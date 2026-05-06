@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block title %}Админ панель{% endblock %}
+
+{% block content %}
+
+<style>
+/* Цветовая схема */
+.bg-soft-blue {
+    background-color: #e6f0fa;
+}
+
+.bg-soft-yellow {
+    background-color: #fff6d6;
+}
+
+.btn-blue {
+    background-color: #7fb3e6;
+    border: none;
+    color: white;
+}
+
+.btn-blue:hover {
+    background-color: #6aa1d6;
+}
+
+.btn-yellow {
+    background-color: #f4d77a;
+    border: none;
+}
+
+.btn-yellow:hover {
+    background-color: #e8c95f;
+}
+
+.card-admin {
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.title {
+    color: #5a7ea8;
+    font-weight: 600;
+}
+
+.label {
+    font-size: 13px;
+    color: #777;
+}
+
+.input-field {
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 6px;
+    width: 100%;
+}
+</style>
+
+<h3 class="title mb-4">Админ панель</h3>
+
+<div class="row">
+
+    <!-- Назначение учителя -->
+    <div class="col-md-6">
+        <div class="card-admin bg-soft-blue">
+            <h5>Назначить учителя группе</h5>
+
+            <label class="label">Группа</label>
+            <select class="input-field mb-2">
+                <option>Выбрать группу</option>
+            </select>
+
+            <label class="label">Учитель</label>
+            <select class="input-field mb-3">
+                <option>Выбрать учителя</option>
+            </select>
+
+            <button class="btn btn-blue w-100">Назначить</button>
+        </div>
+    </div>
+
+    <!-- Добавление ученика -->
+    <div class="col-md-6">
+        <div class="card-admin bg-soft-yellow">
+            <h5>Добавить ученика</h5>
+
+            <input type="text" placeholder="Имя" class="input-field mb-2">
+            <input type="text" placeholder="Фамилия" class="input-field mb-2">
+
+            <label class="label">Группа</label>
+            <select class="input-field mb-3">
+                <option>Выбрать группу</option>
+            </select>
+
+            <button class="btn btn-yellow w-100">Создать ученика</button>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+
+    <!-- Выдача логина учителю -->
+    <div class="col-md-6">
+        <div class="card-admin bg-soft-blue">
+            <h5>Выдать доступ учителю</h5>
+
+            <input type="text" placeholder="Имя" class="input-field mb-2">
+            <input type="text" placeholder="Фамилия" class="input-field mb-2">
+            <input type="email" placeholder="Email" class="input-field mb-3">
+
+            <button class="btn btn-blue w-100">Сгенерировать</button>
+        </div>
+    </div>
+
+    <!-- Выдача логина родителю -->
+    <div class="col-md-6">
+        <div class="card-admin bg-soft-yellow">
+            <h5>Выдать доступ родителю</h5>
+
+            <input type="text" placeholder="Логин ученика" class="input-field mb-2">
+            <input type="text" placeholder="Имя родителя" class="input-field mb-2">
+
+            <button class="btn btn-yellow w-100">Создать родителя</button>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

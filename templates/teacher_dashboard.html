@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+body {
+    background-color: #f4f7fa;
+}
+
+.card-custom {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    padding: 20px;
+}
+
+.title {
+    color: #4a6fa5;
+    font-weight: 600;
+}
+
+.btn-blue {
+    background-color: #6fa8dc;
+    border: none;
+    color: white;
+}
+
+.btn-blue:hover {
+    background-color: #5c95c9;
+}
+
+.btn-gray {
+    background-color: #d6d6d6;
+    border: none;
+}
+
+.input-grade {
+    width: 70px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+
+.note-input {
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+
+.status {
+    font-size: 13px;
+    color: gray;
+}
+</style>
+
+<div class="card-custom">
+
+
+    <h3 class="title mb-4">Панель учителя</h3>
+
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>Ученик</th>
+                <th>ДЗ</th>
+                <th>Класс</th>
+                <th>Комментарий</th>
+                <th>Присутствие</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for student in students %}
+            <tr data-student-id="{{ student.id }}">
+                <td>
+                    {{ student.user.first_name }} {{ student.user.last_name }}
+                </td>
+
+                <td>
+                    <input type="number" class="input-grade">
+                </td>
+
+                <td>
+                    <input type="number" class="input-grade">
+                </td>
+
+                <td>
+                    <input type="text" class="note-input" placeholder="заметка">
+                </td>
+
+                <td>
+                    <select class="form-select form-select-sm">
+                        <option value="1">Был</option>
+                        <option value="0">Не был</option>
+                    </select>
+                </td>
+
+                <td>
+                    <button class="btn btn-blue btn-sm">Сохранить</button>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-end mt-3">
+        <button class="btn btn-gray">Готово</button>
+    </div>
+
+    <button class="btn btn-blue btn-sm save-btn">Сохранить</button>
+
+</div>
+
+{% endblock %}
+
+<script>
+document.querySelectorAll('.save-btn').forEach(button => {
+    button.addEventListener('click', function() {
+
+        const row = this.closest('tr');
+
+        const studentId = row.dataset.studentId;
+        const homework = row.querySelectorAll('input')[0].value;
+        const classwork = row.querySelectorAll('input')[1].value;
+        const note = row.querySelectorAll('input')[2].value;
+        const wasPresent = row.querySelector('select').value === "1";
+
+        fetch('/save-record/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                student_id: studentId,
+                homework: homework,
+                classwork: classwork,
+                note: note,
+                was_present: wasPresent
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            this.innerText = "✔";
+            this.classList.remove('btn-blue');
+            this.classList.add('btn-success');
+        });
+    });
+});
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie) {
+        document.cookie.split(';').forEach(cookie => {
+            if (cookie.trim().startsWith(name + '=')) {
+                cookieValue = cookie.split('=')[1];
+            }
+        });
+    }
+    return cookieValue;
+}
+</script>

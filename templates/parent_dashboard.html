@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block title %}Панель родителя{% endblock %}
+
+{% block content %}
+
+<style>
+/* Цветовая схема */
+.bg-soft-pink {
+    background-color: #fde8f0;
+}
+
+.bg-soft-gray {
+    background-color: #f2f2f2;
+}
+
+.card-parent {
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.title {
+    color: #c06c84;
+    font-weight: 600;
+}
+
+.grade {
+    font-weight: 600;
+    font-size: 18px;
+    color: #b85c7a;
+}
+
+.note {
+    color: #555;
+    font-size: 14px;
+}
+
+.status-ok {
+    color: #6c757d;
+}
+
+.status-bad {
+    color: #d9534f;
+}
+
+.telegram-box {
+    border-radius: 10px;
+    padding: 15px;
+    background-color: #f7f7f7;
+}
+
+.btn-pink {
+    background-color: #f3a6bd;
+    border: none;
+    color: white;
+}
+
+.btn-pink:hover {
+    background-color: #e58aa6;
+}
+</style>
+
+<h3 class="title mb-4">
+    Успеваемость: {{ student.user.first_name }} {{ student.user.last_name }}
+</h3>
+
+<div class="row">
+
+    <!-- Оценки -->
+    <div class="col-md-8">
+        <div class="card-parent bg-soft-gray">
+            <h5 class="mb-3">Оценки и поведение</h5>
+
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>ДЗ</th>
+                        <th>Класс</th>
+                        <th>Комментарий</th>
+                        <th>Посещение</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                {% for record in records %}
+                    <tr>
+                        <td>{{ record.created_at|date:"d.m.Y" }}</td>
+                        <td class="grade">{{ record.homework_grade }}</td>
+                        <td class="grade">{{ record.classwork_grade }}</td>
+                        <td class="note">{{ record.note }}</td>
+
+                        <td>
+                            {% if record.was_present %}
+                                <span class="status-ok">✔ был</span>
+                            {% else %}
+                                <span class="status-bad">✖ отсутствовал</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <!-- Telegram -->
+    <div class="col-md-4">
+        <div class="card-parent bg-soft-pink">
+
+            <h5 class="mb-3">Уведомления</h5>
+
+            {% if parent.telegram_id %}
+                <p class="text-success">
+                    Telegram подключён
+                </p>
+            {% else %}
+                <p class="text-muted">
+                    Подключите Telegram для получения уведомлений
+                </p>
+
+                <div class="telegram-box mt-3">
+                    <p class="small mb-2">
+                        Перейдите в бота и введите код:
+                    </p>
+
+                    <strong>{{ connect_code }}</strong>
+                </div>
+            {% endif %}
+
+            <div class="mt-3">
+                <button class="btn btn-pink w-100">
+                    Обновить
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

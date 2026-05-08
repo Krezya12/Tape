@@ -12,6 +12,7 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 from aiogram.utils.i18n import gettext as _, I18n, lazy_gettext as __, FSMI18nMiddleware
 
+from apps.models import *
 
 load_dotenv()
 
@@ -20,9 +21,26 @@ TOKEN = getenv("BOT_TOKEN")
 dp = Dispatcher()
 
 
-@dp.message(CommandStart())
-async def main(message: Message):
-    await message.answer("Щкебоб")
+@dp.message_handler(commands=['start'])
+async def send_welcome(message: Message):
+    await message.reply("Привет! Введите ваш логин, чтобы получать уведомления об оценках.")
+
+
+@dp.message_handler()
+async def link_parent(message: Message):
+    login = message.text.strip()
+
+    try:
+        # Ищем родителя по логину
+        parent = User.objects.get(username=login, role='parent')
+
+        # Сохраняем его Telegram ID
+        parent.telegram_id = message.from_user.id
+        parent.save()
+
+        await message.reply(f"Успешно! Теперь вы будете получать отчеты для {parent.first_name} {parent.last_name}.")
+    except User.DoesNotExist:
+        await message.reply("Пользователь с таким логином не найден. Проверьте правильность написания.")
 
 async def main() -> None:
     bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))

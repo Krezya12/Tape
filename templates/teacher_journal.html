@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Журнал: {{ group.name }}</title>
+    <style>
+        /* Базовые цвета */
+        :root {
+            --soft-blue: #87CEEB; /* Тот самый выцветше-голубой */
+            --bright-blue: #00BFFF; /* Яркий акцент */
+            --bg-gray: #f4f4f4;    /* Однотонный серый фон */
+            --text-dark: #555;
+            --white: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-gray);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        h1 {
+            color: var(--soft-blue);
+            border-bottom: 2px solid var(--soft-blue);
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th {
+            background-color: var(--soft-blue);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* Поля ввода */
+        input[type="number"], input[type="text"] {
+            border: 1px solid var(--soft-blue);
+            padding: 5px;
+            border-radius: 4px;
+            width: 60px;
+            outline: none;
+        }
+
+        input[type="text"] { width: 200px; }
+
+        input:focus {
+            border-color: var(--bright-blue);
+            box-shadow: 0 0 5px var(--soft-blue);
+        }
+
+        /* Кнопка "Готово" */
+        .btn-submit {
+            background-color: var(--soft-blue);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+            display: block;
+            width: 100%;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--bright-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 191, 255, 0.3);
+        }
+
+        .attendance {
+            accent-color: var(--bright-blue);
+            transform: scale(1.5);
+        }
+
+        .label-hint {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 5px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Группа: {{ group.name }}</h1>
+    <p>Учитель: {{ request.user.get_full_name }}</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Ученик</th>
+                    <th>Классная</th>
+                    <th>Домашка</th>
+                    <th>Был?</th>
+                    <th>Записка родителям</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student_prof in students %}
+                <tr>
+                    <td><strong>{{ student_prof.user.get_full_name }}</strong></td>
+                    <td>
+                        <input type="number" name="grade_class_{{ student_prof.user.id }}" min="1" max="5">
+                    </td>
+                    <td>
+                        <input type="number" name="grade_hw_{{ student_prof.user.id }}" min="1" max="5">
+                    </td>
+                    <td style="text-align: center;">
+                        <input type="checkbox" name="present_{{ student_prof.user.id }}" class="attendance" checked>
+                    </td>
+                    <td>
+                        <input type="text" name="note_{{ student_prof.user.id }}" placeholder="Как вел себя...">
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button type="submit" class="btn-submit">Нажать кнопку "ГОТОВО"</button>
+    </form>
+</div>
+
+</body>
+</html>

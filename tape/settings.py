@@ -1,8 +1,6 @@
 import os
 from pathlib import Path
 
-from apps import models
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -22,7 +20,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'apps'
+    'apps',
     
     'allauth',
     'allauth.account',
@@ -48,6 +46,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware'
 ]
 
 ROOT_URLCONF = 'tape.urls'
@@ -79,7 +78,6 @@ DATABASES = {
 }
 
 
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -95,7 +93,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = 'models.User'
+SOCIALACCOUNT_AUTO_SIGNUP = True
+
+SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
+
+SOCIALACCOUNT_QUERY_EMAIL = True
+
+AUTH_USER_MODEL = 'apps.User'
 
 
 LANGUAGE_CODE = 'ru-ru'

@@ -1,121 +1,169 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        :root {
+            --p-blue: #BDE0FE;
+            --p-pink: #FFC8DD;
+            --accent-pink: #FFAFCC;
+            --bg: #F8F9FA;
+            --white: #FFFFFF;
+            --text: #5F6368;
+        }
 
-{% block title %}Панель ученика{% endblock %}
+        body {
+            background: var(--bg);
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            padding: 30px;
+            color: var(--text);
+            margin: 0;
+        }
 
-{% block content %}
+        .container { max-width: 1100px; margin: 0 auto; }
 
-<style>
-/* Цветовая схема */
-.bg-soft-blue {
-    background-color: #eaf4ff;
-}
+        .grid { display: grid; grid-template-columns: 1.8fr 1.2fr; gap: 25px; }
 
-.bg-soft-pink {
-    background-color: #fde8f0;
-}
+        .card {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
 
-.card-student {
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-}
+        /* Шапка профиля */
+        .header {
+            background: linear-gradient(135deg, var(--p-blue), var(--p-pink));
+            color: #555;
+            padding: 40px;
+            border-radius: 25px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(189, 224, 254, 0.4);
+        }
 
-.title {
-    color: #5a8ecb;
-    font-weight: 600;
-}
+        h1 { margin: 0; font-size: 2rem; color: #444; }
 
-.grade {
-    font-weight: 600;
-    font-size: 18px;
-    color: #d16b86;
-}
 
-.table thead {
-    background-color: #f3f7fc;
-}
+        .rank-badge {
+            background: var(--white);
+            color: #ff85a1;
+            padding: 12px 25px;
+            border-radius: 50px;
+            display: inline-block;
+            font-weight: 800;
+            font-size: 1.3rem;
+            margin-top: 15px;
+            border: 3px solid var(--p-pink);
+        }
 
-.badge-rank {
-    background-color: #f7c6d5;
-    color: #7a3e52;
-    padding: 5px 10px;
-    border-radius: 8px;
-}
-</style>
 
-<h3 class="title mb-4">Моя успеваемость</h3>
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th {
+            text-align: left;
+            color: #999;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            padding: 15px 10px;
+            border-bottom: 2px solid var(--bg);
+        }
+        td { padding: 15px 10px; border-bottom: 1px solid var(--bg); }
+        .mark-val {
+            background: var(--p-blue);
+            color: #555;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
 
-<div class="row">
 
-    <!-- Таблица оценок -->
-    <div class="col-md-8">
-        <div class="card-student bg-soft-blue">
-            <h5 class="mb-3">Оценки</h5>
+        h2 { color: #777; font-size: 1.4rem; margin-top: 0; }
 
-            <table class="table align-middle">
+        .rating-list { margin-top: 20px; }
+
+        .rating-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            transition: 0.3s;
+            background: var(--bg);
+        }
+
+
+        .is-me {
+            background: var(--p-pink);
+            color: #fff;
+            transform: scale(1.03);
+            box-shadow: 0 5px 15px rgba(255, 200, 221, 0.5);
+        }
+
+        .avg-circle {
+            width: 40px;
+            height: 40px;
+            background: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--text);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>{{ request.user.first_name }}, добро пожаловать! ✨</h1>
+        <p>Твой класс: <b>{{ group.name }}</b></p>
+        <div class="rank-badge">Твоё место в топе: #{{ my_rank }}</div>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h2>Дневник успеваемости</h2>
+            <table>
                 <thead>
                     <tr>
                         <th>Дата</th>
-                        <th>ДЗ</th>
                         <th>Класс</th>
+                        <th>Домашка</th>
                         <th>Комментарий</th>
-                        <th>Посещение</th>
                     </tr>
                 </thead>
-
                 <tbody>
-                    {% for record in records %}
+                    {% for mark in my_marks %}
                     <tr>
-                        <td>{{ record.created_at|date:"d.m.Y" }}</td>
-                        <td class="grade">{{ record.homework_grade }}</td>
-                        <td class="grade">{{ record.classwork_grade }}</td>
-                        <td>{{ record.note }}</td>
-                        <td>
-                            {% if record.was_present %}
-                                ✔
-                            {% else %}
-                                ❌
-                            {% endif %}
-                        </td>
+                        <td>{{ mark.date|date:"d M" }}</td>
+                        <td><span class="mark-val">{{ mark.grade_class|default:"-" }}</span></td>
+                        <td><span class="mark-val" style="background: var(--p-pink);">{{ mark.grade_homework|default:"-" }}</span></td>
+                        <td style="font-size: 0.85rem;">{{ mark.note }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-    </div>
 
-    <!-- Рейтинг -->
-    <div class="col-md-4">
-        <div class="card-student bg-soft-pink">
-            <h5 class="mb-3">Рейтинг в группе</h5>
-
-            <ul class="list-group">
-
-                {% for s in rating %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-
-                    <span>
-                        {{ s.user.first_name }}
-                    </span>
-
-                    <span>
-                        {{ s.avg|default:"0"|floatformat:1 }}
-                    </span>
-
-                </li>
+        <!-- Блок рейтинга -->
+        <div class="card">
+            <h2>Рейтинг группы 🏆</h2>
+            <div class="rating-list">
+                {% for entry in leaderboard %}
+                <div class="rating-item {% if entry.is_me %}is-me{% endif %}">
+                    <span><b>{{ forloop.counter }}.</b> {{ entry.name }}</span>
+                    <div class="avg-circle">{{ entry.avg }}</div>
+                </div>
                 {% endfor %}
-
-            </ul>
-
-            <div class="mt-3 text-center">
-                <span class="badge-rank">
-                    Моё место: {{ my_rank }}
-                </span>
             </div>
-
         </div>
     </div>
-
 </div>
 
-{% endblock %}
+</body>
+</html>

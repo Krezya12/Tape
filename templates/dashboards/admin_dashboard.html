@@ -4,7 +4,7 @@
   Django Template Conversion:
   {% extends "base.html" %}
   {% block title %}Admin Dashboard — PDP Academy{% endblock %}
-  {% block content %}  ...  {% endblock %}
+{#  {% block content %}  ...  {% endblock %}#}
 -->
 <head>
     <meta charset="UTF-8">
@@ -364,7 +364,7 @@
         </header><!-- /header -->
 
         <!-- ═══ MAIN CONTENT ═══ -->
-        <!-- {% block contentt %} -->
+        <!-- {% block content %} -->
             <main class="main-content">
 
                 <!-- Welcome Banner -->
@@ -858,11 +858,13 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">New Password</label>
-                        <input type="password" name="new_password" class="form-control" placeholder="Leave blank to keep">
+                        <input type="password" name="new_password" class="form-control"
+                               placeholder="Leave blank to keep">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Confirm</label>
-                        <input type="password" name="confirm_password" class="form-control" placeholder="Repeat password">
+                        <input type="password" name="confirm_password" class="form-control"
+                               placeholder="Repeat password">
                     </div>
                 </div>
             </form>

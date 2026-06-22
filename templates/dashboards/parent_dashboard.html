@@ -728,10 +728,10 @@
                                      style="background:linear-gradient(135deg,#3B82F6,#60A5FA);flex-shrink:0;">T
                                 </div>
                                 <div class="leaderboard-info">
-                                    <p class="leaderboard-name">Timur Rashidov</p>
+                                    <p class="leaderboard-name">{{ n1 }}</p>
                                     <p class="leaderboard-group">Group P38</p>
                                 </div>
-                                <span class="leaderboard-score">95%</span>
+                                <span class="leaderboard-score">{{ n1_pr }}%</span>
                             </div>
                             <div class="leaderboard-row">
                                 <span class="rank-num top-2">🥈</span>
@@ -739,19 +739,19 @@
                                      style="background:linear-gradient(135deg,#EC4899,#F472B6);flex-shrink:0;">M
                                 </div>
                                 <div class="leaderboard-info">
-                                    <p class="leaderboard-name">Maria Chen</p>
-                                    <p class="leaderboard-group">Group P38</p>
+                                    <p class="leaderboard-name">{{ n2 }}</p>
+                                    <p class="leaderboard-group">Group {{ group }}</p>
                                 </div>
-                                <span class="leaderboard-score">93%</span>
+                                <span class="leaderboard-score">{{ n2_pr }}%</span>
                             </div>
                             <div class="leaderboard-row">
                                 <span class="rank-num top-3">🥉</span>
                                 <div class="avatar avatar-xs">S</div>
                                 <div class="leaderboard-info">
-                                    <p class="leaderboard-name">Sherzod Kalandarov</p>
+                                    <p class="leaderboard-name">{{ n3 }}</p>
                                     <p class="leaderboard-group">Group P38</p>
                                 </div>
-                                <span class="leaderboard-score">91%</span>
+                                <span class="leaderboard-score">{{ n3_pr }}%</span>
                             </div>
                             <div style="text-align:center;padding:10px;font-size:.8125rem;color:var(--text-muted);">· ·
                                 ·
@@ -759,7 +759,7 @@
                             <!-- Child's own row highlighted -->
                             <div class="leaderboard-row me">
                                 <span class="rank-num"
-                                      style="font-size:1rem;font-weight:800;color:var(--color-primary);">#9</span>
+                                      style="font-size:1rem;font-weight:800;color:var(--color-primary);">#{{ yn }}</span>
                                 <div class="avatar avatar-xs"
                                      style="background:linear-gradient(135deg,#3B82F6,#60A5FA);flex-shrink:0;border:2px solid var(--color-primary);">
                                     A

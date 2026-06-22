@@ -1,210 +1,891 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="light">
+<!--
+  Django Template Conversion:
+  {% extends "base.html" %}
+  {% block title %}Admin Dashboard — PDP Academy{% endblock %}
+  {% block content %}  ...  {% endblock %}
+-->
 <head>
     <meta charset="UTF-8">
-    <title>Панель Администратора</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — PDP Academy LMS</title>
+    <link rel="stylesheet" href="../apps/static/css/style.css">
+    <link rel="stylesheet" href="../apps/static/css/components.css">
+    <link rel="stylesheet" href="../apps/static/css/dark.css">
     <style>
-        :root {
-            /* Палитра "Выцветший неон" */
-            --pastel-blue: #A2D2FF;      /* Выцветше-голубой */
-            --bright-blue: #70b8ff;     /* Чуть ярче для наведения */
-            --pastel-yellow: #FEF9A7;    /* Выцветше-желтый */
-            --bright-yellow: #FAC213;    /* Яркий акцент для кнопок */
-            --bg-gray: #F9F9F9;
-            --text-main: #4A4A4A;
-            --white: #FFFFFF;
-        }
-
-        body {
-            background-color: var(--bg-gray);
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-            margin: 0;
-            display: flex;
-        }
-
-        /* Сайдбар */
-        .sidebar {
-            width: 250px;
-            background-color: var(--pastel-blue);
-            height: 100vh;
-            padding: 20px;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
-        }
-
-        .sidebar h2 {
-            color: var(--white);
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 30px;
-        }
-
-        .nav-item {
-            display: block;
-            padding: 12px 15px;
-            color: var(--white);
-            text-decoration: none;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            transition: background 0.3s;
-            font-weight: 500;
-        }
-
-        .nav-item:hover {
-            background-color: var(--bright-blue);
-        }
-
-        /* Основной контент */
-        .main-content {
-            flex-grow: 1;
-            padding: 40px;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .stats-grid {
+        .admin-charts {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: 2fr 1fr;
             gap: 20px;
-            margin-bottom: 40px;
         }
 
-        .stat-card {
-            background: var(--white);
-            padding: 20px;
-            border-radius: 15px;
-            border-left: 5px solid var(--pastel-yellow);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
         }
 
-        .stat-card h3 {
-            margin: 0;
-            font-size: 0.9rem;
-            color: #888;
-        }
-
-        .stat-card p {
-            margin: 10px 0 0;
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--text-main);
-        }
-
-        /* Кнопки действий */
-        .action-btn {
-            background-color: var(--pastel-yellow);
-            color: #7d6b00; /* Темно-желтый текст для читаемости */
-            border: none;
-            padding: 12px 25px;
-            border-radius: 10px;
-            font-weight: bold;
+        .quick-action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--r-md);
             cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 0px #e6e086;
+            transition: var(--ease);
+            font-size: .8125rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-family: var(--font-sans);
         }
 
-        .action-btn:hover {
-            background-color: var(--bright-yellow);
-            color: var(--white);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 0px #d4a510;
+        .quick-action-btn:hover {
+            border-color: var(--jade-400);
+            background: var(--jade-50);
+            color: var(--color-primary);
+            box-shadow: var(--shadow-sm);
         }
 
-        .action-btn:active {
-            transform: translateY(2px);
-            box-shadow: none;
+        .quick-action-btn .qa-icon {
+            font-size: 1.375rem;
         }
 
-        .data-table {
-            width: 100%;
-            background: var(--white);
-            border-radius: 15px;
-            overflow: hidden;
-            border-collapse: collapse;
+        [data-theme=dark] .quick-action-btn:hover {
+            background: rgba(34, 197, 94, .08);
         }
 
-        .data-table th {
-            background-color: #f0f7ff;
-            color: var(--bright-blue);
-            padding: 15px;
-            text-align: left;
-            font-size: 0.85rem;
-            text-transform: uppercase;
+        @media (max-width: 900px) {
+            .admin-charts {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .data-table td {
-            padding: 15px;
-            border-bottom: 1px solid #f1f1f1;
+        @media (max-width: 600px) {
+            .quick-actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
-
-        .badge-teacher { background: var(--pastel-blue); color: white; padding: 4px 8px; border-radius: 5px; font-size: 0.8rem; }
     </style>
 </head>
-<body>
+<body data-user-role="admin">
 
-<div class="sidebar">
-    <h2>LMS Admin</h2>
-    <a href="#" class="nav-item">📊 Дашборд</a>
-    <a href="#" class="nav-item">👥 Учителя</a>
-    <a href="#" class="nav-item">🎓 Группы</a>
-    <a href="#" class="nav-item">📝 Логи рассылки</a>
+<div class="app">
+    <!-- Mobile Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <!-- {% include "components/sidebar.html" with role="admin" %} -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html" class="sidebar-logo">
+                <div class="logo-mark">P</div>
+                <div class="logo-text">
+                    <span class="logo-name">PDP Academy</span>
+                    <span class="logo-sub">LMS Platform</span>
+                </div>
+            </a>
+            <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 18l-6-6 6-6"/>
+                </svg>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-group">
+                <span class="nav-group-label">Overview</span>
+                <ul>
+                    <li class="nav-item">
+                        <a href="admin_dashboard.html" class="nav-link active">
+                            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect
+                                    x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect
+                                    x="14" y="14" width="7" height="7"/></svg></span>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="nav-group">
+                <span class="nav-group-label">Management</span>
+                <ul>
+                    <li class="nav-item">
+                        <a href="pages/users.html" class="nav-link">
+                            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round"><path
+                                    d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path
+                                    d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span>
+                            <span class="nav-text">Users</span>
+                            <span class="nav-badge">245</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="pages/groups.html" class="nav-link">
+                            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round"><path
+                                    d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline
+                                    points="9 22 9 12 15 12 15 22"/></svg></span>
+                            <span class="nav-text">Groups</span>
+                            <span class="nav-badge">32</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="pages/lessons.html" class="nav-link">
+                            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round"><path
+                                    d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path
+                                    d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></span>
+                            <span class="nav-text">Lessons</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="pages/homework.html" class="nav-link">
+                            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round"><path
+                                    d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline
+                                    points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17"
+                                                                                                         x2="8"
+                                                                                                         y2="17"/><polyline
+                                    points="10 9 9 9 8 9"/></svg></span>
+                            <span class="nav-text">Homework</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="nav-group">
+                <span class="nav-group-label">Finance & Analytics</span>
+                <ul>
+                    <li class="nav-item">
+                        <a href="pages/payments.html" class="nav-link">
+                            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round"><rect x="1" y="4" width="22" height="16"
+                                                                                      rx="2" ry="2"/><line x1="1"
+                                                                                                           y1="10"
+                                                                                                           x2="23"
+                                                                                                           y2="10"/></svg></span>
+                            <span class="nav-text">Payments</span>
+                            <span class="nav-badge" style="background:var(--color-danger)">7</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="pages/statistics.html" class="nav-link">
+                            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line
+                                    x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+                            <span class="nav-text">Statistics</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="pages/leaderboard.html" class="nav-link">
+                            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path
+                                    d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg></span>
+                            <span class="nav-text">Leaderboard</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="nav-group">
+                <span class="nav-group-label">System</span>
+                <ul>
+                    <li class="nav-item">
+                        <a href="pages/notifications.html" class="nav-link">
+                            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round"><path
+                                    d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>
+                            <span class="nav-text">Notifications</span>
+                            <span class="nav-badge">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="pages/settings.html" class="nav-link">
+                            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path
+                                    d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>
+                            <span class="nav-text">Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user" id="userMenuBtn">
+                <div class="avatar avatar-sm">A</div>
+                <div class="sidebar-user-info">
+                    <p class="sidebar-user-name">Sardor Toshmatov</p>
+                    <p class="sidebar-user-role">Administrator</p>
+                </div>
+            </div>
+        </div>
+    </aside><!-- /sidebar -->
+
+    <!-- ═══ MAIN ═══ -->
+    <div class="main-wrapper" id="mainWrapper">
+
+        <!-- ─── Header ──────────────────────────────── -->
+        <header class="header">
+            <div class="header-left">
+                <button class="menu-toggle-btn" id="menuToggle" title="Toggle menu">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+                <div class="breadcrumb">
+                    <span>PDP Academy</span>
+                    <span class="breadcrumb-sep">/</span>
+                    <span class="breadcrumb-current">Admin Dashboard</span>
+                </div>
+            </div>
+
+            <div class="header-search">
+        <span class="header-search-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21"
+                                                                                                   x2="16.65"
+                                                                                                   y2="16.65"/></svg>
+        </span>
+                <input type="search" placeholder="Search users, groups…">
+            </div>
+
+            <div class="header-right">
+                <!-- Theme Toggle -->
+                <div class="theme-toggle-wrap">
+                    <div class="theme-opt active" data-mode="light" title="Light mode">☀️</div>
+                    <div class="theme-opt" data-mode="dark" title="Dark mode">🌙</div>
+                </div>
+
+                <!-- Notifications -->
+                <div class="dropdown" style="position:relative;">
+                    <button class="icon-btn" id="notifBtn" title="Notifications">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 01-3.46 0"/>
+                        </svg>
+                        <span class="notif-dot"></span>
+                    </button>
+                    <div class="dropdown-menu notif-panel" id="notifPanel">
+                        <div class="notif-header">
+                            <span class="notif-title">Notifications</span>
+                            <span class="notif-mark-read">Mark all read</span>
+                        </div>
+                        <div class="notif-item unread">
+                            <div class="notif-item-icon">💳</div>
+                            <div class="notif-item-content">
+                                <p class="notif-item-title">7 overdue payments require attention</p>
+                                <p class="notif-item-time">10 min ago</p>
+                            </div>
+                            <div class="notif-unread-dot"></div>
+                        </div>
+                        <div class="notif-item unread">
+                            <div class="notif-item-icon">👤</div>
+                            <div class="notif-item-content">
+                                <p class="notif-item-title">New student registered: Doniyor Yusupov</p>
+                                <p class="notif-item-time">25 min ago</p>
+                            </div>
+                            <div class="notif-unread-dot"></div>
+                        </div>
+                        <div class="notif-item unread">
+                            <div class="notif-item-icon">🏫</div>
+                            <div class="notif-item-content">
+                                <p class="notif-item-title">Group J15 — enrollment complete</p>
+                                <p class="notif-item-time">1 hr ago</p>
+                            </div>
+                            <div class="notif-unread-dot"></div>
+                        </div>
+                        <div class="notif-item">
+                            <div class="notif-item-icon">📊</div>
+                            <div class="notif-item-content">
+                                <p class="notif-item-title">Monthly report is ready to download</p>
+                                <p class="notif-item-time">3 hr ago</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Menu -->
+                <div class="dropdown" style="position:relative;">
+                    <button class="icon-btn" id="userMenuBtn" title="Account">
+                        <div class="avatar avatar-sm">S</div>
+                    </button>
+                    <div class="dropdown-menu" id="userDropdownMenu">
+                        <div class="dropdown-header">Sardor Toshmatov</div>
+                        <div class="dropdown-item" onclick="location.href='pages/profile.html'">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                            My Profile
+                        </div>
+                        <div class="dropdown-item" onclick="location.href='pages/settings.html'">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+                            </svg>
+                            Settings
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item danger" onclick="window.showToast('Logged out','success')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                            Log Out
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header><!-- /header -->
+
+        <!-- ═══ MAIN CONTENT ═══ -->
+        <!-- {% block content %} -->
+            <main class="main-content">
+
+                <!-- Welcome Banner -->
+                <div class="welcome-banner">
+                    <div class="welcome-text">
+                        <p class="welcome-greeting">Good morning, <span>Sardor</span> 👋</p>
+                        <p class="welcome-sub">Here's what's happening at PDP Academy today — Sunday, June 21, 2026</p>
+                    </div>
+                    <div class="welcome-emoji" style="font-size:2.5rem;">🎓</div>
+                </div>
+
+                <!-- ── KPI Stat Cards ── -->
+                <div class="grid grid-4 mb-24">
+                    <!-- Students -->
+                    <div class="stat-card green">
+                        <div class="stat-card-header">
+                            <span class="stat-card-label">Total Students</span>
+                            <div class="stat-icon-wrap green">👨‍🎓</div>
+                        </div>
+                        <div class="stat-value mono" data-count="245">0</div>
+                        <div class="stat-trend up">
+                            <span>↑ 12</span>
+                            <span class="stat-trend-label">this month</span>
+                        </div>
+                    </div>
+
+                    <!-- Teachers -->
+                    <div class="stat-card blue">
+                        <div class="stat-card-header">
+                            <span class="stat-card-label">Teachers</span>
+                            <div class="stat-icon-wrap blue">🧑‍💻</div>
+                        </div>
+                        <div class="stat-value mono" data-count="18">0</div>
+                        <div class="stat-trend up">
+                            <span>↑ 2</span>
+                            <span class="stat-trend-label">new this quarter</span>
+                        </div>
+                    </div>
+
+                    <!-- Groups -->
+                    <div class="stat-card gold">
+                        <div class="stat-card-header">
+                            <span class="stat-card-label">Active Groups</span>
+                            <div class="stat-icon-wrap gold">🏫</div>
+                        </div>
+                        <div class="stat-value mono" data-count="32">0</div>
+                        <div class="stat-trend up">
+                            <span>↑ 4</span>
+                            <span class="stat-trend-label">this month</span>
+                        </div>
+                    </div>
+
+                    <!-- Payment Rate -->
+                    <div class="stat-card red">
+                        <div class="stat-card-header">
+                            <span class="stat-card-label">Payment Rate</span>
+                            <div class="stat-icon-wrap red">💳</div>
+                        </div>
+                        <div class="stat-value mono" data-count="92" data-suffix="%">0</div>
+                        <div class="stat-trend down">
+                            <span>↓ 3%</span>
+                            <span class="stat-trend-label">vs last month</span>
+                        </div>
+                    </div>
+                </div><!-- /KPI cards -->
+
+                <!-- ── Charts ── -->
+                <div class="admin-charts mb-24">
+                    <!-- Overview Chart -->
+                    <div class="chart-container card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">Group Performance Overview</h3>
+                                <p class="card-subtitle">Avg score & attendance by group</p>
+                            </div>
+                            <select class="table-filter-select" style="width:auto;">
+                                <option>All Groups</option>
+                                <option>Python</option>
+                                <option>JavaScript</option>
+                                <option>Flutter</option>
+                                <option>React</option>
+                            </select>
+                        </div>
+                        <div class="card-body" style="height:260px; padding-top:8px;">
+                            <canvas id="adminOverviewChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Payment Doughnut -->
+                    <div class="chart-container card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">Payments</h3>
+                                <p class="card-subtitle">Module payment status</p>
+                            </div>
+                        </div>
+                        <div class="card-body" style="height:260px; padding-top:8px;">
+                            <canvas id="paymentChart"></canvas>
+                        </div>
+                    </div>
+                </div><!-- /charts -->
+
+                <!-- ── Bottom Grid: Users Table + Activity ── -->
+                <div class="grid grid-2 mb-24" style="grid-template-columns: 3fr 2fr;">
+
+                    <!-- Recent Users Table -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">Recent Users</h3>
+                                <p class="card-subtitle">Newly registered accounts</p>
+                            </div>
+                            <a href="pages/users.html" class="btn btn-sm btn-secondary">View All</a>
+                        </div>
+                        <div class="card-body" style="padding:0;">
+                            <div class="table-toolbar" style="padding:16px 20px 0;">
+                                <div class="table-search">
+                <span class="table-search-icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21"
+                                                                                                           y1="21"
+                                                                                                           x2="16.65"
+                                                                                                           y2="16.65"/></svg>
+                </span>
+                                    <input type="search" placeholder="Search users…" data-table="recentUsersTable">
+                                </div>
+                                <div class="table-filters">
+                                    <select class="table-filter-select" data-table="recentUsersTable" data-col="2">
+                                        <option value="">All Roles</option>
+                                        <option value="student">Student</option>
+                                        <option value="teacher">Teacher</option>
+                                        <option value="parent">Parent</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <table class="data-table" id="recentUsersTable">
+                                <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Group</th>
+                                    <th>Role</th>
+                                    <th>Joined</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="primary">
+                                        <div style="display:flex;align-items:center;gap:10px;">
+                                            <div class="avatar avatar-xs"
+                                                 style="background:linear-gradient(135deg,#3B82F6,#60A5FA);">A
+                                            </div>
+                                            Alex Kim
+                                        </div>
+                                    </td>
+                                    <td><span class="code-chip">P38</span></td>
+                                    <td><span class="role-badge student">Student</span></td>
+                                    <td style="color:var(--text-muted);font-size:.8125rem;">Jun 18</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-ghost-primary" data-modal-open="editUserModal">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="primary">
+                                        <div style="display:flex;align-items:center;gap:10px;">
+                                            <div class="avatar avatar-xs"
+                                                 style="background:linear-gradient(135deg,#8B5CF6,#A78BFA);">T
+                                            </div>
+                                            Timur Rashidov
+                                        </div>
+                                    </td>
+                                    <td><span class="code-chip">P41</span></td>
+                                    <td><span class="role-badge student">Student</span></td>
+                                    <td style="color:var(--text-muted);font-size:.8125rem;">Jun 17</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-ghost-primary" data-modal-open="editUserModal">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="primary">
+                                        <div style="display:flex;align-items:center;gap:10px;">
+                                            <div class="avatar avatar-xs">I</div>
+                                            Ivan Petrov
+                                        </div>
+                                    </td>
+                                    <td><span class="code-chip">—</span></td>
+                                    <td><span class="role-badge teacher">Teacher</span></td>
+                                    <td style="color:var(--text-muted);font-size:.8125rem;">Jun 15</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-ghost-primary" data-modal-open="editUserModal">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="primary">
+                                        <div style="display:flex;align-items:center;gap:10px;">
+                                            <div class="avatar avatar-xs"
+                                                 style="background:linear-gradient(135deg,#F59E0B,#FCD34D);color:#78350F;">
+                                                M
+                                            </div>
+                                            Maria Chen
+                                        </div>
+                                    </td>
+                                    <td><span class="code-chip">J12</span></td>
+                                    <td><span class="role-badge student">Student</span></td>
+                                    <td style="color:var(--text-muted);font-size:.8125rem;">Jun 14</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-ghost-primary" data-modal-open="editUserModal">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="primary">
+                                        <div style="display:flex;align-items:center;gap:10px;">
+                                            <div class="avatar avatar-xs"
+                                                 style="background:linear-gradient(135deg,#EC4899,#F472B6);">D
+                                            </div>
+                                            Doniyor Yusupov
+                                        </div>
+                                    </td>
+                                    <td><span class="code-chip">P38</span></td>
+                                    <td><span class="role-badge student">Student</span></td>
+                                    <td style="color:var(--text-muted);font-size:.8125rem;">Jun 13</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-ghost-primary" data-modal-open="editUserModal">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="primary">
+                                        <div style="display:flex;align-items:center;gap:10px;">
+                                            <div class="avatar avatar-xs"
+                                                 style="background:linear-gradient(135deg,#14B8A6,#5EEAD4);color:#134E4A;">
+                                                N
+                                            </div>
+                                            Nodira Karimova
+                                        </div>
+                                    </td>
+                                    <td><span class="code-chip">—</span></td>
+                                    <td><span class="role-badge parent">Parent</span></td>
+                                    <td style="color:var(--text-muted);font-size:.8125rem;">Jun 12</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-ghost-primary" data-modal-open="editUserModal">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-footer">
+                            <span style="font-size:.8125rem;color:var(--text-muted);">Showing 6 of 245</span>
+                            <div class="pagination">
+                                <button class="page-btn disabled">←</button>
+                                <button class="page-btn active">1</button>
+                                <button class="page-btn">2</button>
+                                <button class="page-btn">3</button>
+                                <button class="page-btn">→</button>
+                            </div>
+                        </div>
+                    </div><!-- /users table -->
+
+                    <!-- Activity Feed -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">Recent Activity</h3>
+                                <p class="card-subtitle">System events & logs</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="activityFeed">
+                                <!-- Populated by dashboard.js -->
+                                <div style="text-align:center;padding:24px;color:var(--text-muted);">Loading…</div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /bottom grid -->
+
+                <!-- ── Quick Actions ── -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Quick Actions</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="quick-actions-grid">
+                            <button class="quick-action-btn" data-action="add-user" data-modal-open="addUserModal">
+                                <span class="qa-icon">👤</span>
+                                Add User
+                            </button>
+                            <button class="quick-action-btn" data-action="add-group" data-modal-open="addGroupModal">
+                                <span class="qa-icon">🏫</span>
+                                Create Group
+                            </button>
+                            <button class="quick-action-btn" data-action="add-lesson"
+                                    onclick="location.href='pages/lessons.html'">
+                                <span class="qa-icon">📖</span>
+                                New Lesson
+                            </button>
+                            <button class="quick-action-btn" data-action="grade-journal"
+                                    onclick="location.href='pages/homework.html'">
+                                <span class="qa-icon">📋</span>
+                                Grade Journal
+                            </button>
+                            <button class="quick-action-btn" data-action="view-report"
+                                    onclick="location.href='pages/statistics.html'">
+                                <span class="qa-icon">📊</span>
+                                View Report
+                            </button>
+                            <button class="quick-action-btn" onclick="location.href='pages/payments.html'">
+                                <span class="qa-icon">💳</span>
+                                Payments
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+            <!-- {% endblock %} -->
+
+    </div><!-- /main-wrapper -->
+</div><!-- /app -->
+
+<!-- ─── Toast Container ──────────────────────── -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ═══ MODALS ═══ -->
+
+<!-- Add User Modal -->
+<div class="modal-overlay" id="addUserModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 class="modal-title">Add New User</h2>
+            <button class="modal-close" data-modal-close>✕</button>
+        </div>
+        <div class="modal-body">
+            <form data-ajax>
+                <div class="form-row mb-16">
+                    <div class="form-group">
+                        <label class="form-label">First Name <span class="required">*</span></label>
+                        <input type="text" class="form-control" placeholder="e.g. Alex">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Last Name <span class="required">*</span></label>
+                        <input type="text" class="form-control" placeholder="e.g. Kim">
+                    </div>
+                </div>
+                <div class="form-row mb-16">
+                    <div class="form-group">
+                        <label class="form-label">Phone</label>
+                        <div class="input-group">
+                            <span class="input-icon">📱</span>
+                            <input type="tel" class="form-control" placeholder="+998 90 000 00 00">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Role <span class="required">*</span></label>
+                        <select class="form-control">
+                            <option value="">Select role…</option>
+                            <option value="admin">Admin</option>
+                            <option value="teacher">Teacher</option>
+                            <option value="student">Student</option>
+                            <option value="parent">Parent</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row mb-16">
+                    <div class="form-group">
+                        <label class="form-label">Login <span class="required">*</span></label>
+                        <input type="text" class="form-control" placeholder="e.g. alex.kim">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password <span class="required">*</span></label>
+                        <input type="password" class="form-control" placeholder="Min 8 characters">
+                    </div>
+                </div>
+                <div class="form-group mb-16">
+                    <label class="form-label">Group (for students)</label>
+                    <select class="form-control">
+                        <option value="">— None —</option>
+                        <option>P38</option>
+                        <option>P41</option>
+                        <option>J12</option>
+                        <option>F09</option>
+                        <option>R22</option>
+                        <option>J15</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" data-modal-close>Cancel</button>
+            <button class="btn btn-primary"
+                    onclick="window.showToast('User created successfully','success');closeModal('addUserModal')">
+                Create User
+            </button>
+        </div>
+    </div>
 </div>
 
-<div class="main-content">
-    <div class="header">
-        <h1>Обзор системы</h1>
-        <button class="action-btn">+ СОЗДАТЬ ГРУППУ</button>
-    </div>
-
-    <div class="stats-grid">
-        <div class="stat-card">
-            <h3>Всего учеников</h3>
-            <p>128</p>
+<!-- Add Group Modal -->
+<div class="modal-overlay" id="addGroupModal">
+    <div class="modal modal-sm">
+        <div class="modal-header">
+            <h2 class="modal-title">Create New Group</h2>
+            <button class="modal-close" data-modal-close>✕</button>
         </div>
-        <div class="stat-card" style="border-left-color: var(--pastel-blue);">
-            <h3>Активных групп</h3>
-            <p>12</p>
+        <div class="modal-body">
+            <form data-ajax>
+                <div class="form-group mb-16">
+                    <label class="form-label">Group Code <span class="required">*</span></label>
+                    <input type="text" class="form-control" placeholder="e.g. P38, J12, F09">
+                    <p class="form-hint">P = Python · J = JavaScript · F = Flutter · R = React</p>
+                </div>
+                <div class="form-group mb-16">
+                    <label class="form-label">Technology</label>
+                    <select class="form-control">
+                        <option value="python">Python</option>
+                        <option value="js">JavaScript</option>
+                        <option value="react">React</option>
+                        <option value="flutter">Flutter</option>
+                    </select>
+                </div>
+                <div class="form-group mb-16">
+                    <label class="form-label">Teacher</label>
+                    <select class="form-control">
+                        <option>Ivan Petrov</option>
+                        <option>Sardor Aliyev</option>
+                        <option>Malika Nazarova</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Schedule</label>
+                    <input type="text" class="form-control" placeholder="e.g. Mon/Wed/Fri 14:00">
+                </div>
+            </form>
         </div>
-        <div class="stat-card">
-            <h3>Уведомлений сегодня</h3>
-            <p>452</p>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" data-modal-close>Cancel</button>
+            <button class="btn btn-primary"
+                    onclick="window.showToast('Group created','success');closeModal('addGroupModal')">Create Group
+            </button>
         </div>
     </div>
-
-    <div class="header">
-        <h2>Распределение групп</h2>
-    </div>
-
-    <table class="data-table">
-        <thead>
-            <tr>
-                <th>Название группы</th>
-                <th>Учитель</th>
-                <th>Кол-во учеников</th>
-                <th>Действие</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><b>Python Pro 1</b></td>
-                <td><span class="badge-teacher">Иван Иванов</span></td>
-                <td>15</td>
-                <td><button class="action-btn" style="padding: 5px 15px; font-size: 0.8rem;">Редактировать</button></td>
-            </tr>
-            <tr>
-                <td><b>Design Base 2</b></td>
-                <td><span class="badge-teacher">Анна Смит</span></td>
-                <td>12</td>
-                <td><button class="action-btn" style="padding: 5px 15px; font-size: 0.8rem;">Редактировать</button></td>
-            </tr>
-        </tbody>
-    </table>
 </div>
 
+<!-- Edit User Modal -->
+<div class="modal-overlay" id="editUserModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 class="modal-title">Edit User</h2>
+            <button class="modal-close" data-modal-close>✕</button>
+        </div>
+        <div class="modal-body">
+            <form data-ajax>
+                <div class="form-row mb-16">
+                    <div class="form-group">
+                        <label class="form-label">First Name</label>
+                        <input type="text" class="form-control" value="Alex">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" class="form-control" value="Kim">
+                    </div>
+                </div>
+                <div class="form-group mb-16">
+                    <label class="form-label">Role</label>
+                    <select class="form-control">
+                        <option selected>Student</option>
+                        <option>Teacher</option>
+                        <option>Admin</option>
+                        <option>Parent</option>
+                    </select>
+                </div>
+                <div class="form-group mb-16">
+                    <label class="form-label">Group</label>
+                    <select class="form-control">
+                        <option selected>P38</option>
+                        <option>P41</option>
+                        <option>J12</option>
+                    </select>
+                </div>
+                <div class="divider-text mb-16">Reset Password</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">New Password</label>
+                        <input type="password" class="form-control" placeholder="Leave blank to keep">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirm</label>
+                        <input type="password" class="form-control" placeholder="Repeat password">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer" style="justify-content:space-between;">
+            <button class="btn btn-danger btn-sm"
+                    onclick="window.showToast('User deleted','error');closeModal('editUserModal')">Delete User
+            </button>
+            <div class="flex gap-10">
+                <button class="btn btn-secondary" data-modal-close>Cancel</button>
+                <button class="btn btn-primary"
+                        onclick="window.showToast('User updated','success');closeModal('editUserModal')">Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="../apps/static/js/theme.js"></script>
+<script src="../apps/static/js/interactions.js"></script>
+<script src="../apps/static/js/charts.js"></script>
+<script src="../apps/static/js/dashboard.js"></script>
 </body>
 </html>

@@ -10,8 +10,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -36,6 +34,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 LOGIN_REDIRECT_URL = '/login'
+LOGIN_URL = '/login'
 LOGOUT_REDIRECT_URL = '/logout'
 
 MIDDLEWARE = [
@@ -48,6 +47,17 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware'
 ]
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
 
 ROOT_URLCONF = 'tape.urls'
 
@@ -100,6 +110,9 @@ SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
 SOCIALACCOUNT_QUERY_EMAIL = True
 
 AUTH_USER_MODEL = 'apps.User'
+
+LOGIN_REDIRECT_URL = 'smart_redirect'  # Имя path из urls.py
+
 
 
 LANGUAGE_CODE = 'ru-ru'

@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<!--
+  Django Template: {% extends "base.html" %}
+  {% block title %}Teacher Dashboard — PDP Academy{% endblock %}
+  User role: teacher  |  View: teacher_dashboard.html
+-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard — PDP Academy LMS</title>
+    <link rel="stylesheet" href="../apps/static/css/style.css">
+    <link rel="stylesheet" href="../apps/static/css/components.css">
+    <link rel="stylesheet" href="../apps/static/css/dark.css">
+    <style>
+        .journal-table td {
+            min-width: 80px;
+        }
+
+        .journal-table td:first-child {
+            min-width: 160px;
+        }
+
+        .journal-table th:first-child {
+            min-width: 160px;
+        }
+
+        .grade-input {
+            width: 64px;
+            height: 30px;
+            border: 1px solid var(--border);
+            border-radius: var(--r-sm);
+            text-align: center;
+            font-size: .875rem;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            transition: var(--ease);
+        }
+
+        .grade-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            background: var(--bg-card);
+        }
+
+        .att-select {
+            height: 30px;
+            width: 80px;
+            font-size: .8125rem;
+            border: 1px solid var(--border);
+            border-radius: var(--r-sm);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            padding: 0 4px;
+            cursor: pointer;
+        }
+
+        .today-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--jade-100);
+            color: var(--jade-700);
+            padding: 4px 10px;
+            border-radius: var(--r-full);
+            font-size: .75rem;
+            font-weight: 600;
+        }
+
+        [data-theme=dark] .today-badge {
+            background: rgba(34, 197, 94, .12);
+            color: #4ADE80;
+        }
+
+        [data-theme=dark] .grade-input {
+            background: var(--bg-input);
+            border-color: var(--border);
+        }
+
+        [data-theme=dark] .att-select {
+            background: var(--bg-input);
+            border-color: var(--border);
+        }
+    </style>
+</head>
+<body data-user-role="teacher">
+
+<div class="app">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ═══ SIDEBAR — Teacher ═══ -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html" class="sidebar-logo">
+                <div class="logo-mark">P</div>
+                <div class="logo-text">
+                    <span class="logo-name">PDP Academy</span>
+                    <span class="logo-sub">LMS Platform</span>
+                </div>
+            </a>
+            <button class="sidebar-collapse-btn" id="sidebarCollapse">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 18l-6-6 6-6"/>
+                </svg>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-group">
+                <span class="nav-group-label">Overview</span>
+                <ul>
+                    <li><a href="teacher_dashboard.html" class="nav-link active">
+                        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect
+                                x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14"
+                                                                                                                  y="14"
+                                                                                                                  width="7"
+                                                                                                                  height="7"/></svg></span>
+                        <span class="nav-text">Dashboard</span>
+                    </a></li>
+                </ul>
+            </div>
+            <div class="nav-group">
+                <span class="nav-group-label">Teaching</span>
+                <ul>
+                    <li><a href="pages/groups.html" class="nav-link">
+                        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round"><path
+                                d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path
+                                d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span>
+                        <span class="nav-text">My Groups</span>
+                        <span class="nav-badge">4</span>
+                    </a></li>
+                    <li><a href="pages/lessons.html" class="nav-link">
+                        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round"><path
+                                d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path
+                                d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></span>
+                        <span class="nav-text">Lessons</span>
+                    </a></li>
+                    <li><a href="pages/homework.html" class="nav-link">
+                        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round"><path
+                                d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline
+                                points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17"
+                                                                                                     x2="8"
+                                                                                                     y2="17"/></svg></span>
+                        <span class="nav-text">Homework</span>
+                        <span class="nav-badge" style="background:var(--color-accent);color:#fff;">12</span>
+                    </a></li>
+                    <li><a href="pages/materials.html" class="nav-link">
+                        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round"><path
+                                d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg></span>
+                        <span class="nav-text">Materials</span>
+                    </a></li>
+                </ul>
+            </div>
+            <div class="nav-group">
+                <span class="nav-group-label">Insights</span>
+                <ul>
+                    <li><a href="pages/statistics.html" class="nav-link">
+                        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line
+                                x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+                        <span class="nav-text">Statistics</span>
+                    </a></li>
+                    <li><a href="pages/leaderboard.html" class="nav-link">
+                        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path
+                                d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg></span>
+                        <span class="nav-text">Leaderboard</span>
+                    </a></li>
+                </ul>
+            </div>
+            <div class="nav-group">
+                <span class="nav-group-label">Account</span>
+                <ul>
+                    <li><a href="pages/notifications.html" class="nav-link">
+                        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round"><path
+                                d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path
+                                d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>
+                        <span class="nav-text">Notifications</span>
+                        <span class="nav-badge">5</span>
+                    </a></li>
+                    <li><a href="pages/profile.html" class="nav-link">
+                        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round"><path
+                                d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+                        <span class="nav-text">Profile</span>
+                    </a></li>
+                    <li><a href="pages/settings.html" class="nav-link">
+                        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path
+                                d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>
+                        <span class="nav-text">Settings</span>
+                    </a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <div class="avatar avatar-sm">I</div>
+                <div class="sidebar-user-info">
+                    <p class="sidebar-user-name">Ivan Petrov</p>
+                    <p class="sidebar-user-role">Teacher</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ═══ MAIN WRAPPER ═══ -->
+    <div class="main-wrapper" id="mainWrapper">
+
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <button class="menu-toggle-btn" id="menuToggle">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+                <div class="breadcrumb">
+                    <span>PDP Academy</span>
+                    <span class="breadcrumb-sep">/</span>
+                    <span class="breadcrumb-current">Teacher Dashboard</span>
+                </div>
+            </div>
+            <div class="header-search">
+                <span class="header-search-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                                      stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                      stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line
+                        x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+                <input type="search" placeholder="Search students, groups…">
+            </div>
+            <div class="header-right">
+                <div class="theme-toggle-wrap">
+                    <div class="theme-opt active" data-mode="light">☀️</div>
+                    <div class="theme-opt" data-mode="dark">🌙</div>
+                </div>
+                <div class="dropdown" style="position:relative;">
+                    <button class="icon-btn" id="notifBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 01-3.46 0"/>
+                        </svg>
+                        <span class="notif-dot"></span>
+                    </button>
+                    <div class="dropdown-menu notif-panel" id="notifPanel">
+                        <div class="notif-header">
+                            <span class="notif-title">Notifications</span>
+                            <span class="notif-mark-read">Mark all read</span>
+                        </div>
+                        <div class="notif-item unread">
+                            <div class="notif-item-icon">📝</div>
+                            <div class="notif-item-content">
+                                <p class="notif-item-title">12 homework submissions waiting</p>
+                                <p class="notif-item-time">Just now</p>
+                            </div>
+                            <div class="notif-unread-dot"></div>
+                        </div>
+                        <div class="notif-item unread">
+                            <div class="notif-item-icon">📖</div>
+                            <div class="notif-item-content">
+                                <p class="notif-item-title">Lesson today at 14:00 — Group P38</p>
+                                <p class="notif-item-time">30 min ago</p>
+                            </div>
+                            <div class="notif-unread-dot"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dropdown" style="position:relative;">
+                    <button class="icon-btn" id="userMenuBtn">
+                        <div class="avatar avatar-sm">I</div>
+                    </button>
+                    <div class="dropdown-menu" id="userDropdownMenu">
+                        <div class="dropdown-header">Ivan Petrov</div>
+                        <div class="dropdown-item" onclick="location.href='pages/profile.html'">👤 My Profile</div>
+                        <div class="dropdown-item" onclick="location.href='pages/settings.html'">⚙️ Settings</div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item danger" onclick="window.showToast('Logged out','success')">🚪 Log Out
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ─── Main Content ──── -->
+        <main class="main-content">
+
+            <!-- Welcome -->
+            <div class="welcome-banner mb-24">
+                <div class="welcome-text">
+                    <p class="welcome-greeting">Welcome, <span>Ivan</span> 👋</p>
+                    <p class="welcome-sub">
+                        You have <strong style="color:#fff;">4 lessons</strong> today &nbsp;·&nbsp;
+                        <strong style="color:#fff;">12 homework</strong> submissions to review
+                    </p>
+                </div>
+                <span class="today-badge"
+                      style="font-size:.875rem;padding:8px 14px;background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.2);">
+          📅 Sunday, Jun 21
+        </span>
+            </div>
+
+            <!-- ── Top Grid: KPI + Schedule ── -->
+            <div class="grid mb-24" style="grid-template-columns: 1fr 1fr 1fr 1.5fr; gap: 20px;">
+                <div class="stat-card green">
+                    <div class="stat-card-header">
+                        <span class="stat-card-label">My Groups</span>
+                        <div class="stat-icon-wrap green">🏫</div>
+                    </div>
+                    <div class="stat-value mono" data-count="4">0</div>
+                    <div class="stat-trend up"><span>72 students total</span></div>
+                </div>
+                <div class="stat-card blue">
+                    <div class="stat-card-header">
+                        <span class="stat-card-label">To Grade</span>
+                        <div class="stat-icon-wrap blue">📝</div>
+                    </div>
+                    <div class="stat-value mono" data-count="12">0</div>
+                    <div class="stat-trend down"><span style="color:var(--color-warning)">↑ 5 new today</span></div>
+                </div>
+                <div class="stat-card gold">
+                    <div class="stat-card-header">
+                        <span class="stat-card-label">Avg Score</span>
+                        <div class="stat-icon-wrap gold">📊</div>
+                    </div>
+                    <div class="stat-value mono" data-count="87" data-suffix="%">0</div>
+                    <div class="stat-trend up"><span>↑ 3% this module</span></div>
+                </div>
+
+                <!-- Today's schedule (spans last column) -->
+                <div class="card" style="padding:0;">
+                    <div class="card-header" style="padding:16px 18px 0;">
+                        <h3 class="card-title">Today's Schedule</h3>
+                    </div>
+                    <div class="card-body" style="padding:12px 18px 16px;">
+                        <div class="schedule-item" style="padding:10px 0;">
+                            <span class="schedule-time">14:00</span>
+                            <div class="schedule-dot"></div>
+                            <div class="schedule-content">
+                                <p class="schedule-title">Group P38 — Module 3, Lesson 8</p>
+                                <p class="schedule-meta">Python · 20 students · Room 205</p>
+                            </div>
+                            <span class="status-badge status-open">Now</span>
+                        </div>
+                        <div class="schedule-item" style="padding:10px 0;">
+                            <span class="schedule-time">16:00</span>
+                            <div class="schedule-dot" style="background:var(--color-accent);"></div>
+                            <div class="schedule-content">
+                                <p class="schedule-title">Group P41 — Module 2, Lesson 5</p>
+                                <p class="schedule-meta">Python · 15 students · Room 101</p>
+                            </div>
+                            <span class="status-badge status-pending">Upcoming</span>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /top grid -->
+
+            <!-- ── My Groups ── -->
+            <div class="section mb-24">
+                <div class="section-header">
+                    <h2 class="section-title">My Groups</h2>
+                    <a href="pages/groups.html" class="section-action">View all →</a>
+                </div>
+                <div class="grid grid-4">
+                    <!-- Group P38 -->
+                    <div class="group-card" onclick="openModal('journalModal')">
+                        <div class="group-card-top">
+                            <div>
+                                <div class="group-code">P38</div>
+                                <div class="group-name">Python · Intermediate</div>
+                            </div>
+                            <span class="group-badge python">Python</span>
+                        </div>
+                        <div class="progress-label">
+                            <span>Module 3</span>
+                            <strong>7 / 12 lessons</strong>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar gradient" data-progress="58" style="width:0%"></div>
+                        </div>
+                        <div class="group-card-footer">
+                            <span class="group-stat">👨‍🎓 <strong>20</strong> students</span>
+                            <span class="group-stat">Avg <strong>87%</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Group P41 -->
+                    <div class="group-card" onclick="openModal('journalModal')">
+                        <div class="group-card-top">
+                            <div>
+                                <div class="group-code">P41</div>
+                                <div class="group-name">Python · Beginner</div>
+                            </div>
+                            <span class="group-badge python">Python</span>
+                        </div>
+                        <div class="progress-label">
+                            <span>Module 2</span>
+                            <strong>4 / 12 lessons</strong>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar gradient" data-progress="33" style="width:0%"></div>
+                        </div>
+                        <div class="group-card-footer">
+                            <span class="group-stat">👨‍🎓 <strong>15</strong> students</span>
+                            <span class="group-stat">Avg <strong>82%</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Group J12 -->
+                    <div class="group-card" onclick="openModal('journalModal')">
+                        <div class="group-card-top">
+                            <div>
+                                <div class="group-code">J12</div>
+                                <div class="group-name">JavaScript · Advanced</div>
+                            </div>
+                            <span class="group-badge js">JS</span>
+                        </div>
+                        <div class="progress-label">
+                            <span>Module 5</span>
+                            <strong>10 / 12 lessons</strong>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar gradient" data-progress="83" style="width:0%"></div>
+                        </div>
+                        <div class="group-card-footer">
+                            <span class="group-stat">👨‍🎓 <strong>18</strong> students</span>
+                            <span class="group-stat">Avg <strong>91%</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Group R22 -->
+                    <div class="group-card" onclick="openModal('journalModal')">
+                        <div class="group-card-top">
+                            <div>
+                                <div class="group-code">R22</div>
+                                <div class="group-name">React · Intermediate</div>
+                            </div>
+                            <span class="group-badge react">React</span>
+                        </div>
+                        <div class="progress-label">
+                            <span>Module 4</span>
+                            <strong>6 / 12 lessons</strong>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar gradient" data-progress="50" style="width:0%"></div>
+                        </div>
+                        <div class="group-card-footer">
+                            <span class="group-stat">👨‍🎓 <strong>19</strong> students</span>
+                            <span class="group-stat">Avg <strong>84%</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /my groups -->
+
+            <!-- ── Grade Journal (inline preview) ── -->
+            <div class="card mb-24">
+                <div class="card-header">
+                    <div>
+                        <h3 class="card-title">Grade Journal — Group P38</h3>
+                        <p class="card-subtitle">Module 3 · Lesson 7 · Click row to edit grades</p>
+                    </div>
+                    <div class="flex gap-10">
+                        <select class="table-filter-select" style="width:auto;">
+                            <option>P38</option>
+                            <option>P41</option>
+                            <option>J12</option>
+                            <option>R22</option>
+                        </select>
+                        <button class="btn btn-sm btn-primary" onclick="window.showToast('Grades saved','success')">
+                            Save All
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body" style="padding:0; overflow-x:auto;">
+                    <table class="data-table journal-table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th class="sortable">Student <span class="sort-icon">↕</span></th>
+                            <th>Homework <small style="font-weight:400;color:var(--text-muted);">/20</small></th>
+                            <th>Classwork <small style="font-weight:400;color:var(--text-muted);">/20</small></th>
+                            <th>Attendance</th>
+                            <th>Comment</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td style="color:var(--text-muted);font-size:.8125rem;">1</td>
+                            <td class="primary">
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <div class="avatar avatar-xs"
+                                         style="background:linear-gradient(135deg,#3B82F6,#60A5FA);">A
+                                    </div>
+                                    Alex Kim
+                                </div>
+                            </td>
+                            <td><input type="number" class="grade-input" value="18" min="0" max="20"></td>
+                            <td><input type="number" class="grade-input" value="17" min="0" max="20"></td>
+                            <td>
+                                <select class="att-select">
+                                    <option value="present" selected>✅ Present</option>
+                                    <option value="absent">❌ Absent</option>
+                                    <option value="late">⏰ Late</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" style="height:30px;font-size:.8125rem;"
+                                       placeholder="Add comment…"></td>
+                        </tr>
+                        <tr>
+                            <td style="color:var(--text-muted);font-size:.8125rem;">2</td>
+                            <td class="primary">
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <div class="avatar avatar-xs"
+                                         style="background:linear-gradient(135deg,#8B5CF6,#A78BFA);">T
+                                    </div>
+                                    Timur Rashidov
+                                </div>
+                            </td>
+                            <td><input type="number" class="grade-input" value="15" min="0" max="20"></td>
+                            <td><input type="number" class="grade-input" value="16" min="0" max="20"></td>
+                            <td>
+                                <select class="att-select">
+                                    <option value="present" selected>✅ Present</option>
+                                    <option value="absent">❌ Absent</option>
+                                    <option value="late">⏰ Late</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" style="height:30px;font-size:.8125rem;"
+                                       placeholder="Add comment…"></td>
+                        </tr>
+                        <tr>
+                            <td style="color:var(--text-muted);font-size:.8125rem;">3</td>
+                            <td class="primary">
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <div class="avatar avatar-xs"
+                                         style="background:linear-gradient(135deg,#EC4899,#F472B6);">M
+                                    </div>
+                                    Maria Chen
+                                </div>
+                            </td>
+                            <td><input type="number" class="grade-input" value="20" min="0" max="20"></td>
+                            <td><input type="number" class="grade-input" value="19" min="0" max="20"></td>
+                            <td>
+                                <select class="att-select">
+                                    <option value="present" selected>✅ Present</option>
+                                    <option value="absent">❌ Absent</option>
+                                    <option value="late">⏰ Late</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" style="height:30px;font-size:.8125rem;"
+                                       value="Excellent work!"></td>
+                        </tr>
+                        <tr>
+                            <td style="color:var(--text-muted);font-size:.8125rem;">4</td>
+                            <td class="primary">
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <div class="avatar avatar-xs">D</div>
+                                    Doniyor Yusupov
+                                </div>
+                            </td>
+                            <td><input type="number" class="grade-input" value="" min="0" max="20" placeholder="—"></td>
+                            <td><input type="number" class="grade-input" value="" min="0" max="20" placeholder="—"></td>
+                            <td>
+                                <select class="att-select">
+                                    <option value="present">✅ Present</option>
+                                    <option value="absent" selected>❌ Absent</option>
+                                    <option value="late">⏰ Late</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" style="height:30px;font-size:.8125rem;"
+                                       placeholder="Add comment…"></td>
+                        </tr>
+                        <tr>
+                            <td style="color:var(--text-muted);font-size:.8125rem;">5</td>
+                            <td class="primary">
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <div class="avatar avatar-xs"
+                                         style="background:linear-gradient(135deg,#F59E0B,#FCD34D);color:#78350F;">S
+                                    </div>
+                                    Sherzod Kalandarov
+                                </div>
+                            </td>
+                            <td><input type="number" class="grade-input" value="14" min="0" max="20"></td>
+                            <td><input type="number" class="grade-input" value="13" min="0" max="20"></td>
+                            <td>
+                                <select class="att-select">
+                                    <option value="present">✅ Present</option>
+                                    <option value="absent">❌ Absent</option>
+                                    <option value="late" selected>⏰ Late</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" style="height:30px;font-size:.8125rem;"
+                                       placeholder="Add comment…"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <span style="font-size:.8125rem;color:var(--text-muted);">Showing 5 of 20 students · Lesson 7</span>
+                    <div class="flex gap-10">
+                        <button class="btn btn-sm btn-secondary" data-modal-open="addLessonModal">+ New Lesson</button>
+                        <button class="btn btn-sm btn-primary"
+                                onclick="window.showToast('All grades saved successfully','success')">💾 Save Grades
+                        </button>
+                    </div>
+                </div>
+            </div><!-- /journal -->
+
+            <!-- ── Bottom Row: HW to Check + Attendance Chart ── -->
+            <div class="grid grid-2">
+                <!-- Homework to Review -->
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">Homework to Review</h3>
+                            <p class="card-subtitle">Submissions waiting for your grade</p>
+                        </div>
+                        <span class="badge badge-gold badge-dot">12 pending</span>
+                    </div>
+                    <div class="card-body" style="padding:0;">
+                        <table class="data-table">
+                            <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Group</th>
+                                <th>Lesson</th>
+                                <th>Submitted</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="primary">Alex Kim</td>
+                                <td><span class="code-chip">P38</span></td>
+                                <td style="font-size:.8125rem;">M3 · L7</td>
+                                <td style="font-size:.8125rem;color:var(--text-muted);">2 hr ago</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary btn-sm" data-modal-open="gradeHWModal">Grade
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="primary">Timur Rashidov</td>
+                                <td><span class="code-chip">P38</span></td>
+                                <td style="font-size:.8125rem;">M3 · L7</td>
+                                <td style="font-size:.8125rem;color:var(--text-muted);">3 hr ago</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" data-modal-open="gradeHWModal">Grade</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="primary">Nodira Karimova</td>
+                                <td><span class="code-chip">J12</span></td>
+                                <td style="font-size:.8125rem;">M5 · L10</td>
+                                <td style="font-size:.8125rem;color:var(--text-muted);">5 hr ago</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" data-modal-open="gradeHWModal">Grade</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="primary">Bobur Ergashev</td>
+                                <td><span class="code-chip">P41</span></td>
+                                <td style="font-size:.8125rem;">M2 · L4</td>
+                                <td style="font-size:.8125rem;color:var(--text-muted);">1 day ago</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" data-modal-open="gradeHWModal">Grade</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <span style="font-size:.8125rem;color:var(--text-muted);">Showing 4 of 12</span>
+                        <a href="pages/homework.html" class="btn btn-sm btn-secondary">View All</a>
+                    </div>
+                </div>
+
+                <!-- Attendance Chart -->
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">Group Attendance</h3>
+                            <p class="card-subtitle">Average % per month</p>
+                        </div>
+                    </div>
+                    <div class="card-body" style="height:240px; padding-top:8px;">
+                        <canvas id="attendanceChart"></canvas>
+                    </div>
+                </div>
+            </div><!-- /bottom row -->
+
+        </main>
+    </div><!-- /main-wrapper -->
+</div><!-- /app -->
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Grade HW Modal -->
+<div class="modal-overlay" id="gradeHWModal">
+    <div class="modal modal-sm">
+        <div class="modal-header">
+            <h2 class="modal-title">Grade Homework</h2>
+            <button class="modal-close" data-modal-close>✕</button>
+        </div>
+        <div class="modal-body">
+            <div style="margin-bottom:16px;padding:12px;background:var(--bg-body);border-radius:var(--r-md);">
+                <p style="font-size:.8125rem;color:var(--text-muted);">Student</p>
+                <p style="font-weight:600;color:var(--text-primary);">Alex Kim — Group P38</p>
+                <p style="font-size:.8125rem;color:var(--text-muted);margin-top:4px;">Module 3 · Lesson 7 · Submitted 2
+                    hr ago</p>
+            </div>
+            <div style="background:var(--bg-body);border-radius:var(--r-md);padding:12px;margin-bottom:16px;font-size:.875rem;color:var(--text-secondary);">
+                <p style="font-weight:600;color:var(--text-primary);margin-bottom:6px;">📎 Homework Submission</p>
+                <p>Реализовал алгоритм сортировки пузырьком и быстрой сортировки на Python. Оба алгоритма работают
+                    корректно, написал тесты.</p>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Score (out of 20)</label>
+                    <input type="number" class="form-control" placeholder="0–20" min="0" max="20">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Max</label>
+                    <input type="number" class="form-control" value="20" readonly
+                           style="background:var(--bg-input);color:var(--text-muted);">
+                </div>
+            </div>
+            <div class="form-group mt-12">
+                <label class="form-label">Comment</label>
+                <textarea class="form-control" rows="3" placeholder="Feedback for the student…"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" data-modal-close>Cancel</button>
+            <button class="btn btn-primary"
+                    onclick="window.showToast('Grade saved — 18/20','success');closeModal('gradeHWModal')">Save Grade
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Add Lesson Modal -->
+<div class="modal-overlay" id="addLessonModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 class="modal-title">Create Lesson</h2>
+            <button class="modal-close" data-modal-close>✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-row mb-16">
+                <div class="form-group">
+                    <label class="form-label">Module</label>
+                    <select class="form-control">
+                        <option>Module 3</option>
+                        <option>Module 4</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Lesson Number</label>
+                    <input type="number" class="form-control" value="8" min="1">
+                </div>
+            </div>
+            <div class="form-group mb-16">
+                <label class="form-label">Lesson Title</label>
+                <input type="text" class="form-control" placeholder="e.g. Sorting Algorithms — Part 2">
+            </div>
+            <div class="form-group mb-16">
+                <label class="form-label">Homework Task</label>
+                <textarea class="form-control" rows="4" placeholder="Describe the homework assignment…"></textarea>
+            </div>
+            <div class="form-group mb-16">
+                <label class="form-label">Materials</label>
+                <div class="flex gap-8 flex-wrap">
+                    <button type="button" class="btn btn-sm btn-secondary">📹 Upload Video</button>
+                    <button type="button" class="btn btn-sm btn-secondary">📎 Add File</button>
+                    <button type="button" class="btn btn-sm btn-secondary">🔗 Add Link</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Status</label>
+                <select class="form-control">
+                    <option value="open">Open (visible to students)</option>
+                    <option value="closed">Closed (hidden)</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" data-modal-close>Cancel</button>
+            <button class="btn btn-primary"
+                    onclick="window.showToast('Lesson created','success');closeModal('addLessonModal')">Create Lesson
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="../apps/static/js/theme.js"></script>
+<script src="../apps/static/js/interactions.js"></script>
+<script src="../apps/static/js/charts.js"></script>
+<script src="../apps/static/js/dashboard.js"></script>
+</body>
+</html>

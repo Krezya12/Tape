@@ -109,10 +109,7 @@ SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
 
 SOCIALACCOUNT_QUERY_EMAIL = True
 
-AUTH_USER_MODEL = 'apps.User'
-
-LOGIN_REDIRECT_URL = 'smart_redirect'  # Имя path из urls.py
-
+# AUTH_USER_MODEL = 'apps.User'
 
 
 LANGUAGE_CODE = 'ru-ru'

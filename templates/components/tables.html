@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="uz" data-theme="light">
+<!--
+  Component Showcase: Tables
+  Django: {% extends "../base.html" %} {% block title %}UI — Tables{% endblock %}
+  {% load static %}
+-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tables — PDP Academy UI Kit</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dark.css' %}">
+    <style>
+        .grade-input {
+            width: 64px;
+            height: 30px;
+            border: 1px solid var(--border);
+            border-radius: var(--r-sm);
+            text-align: center;
+            font-size: .875rem;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            transition: var(--ease);
+        }
+
+        .grade-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .att-select {
+            height: 30px;
+            width: 84px;
+            font-size: .8125rem;
+            border: 1px solid var(--border);
+            border-radius: var(--r-sm);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            padding: 0 4px;
+            cursor: pointer;
+        }
+
+        [data-theme=dark] .grade-input,
+        [data-theme=dark] .att-select {
+            background: var(--bg-input);
+            border-color: var(--border);
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../dashboards/admin_dashboard.html" class="sidebar-logo">
+                <div class="logo-mark">P</div>
+                <div class="logo-text"><span class="logo-name">PDP Academy</span><span class="logo-sub">UI Kit</span>
+                </div>
+            </a>
+            <button class="sidebar-collapse-btn" id="sidebarCollapse">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 18l-6-6 6-6"/>
+                </svg>
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-group">
+                <span class="nav-group-label">Components</span>
+                <ul>
+                    <li><a href="cards.html" class="nav-link"><span class="nav-icon">🃏</span><span class="nav-text">Cards</span></a>
+                    </li>
+                    <li><a href="tables.html" class="nav-link active"><span class="nav-icon">📋</span><span
+                            class="nav-text">Tables</span></a></li>
+                    <li><a href="forms.html" class="nav-link"><span class="nav-icon">📝</span><span class="nav-text">Forms</span></a>
+                    </li>
+                    <li><a href="modals.html" class="nav-link"><span class="nav-icon">🪟</span><span class="nav-text">Modals</span></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <div class="avatar avatar-sm">P</div>
+                <div class="sidebar-user-info"><p class="sidebar-user-name">PDP Academy</p>
+                    <p class="sidebar-user-role">UI Component Kit</p></div>
+            </div>
+        </div>
+    </aside>
+
+    <div class="main-wrapper" id="mainWrapper">
+        <header class="header">
+            <div class="header-left">
+                <button class="menu-toggle-btn" id="menuToggle">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+                <div class="breadcrumb">
+                    <span>UI Kit</span><span class="breadcrumb-sep">/</span>
+                    <span class="breadcrumb-current">Tables</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="theme-toggle-wrap">
+                    <div class="theme-opt active" data-mode="light">☀️</div>
+                    <div class="theme-opt" data-mode="dark">🌙</div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Tables</h1>
+                    <p class="page-subtitle">Data tables, grade journals, search & filter toolbars, pagination</p>
+                </div>
+            </div>
+
+            <!-- ── 1. Users Table with Toolbar ── -->
+            <div class="section">
+                <div class="section-header"><h2 class="section-title">Users Table — Search & Filter</h2></div>
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">All Users</h3>
+                            <p class="card-subtitle">Registered accounts in the system</p>
+                        </div>
+                        <button class="btn btn-primary btn-sm">+ Add User</button>
+                    </div>
+                    <div class="card-body" style="padding:0;">
+                        <div class="table-toolbar" style="padding:16px 20px 0;">
+                            <div class="table-search">
+                <span class="table-search-icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21"
+                                                                                                           y1="21"
+                                                                                                           x2="16.65"
+                                                                                                           y2="16.65"/></svg>
+                </span>
+                                <input type="search" placeholder="Search users…" data-table="usersTable">
+                            </div>
+                            <div class="table-filters">
+                                <select class="table-filter-select" data-table="usersTable" data-col="2">
+                                    <option value="">All Roles</option>
+                                    <option value="student">Student</option>
+                                    <option value="teacher">Teacher</option>
+                                    <option value="parent">Parent</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                                <select class="table-filter-select" data-table="usersTable" data-col="1">
+                                    <option value="">All Groups</option>
+                                    <option value="P38">P38</option>
+                                    <option value="P41">P41</option>
+                                    <option value="J12">J12</option>
+                                </select>
+                            </div>
+                        </div>
+                        <table class="data-table" id="usersTable">
+                            <thead>
+                            <tr>
+                                <th class="sortable">Name <span class="sort-icon">↕</span></th>
+                                <th>Group</th>
+                                <th>Role</th>
+                                <th>Phone</th>
+                                <th>Joined</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="primary">
+                                    <div style="display:flex;align-items:center;gap:10px;">
+                                        <div class="avatar avatar-xs"
+                                             style="background:linear-gradient(135deg,#3B82F6,#60A5FA);">A
+                                        </div>
+                                        Alex Kim
+                                    </div>
+                                </td>
+                                <td><span class="code-chip">P38</span></td>
+                                <td><span class="role-badge student">Student</span></td>
+                                <td style="font-size:.8125rem;color:var(--text-muted);">+998 90 123 45 67</td>
+                                <td style="font-size:.8125rem;color:var(--text-muted);">Jun 18, 2026</td>
+                                <td>
+                                    <div class="flex gap-6">
+                                        <button class="btn btn-sm btn-ghost-primary">Edit</button>
+                                        <button class="btn btn-sm btn-ghost" style="color:var(--color-danger);">Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="primary">
+                                    <div style="display:flex;align-items:center;gap:10px;">
+                                        <div class="avatar avatar-xs"
+                                             style="background:linear-gradient(135deg,#8B5CF6,#A78BFA);">T
+                                        </div>
+                                        Timur Rashidov
+                                    </div>
+                                </td>
+                                <td><span class="code-chip">P41</span></td>
+                                <td><span class="role-badge student">Student</span></td>
+                                <td style="font-size:.8125rem;color:var(--text-muted);">+998 91 234 56 78</td>
+                                <td style="font-size:.8125rem;color:var(--text-muted);">Jun 17, 2026</td>
+                                <td>
+                                    <div class="flex gap-6">
+                                        <button class="btn btn-sm btn-ghost-primary">Edit</button>
+                                        <button class="btn btn-sm btn-ghost" style="color:var(--color-danger);">Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="primary">
+                                    <div style="display:flex;align-items:center;gap:10px;">
+                                        <div class="avatar avatar-xs">I</div>
+                                        Ivan Petrov
+                                    </div>
+                                </td>
+                                <td><span class="code-chip">—</span></td>
+                                <td><span class="role-badge teacher">Teacher</span></td>
+                                <td style="font-size:.8125rem;color:var(--text-muted);">+998 93 345 67 89</td>
+                                <td style="font-size:.8125rem;color:var(--text-muted);">Jun 15, 2026</td>
+                                <td>
+                                    <div class="flex gap-6">
+                                        <button class="btn btn-sm btn-ghost-primary">Edit</button>
+                                        <button class="btn btn-sm btn-ghost" style="color:var(--color-danger);">Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="primary">
+                                    <div style="display:flex;align-items:center;gap:10px;">
+                                        <div class="avatar avatar-xs"
+                                             style="background:linear-gradient(135deg,#EC4899,#F472B6);">M
+                                        </div>
+                                        Maria Chen
+                                    </div>
+                                </td>
+                                <td><span class="code-chip">J12</span></td>
+                                <td><span class="role-badge student">Student</span></td>
+                                <td style="font-size:.8125rem;color:var(--text-muted);">+998 94 456 78 90</td>
+                                <td style="font-size:.8125rem;color:var(--text-muted);">Jun 14, 2026</td>
+                                <td>
+                                    <div class="flex gap-6">
+                                        <button class="btn btn-sm btn-ghost-primary">Edit</button>
+                                        <button class="btn btn-sm btn-ghost" style="color:var(--color-danger);">Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="primary">
+                                    <div style="display:flex;align-items:center;gap:10px;">
+                                        <div class="avatar avatar-xs"
+                                             style="background:linear-gradient(135deg,#F59E0B,#FCD34D);color:#78350F;">N
+                                        </div>
+                                        Nodira Karimova
+                                    </div>
+                                </td>
+                                <td><span class="code-chip">—</span></td>
+                                <td><span class="role-badge parent">Parent</span></td>
+                                <td style="font-size:.8125rem;color:var(--text-muted);">+998 95 567 89 01</td>
+                                <td style="font-size:.8125rem;color:var(--text-muted);">Jun 12, 2026</td>
+                                <td>
+                                    <div class="flex gap-6">
+                                        <button class="btn btn-sm btn-ghost-primary">Edit</button>
+                                        <button class="btn btn-sm btn-ghost" style="color:var(--color-danger);">Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <span style="font-size:.8125rem;color:var(--text-muted);">Showing 5 of 245 users</span>
+                        <div class="pagination">
+                            <button class="page-btn disabled">←</button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <span class="page-info">…</span>
+                            <button class="page-btn">25</button>
+                            <button class="page-btn">→</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── 2. Grade Journal ── -->
+            <div class="section">
+                <div class="section-header"><h2 class="section-title">Grade Journal — Editable</h2></div>
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">Group P38 — Module 3 · Lesson 7</h3>
+                            <p class="card-subtitle">Click any grade cell to edit · Attendance selectable per row</p>
+                        </div>
+                        <div class="flex gap-10">
+                            <select class="table-filter-select" style="width:auto;">
+                                <option>P38</option>
+                                <option>P41</option>
+                                <option>J12</option>
+                            </select>
+                            <button class="btn btn-sm btn-primary" onclick="window.showToast('Grades saved','success')">
+                                💾 Save All
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding:0;overflow-x:auto;">
+                        <table class="data-table">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th class="sortable">Student <span class="sort-icon">↕</span></th>
+                                <th>HW <small style="font-weight:400;color:var(--text-muted);">/20</small></th>
+                                <th>CW <small style="font-weight:400;color:var(--text-muted);">/20</small></th>
+                                <th>Attendance</th>
+                                <th>Comment</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td style="color:var(--text-muted);font-size:.8125rem;">1</td>
+                                <td class="primary">
+                                    <div style="display:flex;align-items:center;gap:8px;">
+                                        <div class="avatar avatar-xs"
+                                             style="background:linear-gradient(135deg,#3B82F6,#60A5FA);">A
+                                        </div>
+                                        Alex Kim
+                                    </div>
+                                </td>
+                                <td><input type="number" class="grade-input" value="18" min="0" max="20"></td>
+                                <td><input type="number" class="grade-input" value="17" min="0" max="20"></td>
+                                <td><select class="att-select">
+                                    <option value="present" selected>✅ Present</option>
+                                    <option value="absent">❌ Absent</option>
+                                    <option value="late">⏰ Late</option>
+                                </select></td>
+                                <td><input type="text" class="form-control" style="height:30px;font-size:.8125rem;"
+                                           placeholder="Comment…" value="Great work!"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:var(--text-muted);font-size:.8125rem;">2</td>
+                                <td class="primary">
+                                    <div style="display:flex;align-items:center;gap:8px;">
+                                        <div class="avatar avatar-xs"
+                                             style="background:linear-gradient(135deg,#8B5CF6,#A78BFA);">T
+                                        </div>
+                                        Timur Rashidov
+                                    </div>
+                                </td>
+                                <td><input type="number" class="grade-input" value="15" min="0" max="20"></td>
+                                <td><input type="number" class="grade-input" value="16" min="0" max="20"></td>
+                                <td><select class="att-select">
+                                    <option value="present" selected>✅ Present</option>
+                                    <option value="absent">❌ Absent</option>
+                                    <option value="late">⏰ Late</option>
+                                </select></td>
+                                <td><input type="text" class="form-control" style="height:30px;font-size:.8125rem;"
+                                           placeholder="Comment…"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:var(--text-muted);font-size:.8125rem;">3</td>
+                                <td class="primary">
+                                    <div style="display:flex;align-items:center;gap:8px;">
+                                        <div class="avatar avatar-xs"
+                                             style="background:linear-gradient(135deg,#EC4899,#F472B6);">M
+                                        </div>
+                                        Maria Chen
+                                    </div>
+                                </td>
+                                <td><input type="number" class="grade-input" value="20" min="0" max="20"></td>
+                                <td><input type="number" class="grade-input" value="19" min="0" max="20"></td>
+                                <td><select class="att-select">
+                                    <option value="present" selected>✅ Present</option>
+                                    <option value="absent">❌ Absent</option>
+                                    <option value="late">⏰ Late</option>
+                                </select></td>
+                                <td><input type="text" class="form-control" style="height:30px;font-size:.8125rem;"
+                                           value="Excellent!" placeholder="Comment…"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:var(--text-muted);font-size:.8125rem;">4</td>
+                                <td class="primary">
+                                    <div style="display:flex;align-items:center;gap:8px;">
+                                        <div class="avatar avatar-xs">D</div>
+                                        Doniyor Yusupov
+                                    </div>
+                                </td>
+                                <td><input type="number" class="grade-input" value="" min="0" max="20" placeholder="—">
+                                </td>
+                                <td><input type="number" class="grade-input" value="" min="0" max="20" placeholder="—">
+                                </td>
+                                <td><select class="att-select">
+                                    <option value="present">✅ Present</option>
+                                    <option value="absent" selected>❌ Absent</option>
+                                    <option value="late">⏰ Late</option>
+                                </select></td>
+                                <td><input type="text" class="form-control" style="height:30px;font-size:.8125rem;"
+                                           placeholder="Comment…"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <span style="font-size:.8125rem;color:var(--text-muted);">4 of 20 students shown</span>
+                        <div class="flex gap-8">
+                            <button class="btn btn-sm btn-secondary">Export CSV</button>
+                            <button class="btn btn-sm btn-primary"
+                                    onclick="window.showToast('Grades saved!','success')">💾 Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── 3. Read-only Grades View ── -->
+            <div class="section">
+                <div class="section-header"><h2 class="section-title">Grades Table — Read-only (Student / Parent
+                    view)</h2></div>
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">My Grades — Module 3</h3>
+                            <p class="card-subtitle">Python Algorithms · Group P38</p>
+                        </div>
+                        <span class="badge badge-green badge-dot">87% avg</span>
+                    </div>
+                    <div class="card-body" style="padding:0;">
+                        <table class="data-table">
+                            <thead>
+                            <tr>
+                                <th>Lesson</th>
+                                <th>Homework</th>
+                                <th>Classwork</th>
+                                <th>Total</th>
+                                <th>Attendance</th>
+                                <th>Teacher Note</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="primary">Lesson 7</td>
+                                <td><span class="grade-badge high">18/20</span></td>
+                                <td><span class="grade-badge high">17/20</span></td>
+                                <td><span class="grade-badge high">35/40</span></td>
+                                <td><span class="status-badge status-present">Present</span></td>
+                                <td style="font-size:.8125rem;color:var(--text-muted);">Great work! Keep it up</td>
+                            </tr>
+                            <tr>
+                                <td class="primary">Lesson 6</td>
+                                <td><span class="grade-badge high">18/20</span></td>
+                                <td><span class="grade-badge mid">15/20</span></td>
+                                <td><span class="grade-badge high">33/40</span></td>
+                                <td><span class="status-badge status-present">Present</span></td>
+                                <td style="font-size:.8125rem;color:var(--text-muted);">Good understanding</td>
+                            </tr>
+                            <tr>
+                                <td class="primary">Lesson 5</td>
+                                <td><span class="grade-badge mid">16/20</span></td>
+                                <td><span class="grade-badge high">18/20</span></td>
+                                <td><span class="grade-badge high">34/40</span></td>
+                                <td><span class="status-badge status-present">Present</span></td>
+                                <td style="font-size:.8125rem;color:var(--text-muted);">Excellent in-class!</td>
+                            </tr>
+                            <tr>
+                                <td class="primary">Lesson 4</td>
+                                <td><span class="grade-badge mid">14/20</span></td>
+                                <td><span class="grade-badge mid">15/20</span></td>
+                                <td><span class="grade-badge mid">29/40</span></td>
+                                <td><span class="status-badge status-late">Late</span></td>
+                                <td style="font-size:.8125rem;color:var(--text-muted);">Review recursion</td>
+                            </tr>
+                            <tr>
+                                <td class="primary">Lesson 3</td>
+                                <td><span class="grade-badge low">9/20</span></td>
+                                <td><span class="grade-badge mid">13/20</span></td>
+                                <td><span class="grade-badge low">22/40</span></td>
+                                <td><span class="status-badge status-absent">Absent</span></td>
+                                <td style="font-size:.8125rem;color:var(--color-danger);">Needs improvement</td>
+                            </tr>
+                            <tr>
+                                <td class="primary">Lesson 2</td>
+                                <td><span class="grade-badge high">19/20</span></td>
+                                <td><span class="grade-badge high">20/20</span></td>
+                                <td><span class="grade-badge high">39/40</span></td>
+                                <td><span class="status-badge status-present">Present</span></td>
+                                <td style="font-size:.8125rem;color:var(--color-primary);">Perfect classwork! 🌟</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── 4. Payments Table ── -->
+            <div class="section">
+                <div class="section-header"><h2 class="section-title">Payments Table</h2></div>
+                <div class="card">
+                    <div class="card-header">
+                        <div><h3 class="card-title">Payment History</h3>
+                            <p class="card-subtitle">All module payments</p></div>
+                        <div class="flex gap-10">
+                            <select class="table-filter-select" style="width:auto;">
+                                <option value="">All Statuses</option>
+                                <option value="paid">Paid</option>
+                                <option value="pending">Pending</option>
+                                <option value="overdue">Overdue</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding:0;">
+                        <table class="data-table">
+                            <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Group</th>
+                                <th>Module</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="primary">
+                                    <div style="display:flex;align-items:center;gap:8px;">
+                                        <div class="avatar avatar-xs"
+                                             style="background:linear-gradient(135deg,#3B82F6,#60A5FA);">A
+                                        </div>
+                                        Alex Kim
+                                    </div>
+                                </td>
+                                <td><span class="code-chip">P38</span></td>
+                                <td style="font-size:.8125rem;">Module 3</td>
+                                <td style="font-family:var(--font-mono);font-size:.875rem;font-weight:600;">750,000</td>
+                                <td><span class="status-badge status-paid">Paid</span></td>
+                                <td style="font-size:.8125rem;color:var(--text-muted);">Jun 1, 2026</td>
+                                <td>
+                                    <button class="btn btn-sm btn-ghost">Receipt</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="primary">
+                                    <div style="display:flex;align-items:center;gap:8px;">
+                                        <div class="avatar avatar-xs"
+                                             style="background:linear-gradient(135deg,#8B5CF6,#A78BFA);">T
+                                        </div>
+                                        Timur Rashidov
+                                    </div>
+                                </td>
+                                <td><span class="code-chip">P38</span></td>
+                                <td style="font-size:.8125rem;">Module 3</td>
+                                <td style="font-family:var(--font-mono);font-size:.875rem;font-weight:600;">750,000</td>
+                                <td><span class="status-badge status-pending">Pending</span></td>
+                                <td style="font-size:.8125rem;color:var(--text-muted);">Due Jun 30</td>
+                                <td>
+                                    <button class="btn btn-sm btn-accent btn-sm"
+                                            onclick="window.showToast('Sending reminder…','info')">Remind
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="primary">
+                                    <div style="display:flex;align-items:center;gap:8px;">
+                                        <div class="avatar avatar-xs">D</div>
+                                        Doniyor Yusupov
+                                    </div>
+                                </td>
+                                <td><span class="code-chip">P38</span></td>
+                                <td style="font-size:.8125rem;">Module 2</td>
+                                <td style="font-family:var(--font-mono);font-size:.875rem;font-weight:600;">750,000</td>
+                                <td><span class="status-badge status-overdue">Overdue</span></td>
+                                <td style="font-size:.8125rem;color:var(--color-danger);">Was Jun 15</td>
+                                <td>
+                                    <button class="btn btn-sm btn-danger btn-sm"
+                                            onclick="window.showToast('Flagged for follow-up','warning')">Flag
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script src="{% static 'js/theme.js' %}"></script>
+<script src="{% static 'js/interactions.js' %}"></script>
+</body>
+</html>

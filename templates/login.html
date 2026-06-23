@@ -1,0 +1,220 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In — PDP Academy LMS</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dark.css' %}">
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            background: var(--bg-body);
+        }
+
+        @media (max-width: 768px) {
+            .auth-left {
+                display: none;
+            }
+
+            .auth-right {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="auth-page">
+
+    <!-- ── Left Brand Panel ── -->
+    <div class="auth-left">
+        <div class="auth-brand">
+            <div class="auth-brand-icon">P</div>
+            <div>
+                <p class="auth-brand-name">PDP Academy</p>
+                <p class="auth-brand-sub">Learning Management System</p>
+            </div>
+        </div>
+
+        <h1 class="auth-tagline">
+            Education that<br>
+            <span>drives results</span> 🚀
+        </h1>
+
+        <div class="auth-features">
+            <div class="auth-feature">
+                <div class="auth-feature-dot">📊</div>
+                Real-time grade tracking & analytics
+            </div>
+            <div class="auth-feature">
+                <div class="auth-feature-dot">🎥</div>
+                Video lessons & interactive materials
+            </div>
+            <div class="auth-feature">
+                <div class="auth-feature-dot">🏆</div>
+                Leaderboards to motivate students
+            </div>
+            <div class="auth-feature">
+                <div class="auth-feature-dot">💳</div>
+                Transparent payment management
+            </div>
+            <div class="auth-feature">
+                <div class="auth-feature-dot">👨‍👩‍👧</div>
+                Parent visibility into child's progress
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Right Login Form ── -->
+    <div class="auth-right">
+        <div class="auth-form-wrap">
+
+            <!-- Header -->
+            <div style="text-align:center;margin-bottom:32px;">
+                <div class="logo-mark" style="width:44px;height:44px;font-size:1.1rem;margin:0 auto 16px;">P</div>
+                <h1 class="auth-form-title">Welcome back 👋</h1>
+                <p class="auth-form-sub">Sign in to your PDP Academy account</p>
+            </div>
+
+            <!-- Django: {% if messages %} -->
+                <!-- Error alerts would appear here -->
+                <!-- Django: {% endif %} -->
+
+            <!-- Login Form -->
+            <!-- Django: <form method="post" action="{% url 'login' %}"> -->
+            <!-- Django: {% csrf_token %} -->
+            <form data-ajax id="loginForm">
+
+                <div class="form-group mb-16">
+                    <label class="form-label" for="loginInput">Login</label>
+                    <div class="input-group">
+            <span class="input-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle
+                      cx="12" cy="7" r="4"/></svg>
+            </span>
+                        <input type="text" id="loginInput" name="username" class="form-control"
+                               placeholder="your.login" autocomplete="username" required>
+                    </div>
+                </div>
+
+                <div class="form-group mb-8">
+                    <label class="form-label" for="passwordInput">Password</label>
+                    <div class="input-group">
+            <span class="input-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"
+                                                                        ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            </span>
+                        <input type="password" id="passwordInput" name="password" class="form-control"
+                               placeholder="••••••••" autocomplete="current-password" required>
+                        <button type="button" class="input-suffix"
+                                onclick="togglePwd()"
+                                title="Show / hide password"
+                                style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:.875rem;">
+                            👁
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between mb-24">
+                    <label class="form-check">
+                        <input type="checkbox" name="remember_me">
+                        <span class="form-check-label">Remember me</span>
+                    </label>
+                    <a href="#" style="font-size:.875rem;color:var(--color-primary);font-weight:500;">Forgot
+                        password?</a>
+                </div>
+
+                <!-- Quick role selector for demo -->
+                <div style="margin-bottom:20px;padding:14px;background:var(--bg-input);border-radius:var(--r-md);border:1px solid var(--border);">
+                    <p style="font-size:.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">
+                        Demo — Sign in as:
+                    </p>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="loginAs('admin')">🛡️ Admin
+                        </button>
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="loginAs('teacher')">🧑‍💻
+                            Teacher
+                        </button>
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="loginAs('student')">👨‍🎓
+                            Student
+                        </button>
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="loginAs('parent')">👨‍👩‍👧
+                            Parent
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full btn-lg">
+                    Sign In →
+                </button>
+            </form>
+
+            <!-- Footer -->
+            <div style="margin-top:24px;text-align:center;">
+                <p style="font-size:.8125rem;color:var(--text-muted);">
+                    Problems signing in? Contact
+                    <a href="mailto:support@pdp.uz"
+                       style="color:var(--color-primary);font-weight:500;">support@pdp.uz</a>
+                </p>
+            </div>
+
+            <!-- Theme toggle -->
+            <div style="margin-top:20px;display:flex;justify-content:center;">
+                <div class="theme-toggle-wrap">
+                    <div class="theme-opt active" data-mode="light">☀️</div>
+                    <div class="theme-opt" data-mode="dark">🌙</div>
+                </div>
+            </div>
+
+        </div>
+    </div><!-- /auth-right -->
+
+</div><!-- /auth-page -->
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="{% static 'js/theme.js' %}"></script>
+<script src="{% static 'js/interactions.js' %}"></script>
+<script>
+    // Demo role login
+    const roleUrls = {
+        admin: 'admin',
+        teacher: 'teacher',
+        student: 'student',
+        parent: 'parent',
+    };
+
+    function loginAs(role) {
+        window.showToast('Signing in as ' + role + '…', 'info', 1200);
+        setTimeout(() => {
+            window.location.href = roleUrls[role];
+        }, 800);
+    }
+
+    function togglePwd() {
+        const inp = document.getElementById('passwordInput');
+        inp.type = inp.type === 'password' ? 'text' : 'password';
+    }
+
+    // Form submit (demo)
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const login = document.getElementById('loginInput').value.trim();
+        if (!login) {
+            window.showToast('Enter your login', 'error');
+            return;
+        }
+        window.showToast('Authenticating…', 'info', 900);
+        setTimeout(() => {
+            window.location.href = 'admin';
+        }, 800);
+    });
+</script>
+</body>
+</html>

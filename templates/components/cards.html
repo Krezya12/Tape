@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<!--
+  Component Showcase: Cards
+  Django: {% extends "lms/base.html" %} {% block title %}UI — Cards{% endblock %}
+-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cards — PDP Academy UI Kit</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/dark.css">
+</head>
+<body>
+<div class="app">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Minimal sidebar for showcase -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../dashboards/admin_dashboard.html" class="sidebar-logo">
+                <div class="logo-mark">P</div>
+                <div class="logo-text">
+                    <span class="logo-name">PDP Academy</span>
+                    <span class="logo-sub">UI Kit</span>
+                </div>
+            </a>
+            <button class="sidebar-collapse-btn" id="sidebarCollapse">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 18l-6-6 6-6"/>
+                </svg>
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-group">
+                <span class="nav-group-label">Components</span>
+                <ul>
+                    <li><a href="cards.html" class="nav-link active"><span class="nav-icon">🃏</span><span
+                            class="nav-text">Cards</span></a></li>
+                    <li><a href="tables.html" class="nav-link"><span class="nav-icon">📋</span><span class="nav-text">Tables</span></a>
+                    </li>
+                    <li><a href="forms.html" class="nav-link"><span class="nav-icon">📝</span><span class="nav-text">Forms</span></a>
+                    </li>
+                    <li><a href="modals.html" class="nav-link"><span class="nav-icon">🪟</span><span class="nav-text">Modals</span></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="nav-group">
+                <span class="nav-group-label">Dashboards</span>
+                <ul>
+                    <li><a href="../dashboards/admin_dashboard.html" class="nav-link"><span
+                            class="nav-icon">🛡️</span><span class="nav-text">Admin</span></a></li>
+                    <li><a href="../dashboards/teacher_dashboard.html" class="nav-link"><span
+                            class="nav-icon">🧑‍💻</span><span class="nav-text">Teacher</span></a></li>
+                    <li><a href="../dashboards/student_dashboard.html" class="nav-link"><span
+                            class="nav-icon">👨‍🎓</span><span class="nav-text">Student</span></a></li>
+                    <li><a href="../dashboards/parent_dashboard.html" class="nav-link"><span
+                            class="nav-icon">👨‍👩‍👧</span><span class="nav-text">Parent</span></a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <div class="avatar avatar-sm">P</div>
+                <div class="sidebar-user-info">
+                    <p class="sidebar-user-name">PDP Academy</p>
+                    <p class="sidebar-user-role">UI Component Kit</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <div class="main-wrapper" id="mainWrapper">
+        <header class="header">
+            <div class="header-left">
+                <button class="menu-toggle-btn" id="menuToggle">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+                <div class="breadcrumb">
+                    <span>UI Kit</span>
+                    <span class="breadcrumb-sep">/</span>
+                    <span class="breadcrumb-current">Cards</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="theme-toggle-wrap">
+                    <div class="theme-opt active" data-mode="light">☀️</div>
+                    <div class="theme-opt" data-mode="dark">🌙</div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Cards</h1>
+                    <p class="page-subtitle">All card variants used across PDP Academy LMS</p>
+                </div>
+            </div>
+
+            <!-- ── 1. Stat Cards ── -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Stat Cards (KPI)</h2>
+                </div>
+                <div class="grid grid-4">
+                    <div class="stat-card green">
+                        <div class="stat-card-header">
+                            <span class="stat-card-label">Total Students</span>
+                            <div class="stat-icon-wrap green">👨‍🎓</div>
+                        </div>
+                        <div class="stat-value mono" data-count="245">245</div>
+                        <div class="stat-trend up"><span>↑ 12</span><span class="stat-trend-label">this month</span>
+                        </div>
+                    </div>
+                    <div class="stat-card blue">
+                        <div class="stat-card-header">
+                            <span class="stat-card-label">Teachers</span>
+                            <div class="stat-icon-wrap blue">🧑‍💻</div>
+                        </div>
+                        <div class="stat-value mono">18</div>
+                        <div class="stat-trend up"><span>↑ 2</span><span
+                                class="stat-trend-label">new this quarter</span></div>
+                    </div>
+                    <div class="stat-card gold">
+                        <div class="stat-card-header">
+                            <span class="stat-card-label">Active Groups</span>
+                            <div class="stat-icon-wrap gold">🏫</div>
+                        </div>
+                        <div class="stat-value mono">32</div>
+                        <div class="stat-trend up"><span>↑ 4</span><span class="stat-trend-label">this month</span>
+                        </div>
+                    </div>
+                    <div class="stat-card red">
+                        <div class="stat-card-header">
+                            <span class="stat-card-label">Payment Rate</span>
+                            <div class="stat-icon-wrap red">💳</div>
+                        </div>
+                        <div class="stat-value mono">92<span style="font-size:1.25rem;font-weight:600;">%</span></div>
+                        <div class="stat-trend down"><span>↓ 3%</span><span
+                                class="stat-trend-label">vs last month</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── 2. Standard Cards ── -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Standard Cards — Accent Borders</h2>
+                </div>
+                <div class="grid grid-4">
+                    <div class="card card-accent-green">
+                        <div class="card-header">
+                            <h3 class="card-title">Green Accent</h3>
+                        </div>
+                        <div class="card-body">
+                            <p style="font-size:.875rem;">Used for primary data, active modules, positive states.</p>
+                        </div>
+                        <div class="card-footer">
+                            <span class="badge badge-green badge-dot">Active</span>
+                            <button class="btn btn-sm btn-primary">Action</button>
+                        </div>
+                    </div>
+                    <div class="card card-accent-gold">
+                        <div class="card-header">
+                            <h3 class="card-title">Gold Accent</h3>
+                        </div>
+                        <div class="card-body">
+                            <p style="font-size:.875rem;">Used for achievements, warnings, pending states.</p>
+                        </div>
+                        <div class="card-footer">
+                            <span class="badge badge-gold badge-dot">Pending</span>
+                            <button class="btn btn-sm btn-accent">Action</button>
+                        </div>
+                    </div>
+                    <div class="card card-accent-blue">
+                        <div class="card-header">
+                            <h3 class="card-title">Blue Accent</h3>
+                        </div>
+                        <div class="card-body">
+                            <p style="font-size:.875rem;">Used for info, classwork, lesson status.</p>
+                        </div>
+                        <div class="card-footer">
+                            <span class="badge badge-blue badge-dot">In Progress</span>
+                            <button class="btn btn-sm btn-secondary">Action</button>
+                        </div>
+                    </div>
+                    <div class="card card-accent-red">
+                        <div class="card-header">
+                            <h3 class="card-title">Red Accent</h3>
+                        </div>
+                        <div class="card-body">
+                            <p style="font-size:.875rem;">Used for overdue, danger states, errors.</p>
+                        </div>
+                        <div class="card-footer">
+                            <span class="badge badge-red badge-dot">Overdue</span>
+                            <button class="btn btn-sm btn-danger">Action</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── 3. Group Cards ── -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Group Cards</h2>
+                </div>
+                <div class="grid grid-4">
+                    <div class="group-card">
+                        <div class="group-card-top">
+                            <div>
+                                <div class="group-code">P38</div>
+                                <div class="group-name">Python · Intermediate</div>
+                            </div>
+                            <span class="group-badge python">Python</span>
+                        </div>
+                        <div class="progress-label"><span>Module 3</span><strong>7 / 12</strong></div>
+                        <div class="progress">
+                            <div class="progress-bar gradient" data-progress="58" style="width:58%;"></div>
+                        </div>
+                        <div class="group-card-footer">
+                            <span class="group-stat">👨‍🎓 <strong>20</strong> students</span>
+                            <span class="group-stat">Avg <strong>87%</strong></span>
+                        </div>
+                    </div>
+                    <div class="group-card">
+                        <div class="group-card-top">
+                            <div>
+                                <div class="group-code">J12</div>
+                                <div class="group-name">JavaScript · Advanced</div>
+                            </div>
+                            <span class="group-badge js">JS</span>
+                        </div>
+                        <div class="progress-label"><span>Module 5</span><strong>10 / 12</strong></div>
+                        <div class="progress">
+                            <div class="progress-bar gradient" data-progress="83" style="width:83%;"></div>
+                        </div>
+                        <div class="group-card-footer">
+                            <span class="group-stat">👨‍🎓 <strong>18</strong> students</span>
+                            <span class="group-stat">Avg <strong>91%</strong></span>
+                        </div>
+                    </div>
+                    <div class="group-card">
+                        <div class="group-card-top">
+                            <div>
+                                <div class="group-code">R22</div>
+                                <div class="group-name">React · Intermediate</div>
+                            </div>
+                            <span class="group-badge react">React</span>
+                        </div>
+                        <div class="progress-label"><span>Module 4</span><strong>6 / 12</strong></div>
+                        <div class="progress">
+                            <div class="progress-bar gradient" data-progress="50" style="width:50%;"></div>
+                        </div>
+                        <div class="group-card-footer">
+                            <span class="group-stat">👨‍🎓 <strong>19</strong> students</span>
+                            <span class="group-stat">Avg <strong>84%</strong></span>
+                        </div>
+                    </div>
+                    <div class="group-card">
+                        <div class="group-card-top">
+                            <div>
+                                <div class="group-code">F09</div>
+                                <div class="group-name">Flutter · Beginner</div>
+                            </div>
+                            <span class="group-badge flutter">Flutter</span>
+                        </div>
+                        <div class="progress-label"><span>Module 1</span><strong>3 / 12</strong></div>
+                        <div class="progress">
+                            <div class="progress-bar gradient" data-progress="25" style="width:25%;"></div>
+                        </div>
+                        <div class="group-card-footer">
+                            <span class="group-stat">👨‍🎓 <strong>22</strong> students</span>
+                            <span class="group-stat">Avg <strong>79%</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── 4. Badges / Labels / Status ── -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Badges, Role Labels & Status</h2>
+                </div>
+                <div class="card">
+                    <div class="card-body" style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start;">
+
+                        <div>
+                            <p style="font-size:.6875rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">
+                                Badges</p>
+                            <div class="flex gap-8 flex-wrap">
+                                <span class="badge badge-green">Active</span>
+                                <span class="badge badge-gold">Pending</span>
+                                <span class="badge badge-red">Overdue</span>
+                                <span class="badge badge-blue">Open</span>
+                                <span class="badge badge-neutral">Closed</span>
+                                <span class="badge badge-purple">Flutter</span>
+                            </div>
+                            <div class="flex gap-8 flex-wrap mt-8">
+                                <span class="badge badge-green badge-dot">Present</span>
+                                <span class="badge badge-red badge-dot">Absent</span>
+                                <span class="badge badge-gold badge-dot">Late</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p style="font-size:.6875rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">
+                                Role Badges</p>
+                            <div class="flex gap-8 flex-wrap">
+                                <span class="role-badge admin">Admin</span>
+                                <span class="role-badge teacher">Teacher</span>
+                                <span class="role-badge student">Student</span>
+                                <span class="role-badge parent">Parent</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p style="font-size:.6875rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">
+                                Grade Badges</p>
+                            <div class="flex gap-8 flex-wrap">
+                                <span class="grade-badge high">18/20</span>
+                                <span class="grade-badge mid">14/20</span>
+                                <span class="grade-badge low">7/20</span>
+                                <span class="grade-badge empty">—</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p style="font-size:.6875rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">
+                                Status Badges</p>
+                            <div class="flex gap-8 flex-wrap">
+                                <span class="status-badge status-paid">Paid</span>
+                                <span class="status-badge status-pending">Pending</span>
+                                <span class="status-badge status-overdue">Overdue</span>
+                                <span class="status-badge status-open">Open</span>
+                                <span class="status-badge status-closed">Closed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── 5. Alerts ── -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Alerts</h2>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                    <div class="alert alert-success">
+                        <span class="alert-icon">✅</span>
+                        <div class="alert-content">
+                            <p class="alert-title">Grades saved successfully</p>
+                            <p class="alert-desc">All 20 students' grades for Lesson 7 have been recorded.</p>
+                        </div>
+                    </div>
+                    <div class="alert alert-warning">
+                        <span class="alert-icon">⚠️</span>
+                        <div class="alert-content">
+                            <p class="alert-title">2 overdue assignments</p>
+                            <p class="alert-desc">Students haven't submitted Lesson 5 homework — deadline was 2 days
+                                ago.</p>
+                        </div>
+                    </div>
+                    <div class="alert alert-danger">
+                        <span class="alert-icon">❌</span>
+                        <div class="alert-content">
+                            <p class="alert-title">Payment overdue</p>
+                            <p class="alert-desc">Module 4 payment has not been received. Access may be restricted.</p>
+                        </div>
+                    </div>
+                    <div class="alert alert-info">
+                        <span class="alert-icon">ℹ️</span>
+                        <div class="alert-content">
+                            <p class="alert-title">New lesson available</p>
+                            <p class="alert-desc">Module 3 — Lesson 8: Recursion Deep Dive is now published.</p>
+                        </div>
+                    </div>
+                    <div class="payment-alert">
+                        <span class="payment-alert-icon">💳</span>
+                        <div style="flex:1;">
+                            <p class="payment-alert-title">Module 4 payment required</p>
+                            <p class="payment-alert-desc">Due date: June 30, 2026 · Amount: 750,000 UZS</p>
+                        </div>
+                        <button class="btn btn-sm btn-accent">Pay Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── 6. Buttons ── -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Buttons</h2>
+                </div>
+                <div class="card">
+                    <div class="card-body" style="display:flex;flex-direction:column;gap:16px;">
+                        <div>
+                            <p style="font-size:.75rem;color:var(--text-muted);margin-bottom:8px;">Sizes</p>
+                            <div class="flex gap-10 items-center flex-wrap">
+                                <button class="btn btn-primary btn-sm">Small</button>
+                                <button class="btn btn-primary">Default</button>
+                                <button class="btn btn-primary btn-lg">Large</button>
+                            </div>
+                        </div>
+                        <div>
+                            <p style="font-size:.75rem;color:var(--text-muted);margin-bottom:8px;">Variants</p>
+                            <div class="flex gap-10 flex-wrap">
+                                <button class="btn btn-primary">Primary</button>
+                                <button class="btn btn-secondary">Secondary</button>
+                                <button class="btn btn-accent">Accent</button>
+                                <button class="btn btn-danger">Danger</button>
+                                <button class="btn btn-ghost">Ghost</button>
+                                <button class="btn btn-ghost-primary">Ghost Primary</button>
+                                <button class="btn btn-outline-primary">Outline</button>
+                                <button class="btn btn-primary" disabled>Disabled</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── 7. Progress Bars ── -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Progress Bars</h2>
+                </div>
+                <div class="card">
+                    <div class="card-body" style="display:flex;flex-direction:column;gap:16px;">
+                        <div>
+                            <div class="progress-label"><span>Module Progress</span><strong>7 / 12</strong></div>
+                            <div class="progress">
+                                <div class="progress-bar gradient" data-progress="58" style="width:58%;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="progress-label"><span>Attendance</span><strong>95%</strong></div>
+                            <div class="progress">
+                                <div class="progress-bar gradient" data-progress="95" style="width:95%;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="progress-label"><span>Homework Completion</span><strong>80%</strong></div>
+                            <div class="progress">
+                                <div class="progress-bar gold" data-progress="80" style="width:80%;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="progress-label"><span>Payment Rate</span><strong>68%</strong></div>
+                            <div class="progress">
+                                <div class="progress-bar red" data-progress="68" style="width:68%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── 8. Attendance Dots ── -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Attendance Tracker</h2>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="attendance-grid mb-16">
+                            <div class="attendance-dot present" data-tooltip="Jun 1 — Present">1</div>
+                            <div class="attendance-dot present" data-tooltip="Jun 3 — Present">2</div>
+                            <div class="attendance-dot present" data-tooltip="Jun 5 — Present">3</div>
+                            <div class="attendance-dot present" data-tooltip="Jun 8 — Present">4</div>
+                            <div class="attendance-dot present" data-tooltip="Jun 10 — Present">5</div>
+                            <div class="attendance-dot absent" data-tooltip="Jun 12 — Absent">6</div>
+                            <div class="attendance-dot present" data-tooltip="Jun 15 — Present">7</div>
+                            <div class="attendance-dot late" data-tooltip="Jun 17 — Late">8</div>
+                            <div class="attendance-dot present" data-tooltip="Jun 19 — Present">9</div>
+                            <div class="attendance-dot future" data-tooltip="Jun 22 — Upcoming">10</div>
+                            <div class="attendance-dot future" data-tooltip="Jun 24 — Upcoming">11</div>
+                            <div class="attendance-dot future" data-tooltip="Jun 26 — Upcoming">12</div>
+                        </div>
+                        <div class="flex gap-16 flex-wrap">
+                            <div class="flex items-center gap-6">
+                                <div class="attendance-dot present" style="width:20px;height:20px;font-size:.6rem;">✓
+                                </div>
+                                <span style="font-size:.8125rem;">Present</span></div>
+                            <div class="flex items-center gap-6">
+                                <div class="attendance-dot absent" style="width:20px;height:20px;font-size:.6rem;">✗
+                                </div>
+                                <span style="font-size:.8125rem;">Absent</span></div>
+                            <div class="flex items-center gap-6">
+                                <div class="attendance-dot late" style="width:20px;height:20px;font-size:.6rem;">L</div>
+                                <span style="font-size:.8125rem;">Late</span></div>
+                            <div class="flex items-center gap-6">
+                                <div class="attendance-dot future" style="width:20px;height:20px;font-size:.6rem;">·
+                                </div>
+                                <span style="font-size:.8125rem;">Upcoming</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script src="../js/theme.js"></script>
+<script src="../js/interactions.js"></script>
+</body>
+</html>

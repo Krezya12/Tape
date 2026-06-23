@@ -1,17 +1,13 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru" data-theme="light">
-<!--
-  Django Template: {% extends "base.html" %}
-  {% block title %}My Dashboard — PDP Academy{% endblock %}
-  User role: student
--->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard — PDP Academy LMS</title>
-    <link rel="stylesheet" href="../../apps/static/css/style.css">
-    <link rel="stylesheet" href="../../apps/static/css/components.css">
-    <link rel="stylesheet" href="../../apps/static/css/dark.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dark.css' %}">
     <style>
         .hw-item {
             display: flex;
@@ -115,220 +111,12 @@
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <!-- ═══ SIDEBAR — Student ═══ -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <a href="../index.html" class="sidebar-logo">
-                <div class="logo-mark">P</div>
-                <div class="logo-text">
-                    <span class="logo-name">PDP Academy</span>
-                    <span class="logo-sub">LMS Platform</span>
-                </div>
-            </a>
-            <button class="sidebar-collapse-btn" id="sidebarCollapse">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                     stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M15 18l-6-6 6-6"/>
-                </svg>
-            </button>
-        </div>
-
-        <nav class="sidebar-nav">
-            <div class="nav-group">
-                <span class="nav-group-label">My Learning</span>
-                <ul>
-                    <li><a href="student_dashboard.html" class="nav-link active">
-                        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                    stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect
-                                x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14"
-                                                                                                                  y="14"
-                                                                                                                  width="7"
-                                                                                                                  height="7"/></svg></span>
-                        <span class="nav-text">Dashboard</span>
-                    </a></li>
-                    <li><a href="pages/lessons.html" class="nav-link">
-                        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                    stroke-linejoin="round"><path
-                                d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path
-                                d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></span>
-                        <span class="nav-text">Lessons</span>
-                        <span class="nav-badge" style="background:var(--jade-500)">1 new</span>
-                    </a></li>
-                    <li><a href="pages/homework.html" class="nav-link">
-                        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                    stroke-linejoin="round"><path
-                                d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline
-                                points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17"
-                                                                                                     x2="8"
-                                                                                                     y2="17"/></svg></span>
-                        <span class="nav-text">Homework</span>
-                        <span class="nav-badge" style="background:var(--color-danger)">2</span>
-                    </a></li>
-                    <li><a href="pages/materials.html" class="nav-link">
-                        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                    stroke-linejoin="round"><path
-                                d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg></span>
-                        <span class="nav-text">Materials</span>
-                    </a></li>
-                </ul>
-            </div>
-            <div class="nav-group">
-                <span class="nav-group-label">Progress</span>
-                <ul>
-                    <li><a href="pages/statistics.html" class="nav-link">
-                        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                    stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line
-                                x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
-                        <span class="nav-text">My Grades</span>
-                    </a></li>
-                    <li><a href="pages/leaderboard.html" class="nav-link">
-                        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                    stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path
-                                d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg></span>
-                        <span class="nav-text">Leaderboard</span>
-                    </a></li>
-                    <li><a href="pages/payments.html" class="nav-link">
-                        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                    stroke-linejoin="round"><rect x="1" y="4" width="22" height="16"
-                                                                                  rx="2" ry="2"/><line x1="1" y1="10"
-                                                                                                       x2="23" y2="10"/></svg></span>
-                        <span class="nav-text">Payments</span>
-                    </a></li>
-                </ul>
-            </div>
-            <div class="nav-group">
-                <span class="nav-group-label">Account</span>
-                <ul>
-                    <li><a href="pages/notifications.html" class="nav-link">
-                        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                    stroke-linejoin="round"><path
-                                d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path
-                                d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>
-                        <span class="nav-text">Notifications</span>
-                        <span class="nav-badge">3</span>
-                    </a></li>
-                    <li><a href="pages/profile.html" class="nav-link">
-                        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                    stroke-linejoin="round"><path
-                                d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
-                        <span class="nav-text">Profile</span>
-                    </a></li>
-                    <li><a href="pages/settings.html" class="nav-link">
-                        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                    stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path
-                                d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>
-                        <span class="nav-text">Settings</span>
-                    </a></li>
-                </ul>
-            </div>
-        </nav>
-
-        <div class="sidebar-footer">
-            <div class="sidebar-user">
-                <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#3B82F6,#60A5FA);">A</div>
-                <div class="sidebar-user-info">
-                    <p class="sidebar-user-name">Alex Kim</p>
-                    <p class="sidebar-user-role">Student · Group P38</p>
-                </div>
-            </div>
-        </div>
-    </aside>
+    {% include 'components/sidebar.html' %}
 
     <!-- ═══ MAIN WRAPPER ═══ -->
     <div class="main-wrapper" id="mainWrapper">
 
-        <header class="header">
-            <div class="header-left">
-                <button class="menu-toggle-btn" id="menuToggle">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                         stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="3" y1="6" x2="21" y2="6"/>
-                        <line x1="3" y1="12" x2="21" y2="12"/>
-                        <line x1="3" y1="18" x2="21" y2="18"/>
-                    </svg>
-                </button>
-                <div class="breadcrumb">
-                    <span>PDP Academy</span>
-                    <span class="breadcrumb-sep">/</span>
-                    <span class="breadcrumb-current">My Dashboard</span>
-                </div>
-            </div>
-            <div class="header-search">
-                <span class="header-search-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                                                      stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                      stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line
-                        x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
-                <input type="search" placeholder="Search lessons, materials…">
-            </div>
-            <div class="header-right">
-                <div class="theme-toggle-wrap">
-                    <div class="theme-opt active" data-mode="light">☀️</div>
-                    <div class="theme-opt" data-mode="dark">🌙</div>
-                </div>
-                <div class="dropdown" style="position:relative;">
-                    <button class="icon-btn" id="notifBtn">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                            <path d="M13.73 21a2 2 0 01-3.46 0"/>
-                        </svg>
-                        <span class="notif-dot"></span>
-                    </button>
-                    <div class="dropdown-menu notif-panel" id="notifPanel">
-                        <div class="notif-header">
-                            <span class="notif-title">Notifications</span>
-                            <span class="notif-mark-read">Mark all read</span>
-                        </div>
-                        <div class="notif-item unread">
-                            <div class="notif-item-icon">📊</div>
-                            <div class="notif-item-content">
-                                <p class="notif-item-title">Homework graded: 18/20 — Lesson 6</p>
-                                <p class="notif-item-time">1 hr ago</p>
-                            </div>
-                            <div class="notif-unread-dot"></div>
-                        </div>
-                        <div class="notif-item unread">
-                            <div class="notif-item-icon">📖</div>
-                            <div class="notif-item-content">
-                                <p class="notif-item-title">New lesson available: Module 3 — Lesson 8</p>
-                                <p class="notif-item-time">3 hr ago</p>
-                            </div>
-                            <div class="notif-unread-dot"></div>
-                        </div>
-                        <div class="notif-item unread">
-                            <div class="notif-item-icon">🏆</div>
-                            <div class="notif-item-content">
-                                <p class="notif-item-title">You moved up to rank #9 on leaderboard!</p>
-                                <p class="notif-item-time">5 hr ago</p>
-                            </div>
-                            <div class="notif-unread-dot"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="dropdown" style="position:relative;">
-                    <button class="icon-btn" id="userMenuBtn">
-                        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#3B82F6,#60A5FA);">A
-                        </div>
-                    </button>
-                    <div class="dropdown-menu" id="userDropdownMenu">
-                        <div class="dropdown-header">Alex Kim</div>
-                        <div class="dropdown-item" onclick="location.href='pages/profile.html'">👤 My Profile</div>
-                        <div class="dropdown-item" onclick="location.href='pages/settings.html'">⚙️ Settings</div>
-                        <div class="dropdown-divider"></div>
-                        <div class="dropdown-item danger">🚪 Log Out</div>
-                    </div>
-                </div>
-            </div>
-        </header>
+        {% include "components/header.html"  %}
 
         <!-- ─── Main Content ──── -->
         <main class="main-content">
@@ -649,15 +437,16 @@
             </div><!-- /bottom row -->
 
         </main>
+        {% include 'components/footer.html' %}
     </div>
 </div>
 
 <div class="toast-container" id="toastContainer"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="../../apps/static/js/theme.js"></script>
-<script src="../../apps/static/js/interactions.js"></script>
-<script src="../../apps/static/js/charts.js"></script>
-<script src="../../apps/static/js/dashboard.js"></script>
+<script src="{% static 'js/theme.js' %}"></script>
+<script src="{% static 'js/interactions.js' %}"></script>
+<script src="{% static 'js/charts.js' %}"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
 </body>
 </html>

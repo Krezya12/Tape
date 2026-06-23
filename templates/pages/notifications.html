@@ -1,10 +1,338 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications — PDP Academy LMS</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dark.css' %}">
+    <style>
+        .notif-list-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            transition: var(--ease);
+            cursor: pointer;
+            position: relative;
+        }
 
+        .notif-list-item:last-child {
+            border-bottom: none;
+        }
+
+        .notif-list-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .notif-list-item.unread {
+            background: rgba(22, 163, 74, .03);
+        }
+
+        .notif-list-item.unread::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--color-primary);
+            border-radius: 0 2px 2px 0;
+        }
+
+        .notif-list-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: var(--r-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.125rem;
+            flex-shrink: 0;
+            background: var(--bg-input);
+        }
+
+        .notif-list-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notif-list-title {
+            font-size: .9375rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .notif-list-item.unread .notif-list-title {
+            font-weight: 600;
+        }
+
+        .notif-list-body {
+            font-size: .875rem;
+            color: var(--text-secondary);
+            margin-top: 3px;
+            line-height: 1.5;
+        }
+
+        .notif-list-time {
+            font-size: .75rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        .notif-list-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .notif-list-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: var(--r-full);
+            background: var(--color-primary);
+            flex-shrink: 0;
+            margin-top: 6px;
+        }
+
+        [data-theme=dark] .notif-list-item.unread {
+            background: rgba(34, 197, 94, .04);
+        }
+    </style>
+</head>
+<body data-user-role="admin">
+<div class="app">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    {% include 'components/sidebar.html' %}
+
+    <div class="main-wrapper" id="mainWrapper">
+
+        {% include "components/header.html" %}
+
+        <main class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Notifications</h1>
+                    <p class="page-subtitle">All system events and alerts</p>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-secondary" onclick="markAllRead()">✓ Mark all read</button>
+                    <select class="table-filter-select">
+                        <option>All Types</option>
+                        <option>Grades</option>
+                        <option>Homework</option>
+                        <option>Payments</option>
+                        <option>System</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="grid grid-4 mb-24">
+                <div class="stat-card green">
+                    <div class="stat-card-header"><span class="stat-card-label">Unread</span>
+                        <div class="stat-icon-wrap green">🔔</div>
+                    </div>
+                    <div class="stat-value mono">3</div>
+                    <div class="stat-trend up"><span>Today</span></div>
+                </div>
+                <div class="stat-card blue">
+                    <div class="stat-card-header"><span class="stat-card-label">Grades</span>
+                        <div class="stat-icon-wrap blue">📊</div>
+                    </div>
+                    <div class="stat-value mono">8</div>
+                    <div class="stat-trend up"><span>This week</span></div>
+                </div>
+                <div class="stat-card gold">
+                    <div class="stat-card-header"><span class="stat-card-label">Payments</span>
+                        <div class="stat-icon-wrap gold">💳</div>
+                    </div>
+                    <div class="stat-value mono">7</div>
+                    <div class="stat-trend down"><span>Overdue alerts</span></div>
+                </div>
+                <div class="stat-card red">
+                    <div class="stat-card-header"><span class="stat-card-label">System</span>
+                        <div class="stat-icon-wrap red">⚙️</div>
+                    </div>
+                    <div class="stat-value mono">2</div>
+                    <div class="stat-trend up"><span>This month</span></div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs mb-0" id="notifTabs">
+                <div class="tab-btn active" data-tab="all" onclick="filterNotifs('all',this)">All <span
+                        class="badge badge-neutral" style="margin-left:4px;">18</span></div>
+                <div class="tab-btn" data-tab="unread" onclick="filterNotifs('unread',this)">Unread <span
+                        class="badge badge-green" style="margin-left:4px;">3</span></div>
+                <div class="tab-btn" data-tab="grades" onclick="filterNotifs('grades',this)">Grades</div>
+                <div class="tab-btn" data-tab="homework" onclick="filterNotifs('homework',this)">Homework</div>
+                <div class="tab-btn" data-tab="payments" onclick="filterNotifs('payments',this)">Payments</div>
+                <div class="tab-btn" data-tab="system" onclick="filterNotifs('system',this)">System</div>
+            </div>
+
+            <!-- Notifications List -->
+            <div class="card" style="border-radius:0 0 var(--r-lg) var(--r-lg);">
+                <div id="notifListContainer">
+
+                    <!-- UNREAD -->
+                    <div class="notif-list-item unread" data-type="payments">
+                        <div class="notif-list-icon">💳</div>
+                        <div class="notif-list-content">
+                            <p class="notif-list-title">7 overdue payments require attention</p>
+                            <p class="notif-list-body">Students in Groups P38, P41, J12 have unpaid Module 4 fees.
+                                Deadline was June 15.</p>
+                            <p class="notif-list-time">10 minutes ago</p>
+                            <div class="notif-list-actions">
+                                <a href="payments.html" class="btn btn-sm btn-primary">View Payments</a>
+                                <button class="btn btn-sm btn-secondary" onclick="markRead(this)">Mark read</button>
+                            </div>
+                        </div>
+                        <div class="notif-list-dot"></div>
+                    </div>
+
+                    <div class="notif-list-item unread" data-type="system">
+                        <div class="notif-list-icon">👤</div>
+                        <div class="notif-list-content">
+                            <p class="notif-list-title">New student registered: Doniyor Yusupov</p>
+                            <p class="notif-list-body">Doniyor Yusupov has been added to Group P38. Account is pending
+                                activation.</p>
+                            <p class="notif-list-time">25 minutes ago</p>
+                            <div class="notif-list-actions">
+                                <a href="users.html" class="btn btn-sm btn-secondary">View User</a>
+                                <button class="btn btn-sm btn-secondary" onclick="markRead(this)">Mark read</button>
+                            </div>
+                        </div>
+                        <div class="notif-list-dot"></div>
+                    </div>
+
+                    <div class="notif-list-item unread" data-type="system">
+                        <div class="notif-list-icon">🏫</div>
+                        <div class="notif-list-content">
+                            <p class="notif-list-title">Group J15 enrollment complete — 22 students</p>
+                            <p class="notif-list-body">Group J15 (JavaScript Advanced) has been fully enrolled. Teacher:
+                                Malika Nazarova.</p>
+                            <p class="notif-list-time">1 hour ago</p>
+                            <div class="notif-list-actions">
+                                <a href="groups.html" class="btn btn-sm btn-secondary">View Group</a>
+                            </div>
+                        </div>
+                        <div class="notif-list-dot"></div>
+                    </div>
+
+                    <!-- READ -->
+                    <div class="notif-list-item" data-type="grades">
+                        <div class="notif-list-icon">📊</div>
+                        <div class="notif-list-content">
+                            <p class="notif-list-title">Monthly report ready to download</p>
+                            <p class="notif-list-body">The June 2026 performance report for all groups has been
+                                generated.</p>
+                            <p class="notif-list-time">3 hours ago</p>
+                            <div class="notif-list-actions">
+                                <a href="statistics.html" class="btn btn-sm btn-secondary">View Report</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="notif-list-item" data-type="homework">
+                        <div class="notif-list-icon">📝</div>
+                        <div class="notif-list-content">
+                            <p class="notif-list-title">12 homework submissions received today</p>
+                            <p class="notif-list-body">Module 3 Lesson 7 homework submissions from Group P38 are
+                                awaiting review.</p>
+                            <p class="notif-list-time">5 hours ago</p>
+                            <div class="notif-list-actions">
+                                <a href="homework.html" class="btn btn-sm btn-secondary">Grade Homework</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="notif-list-item" data-type="payments">
+                        <div class="notif-list-icon">✅</div>
+                        <div class="notif-list-content">
+                            <p class="notif-list-title">Payment confirmed — Alex Kim, Module 3</p>
+                            <p class="notif-list-body">750,000 UZS payment for Module 3 received from Alex Kim (Group
+                                P38).</p>
+                            <p class="notif-list-time">Yesterday, 14:30</p>
+                        </div>
+                    </div>
+
+                    <div class="notif-list-item" data-type="grades">
+                        <div class="notif-list-icon">📖</div>
+                        <div class="notif-list-content">
+                            <p class="notif-list-title">Lesson 8 published — Module 3 (Group P38)</p>
+                            <p class="notif-list-body">Ivan Petrov published Lesson 8: Recursion Deep Dive. Materials
+                                and homework attached.</p>
+                            <p class="notif-list-time">Yesterday, 11:00</p>
+                            <div class="notif-list-actions">
+                                <a href="lessons.html" class="btn btn-sm btn-secondary">View Lesson</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="notif-list-item" data-type="system">
+                        <div class="notif-list-icon">🔑</div>
+                        <div class="notif-list-content">
+                            <p class="notif-list-title">Password reset for teacher@pdp.uz</p>
+                            <p class="notif-list-body">Admin performed a password reset for Ivan Petrov's account.</p>
+                            <p class="notif-list-time">2 days ago</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="card-footer">
+                    <span style="font-size:.8125rem;color:var(--text-muted);">Showing 8 of 18 notifications</span>
+                    <button class="btn btn-sm btn-secondary" onclick="window.showToast('Loading more…','info')">Load
+                        more
+                    </button>
+                </div>
+            </div>
+
+        </main>
+
+        {% include 'components/footer.html' %}
+        
+    </div>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script src="{% static 'js/theme.js' %}"></script>
+<script src="{% static 'js/interactions.js' %}"></script>
+<script>
+    function markAllRead() {
+        document.querySelectorAll('.notif-list-item.unread').forEach(el => el.classList.remove('unread'));
+        document.querySelectorAll('.notif-list-dot').forEach(el => el.remove());
+        document.querySelector('.nav-badge')?.remove();
+        window.showToast('All notifications marked as read', 'success');
+    }
+
+    function markRead(btn) {
+        const item = btn.closest('.notif-list-item');
+        item.classList.remove('unread');
+        item.querySelector('.notif-list-dot')?.remove();
+        btn.remove();
+        window.showToast('Marked as read', 'success', 2000);
+    }
+
+    function filterNotifs(type, btn) {
+        document.querySelectorAll('#notifTabs .tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.notif-list-item').forEach(item => {
+            if (type === 'all') {
+                item.style.display = '';
+                return;
+            }
+            if (type === 'unread') {
+                item.style.display = item.classList.contains('unread') ? '' : 'none';
+                return;
+            }
+            item.style.display = item.dataset.type === type ? '' : 'none';
+        });
+    }
+</script>
 </body>
 </html>

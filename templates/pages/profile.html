@@ -1,0 +1,460 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile — PDP Academy LMS</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dark.css' %}">
+    <style>
+        .avatar-upload-wrap {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .avatar-upload-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, .45);
+            border-radius: var(--r-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--ease);
+            font-size: .75rem;
+            color: #fff;
+            font-weight: 600;
+            gap: 4px;
+        }
+
+        .avatar-upload-wrap:hover .avatar-upload-overlay {
+            opacity: 1;
+        }
+
+        .profile-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 20px;
+            border-right: 1px solid rgba(255, 255, 255, .12);
+        }
+
+        .profile-stat:last-child {
+            border-right: none;
+        }
+
+        .profile-stat-val {
+            font-size: 1.375rem;
+            font-weight: 800;
+            color: #fff;
+            font-family: var(--font-mono);
+            letter-spacing: -.03em;
+        }
+
+        .profile-stat-lbl {
+            font-size: .75rem;
+            color: rgba(255, 255, 255, .55);
+            margin-top: 2px;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+
+        .connected-account {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .connected-account:last-child {
+            border-bottom: none;
+        }
+
+        .connected-account-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .connected-account-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--r-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .connected-account-name {
+            font-size: .875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .connected-account-info {
+            font-size: .75rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .activity-log-item {
+            display: flex;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: .8125rem;
+        }
+
+        .activity-log-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-log-time {
+            color: var(--text-muted);
+            white-space: nowrap;
+            min-width: 90px;
+        }
+
+        .activity-log-text {
+            color: var(--text-secondary);
+            flex: 1;
+        }
+
+        .activity-log-text strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body data-user-role="admin">
+<div class="app">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    {% include 'components/sidebar.html' %}
+
+    <div class="main-wrapper" id="mainWrapper">
+        {% include 'components/header.html' %}
+
+        <main class="main-content">
+
+            <!-- ── Profile Hero ── -->
+            <div class="profile-hero mb-24">
+                <div style="position:relative;z-index:1;">
+                    <div class="avatar-upload-wrap" onclick="document.getElementById('avatarInput').click()">
+                        <div class="avatar avatar-xl" style="border:3px solid rgba(255,255,255,.2);">S</div>
+                        <div class="avatar-upload-overlay">📷 Change</div>
+                    </div>
+                    <input type="file" id="avatarInput" accept="image/*" style="display:none"
+                           onchange="window.showToast('Avatar updated','success')">
+                </div>
+                <div class="profile-hero-info">
+                    <p class="profile-hero-name">Sardor Toshmatov</p>
+                    <p class="profile-hero-role">
+                        <span class="role-badge admin" style="display:inline-flex;margin-right:8px;">Admin</span>
+                        sardor.toshmatov · sardor@pdp.uz
+                    </p>
+                    <div class="profile-hero-meta">
+                        <div class="profile-stat">
+                            <span class="profile-stat-val">245</span>
+                            <span class="profile-stat-lbl">Students</span>
+                        </div>
+                        <div class="profile-stat">
+                            <span class="profile-stat-val">32</span>
+                            <span class="profile-stat-lbl">Groups</span>
+                        </div>
+                        <div class="profile-stat">
+                            <span class="profile-stat-val">18</span>
+                            <span class="profile-stat-lbl">Teachers</span>
+                        </div>
+                        <div class="profile-stat">
+                            <span class="profile-stat-val">92%</span>
+                            <span class="profile-stat-lbl">Pay Rate</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="position:relative;z-index:1;margin-left:auto;">
+                    <a href="settings.html" class="btn btn-secondary"
+                       style="color:#fff;border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.1);">
+                        ⚙️ Settings
+                    </a>
+                </div>
+            </div>
+
+            <!-- ── Main Grid ── -->
+            <div class="grid grid-2 mb-24" style="gap:24px;">
+
+                <!-- Edit Profile -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Edit Profile</h3>
+                        <span class="badge badge-neutral">Admin</span>
+                    </div>
+                    <div class="card-body">
+                        <form data-ajax id="profileForm">
+                            <div class="form-row mb-16">
+                                <div class="form-group">
+                                    <label class="form-label">First Name</label>
+                                    <input type="text" class="form-control" value="Sardor">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" value="Toshmatov">
+                                </div>
+                            </div>
+                            <div class="form-group mb-16">
+                                <label class="form-label">Email</label>
+                                <div class="input-group">
+                                    <span class="input-icon">✉️</span>
+                                    <input type="email" class="form-control" value="sardor@pdp.uz">
+                                </div>
+                            </div>
+                            <div class="form-group mb-16">
+                                <label class="form-label">Phone</label>
+                                <div class="input-group">
+                                    <span class="input-icon">📱</span>
+                                    <input type="tel" class="form-control" value="+998 90 123 45 67">
+                                </div>
+                            </div>
+                            <div class="form-group mb-16">
+                                <label class="form-label">Login</label>
+                                <input type="text" class="form-control" value="sardor.toshmatov" readonly
+                                       style="background:var(--bg-input);color:var(--text-muted);">
+                                <p class="form-hint">Login cannot be changed. Contact your system administrator.</p>
+                            </div>
+                            <div class="form-group mb-20">
+                                <label class="form-label">About</label>
+                                <textarea class="form-control" rows="3" placeholder="Tell about yourself…">Academy administrator. Responsible for user management and system settings.</textarea>
+                            </div>
+                            <div class="flex gap-10">
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                <button type="button" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Right column -->
+                <div class="flex flex-col gap-20">
+
+                    <!-- Connected Accounts -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Connected Accounts</h3>
+                            <span class="badge badge-green">2 active</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="connected-account">
+                                <div class="connected-account-left">
+                                    <div class="connected-account-icon" style="background:#FEE2E2;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                                                  fill="#4285F4"/>
+                                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                                                  fill="#34A853"/>
+                                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                                                  fill="#FBBC05"/>
+                                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                                                  fill="#EA4335"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="connected-account-name">Google</p>
+                                        <p class="connected-account-info">sardor.toshmatov@gmail.com</p>
+                                    </div>
+                                </div>
+                                <button class="btn btn-sm btn-danger"
+                                        onclick="window.showToast('Google account disconnected','warning')">Disconnect
+                                </button>
+                            </div>
+                            <div class="connected-account">
+                                <div class="connected-account-left">
+                                    <div class="connected-account-icon" style="background:#DBEAFE;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="#229ED9">
+                                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.018 9.51c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.881.71z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="connected-account-name">Telegram</p>
+                                        <p class="connected-account-info">@sardor_pdp</p>
+                                    </div>
+                                </div>
+                                <button class="btn btn-sm btn-danger"
+                                        onclick="window.showToast('Telegram disconnected','warning')">Disconnect
+                                </button>
+                            </div>
+                            <div class="connected-account">
+                                <div class="connected-account-left">
+                                    <div class="connected-account-icon" style="background:var(--bg-input);">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                             stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                             stroke-linejoin="round">
+                                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="connected-account-name">GitHub</p>
+                                        <p class="connected-account-info" style="color:var(--text-muted);">Not
+                                            connected</p>
+                                    </div>
+                                </div>
+                                <button class="btn btn-sm btn-secondary"
+                                        onclick="window.showToast('Redirecting to GitHub…','info')">Connect
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Security</h3>
+                        </div>
+                        <div class="card-body">
+                            <div style="display:flex;flex-direction:column;gap:14px;">
+                                <div style="display:flex;justify-content:space-between;align-items:center;">
+                                    <div>
+                                        <p style="font-size:.875rem;font-weight:600;color:var(--text-primary);">
+                                            Password</p>
+                                        <p style="font-size:.75rem;color:var(--text-muted);">Last changed 45 days
+                                            ago</p>
+                                    </div>
+                                    <button class="btn btn-sm btn-secondary" data-modal-open="changePasswordModal">
+                                        Change
+                                    </button>
+                                </div>
+                                <div style="display:flex;justify-content:space-between;align-items:center;">
+                                    <div>
+                                        <p style="font-size:.875rem;font-weight:600;color:var(--text-primary);">
+                                            Two-Factor Auth</p>
+                                        <p style="font-size:.75rem;color:var(--text-muted);">Not enabled</p>
+                                    </div>
+                                    <button class="btn btn-sm btn-primary"
+                                            onclick="window.showToast('2FA setup coming soon','info')">Enable
+                                    </button>
+                                </div>
+                                <div style="display:flex;justify-content:space-between;align-items:center;">
+                                    <div>
+                                        <p style="font-size:.875rem;font-weight:600;color:var(--text-primary);">Active
+                                            Sessions</p>
+                                        <p style="font-size:.75rem;color:var(--text-muted);">1 device · Chrome on
+                                            Windows</p>
+                                    </div>
+                                    <button class="btn btn-sm btn-secondary"
+                                            onclick="window.showToast('Other sessions terminated','success')">Terminate
+                                        All
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Activity Log ── -->
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <h3 class="card-title">Recent Activity</h3>
+                        <p class="card-subtitle">Your last actions in the system</p>
+                    </div>
+                    <select class="table-filter-select" style="width:auto;">
+                        <option>All Actions</option>
+                        <option>Logins</option>
+                        <option>Edits</option>
+                        <option>System</option>
+                    </select>
+                </div>
+                <div class="card-body">
+                    <div class="activity-log-item">
+                        <span class="activity-log-time">Today 14:32</span>
+                        <span class="activity-log-text">Logged in from <strong>Chrome · Windows</strong> · IP 95.214.*.***</span>
+                        <span class="badge badge-green">Login</span>
+                    </div>
+                    <div class="activity-log-item">
+                        <span class="activity-log-time">Today 14:35</span>
+                        <span class="activity-log-text">Created user <strong>Doniyor Yusupov</strong> → Group P38, Student</span>
+                        <span class="badge badge-blue">Create</span>
+                    </div>
+                    <div class="activity-log-item">
+                        <span class="activity-log-time">Today 13:10</span>
+                        <span class="activity-log-text">Reset password for <strong>Ivan Petrov</strong></span>
+                        <span class="badge badge-gold">Edit</span>
+                    </div>
+                    <div class="activity-log-item">
+                        <span class="activity-log-time">Yesterday 16:22</span>
+                        <span class="activity-log-text">Created group <strong>J15</strong> · JavaScript Advanced · 22 students enrolled</span>
+                        <span class="badge badge-blue">Create</span>
+                    </div>
+                    <div class="activity-log-item">
+                        <span class="activity-log-time">Yesterday 11:05</span>
+                        <span class="activity-log-text">Generated <strong>Monthly Report</strong> — June 2026</span>
+                        <span class="badge badge-neutral">System</span>
+                    </div>
+                    <div class="activity-log-item">
+                        <span class="activity-log-time">Jun 19, 09:40</span>
+                        <span class="activity-log-text">Logged in from <strong>Safari · iPhone</strong> · IP 95.214.*.***</span>
+                        <span class="badge badge-green">Login</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span style="font-size:.8125rem;color:var(--text-muted);">Showing 6 of 48 recent actions</span>
+                    <button class="btn btn-sm btn-secondary">Load more</button>
+                </div>
+            </div>
+
+        </main>
+        {% include 'components/footer.html' %}
+    </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Change Password Modal -->
+<div class="modal-overlay" id="changePasswordModal">
+    <div class="modal modal-sm">
+        <div class="modal-header">
+            <h2 class="modal-title">Change Password</h2>
+            <button class="modal-close" data-modal-close>✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group mb-16">
+                <label class="form-label">Current Password <span class="required">*</span></label>
+                <input type="password" class="form-control" placeholder="Enter current password" id="currentPwd">
+            </div>
+            <div class="form-group mb-16">
+                <label class="form-label">New Password <span class="required">*</span></label>
+                <input type="password" class="form-control" placeholder="Min 8 characters" id="newPwd">
+            </div>
+            <div class="form-group mb-4">
+                <label class="form-label">Confirm New Password <span class="required">*</span></label>
+                <input type="password" class="form-control" placeholder="Repeat new password"
+                       id="confirmPwd" data-confirm="newPwd">
+            </div>
+            <p class="form-hint">Password must be at least 8 characters, include a number and a special character.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" data-modal-close>Cancel</button>
+            <button class="btn btn-primary"
+                    onclick="window.showToast('Password changed successfully','success');closeModal('changePasswordModal')">
+                Update Password
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/theme.js' %}"></script>
+<script src="{% static 'js/interactions.js' %}"></script>
+<script>
+    document.getElementById('profileForm').addEventListener('submit', e => {
+        e.preventDefault();
+        window.showToast('Profile saved successfully', 'success');
+    });
+</script>
+</body>
+</html>

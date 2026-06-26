@@ -91,8 +91,9 @@
                 <!-- Welcome Banner -->
                 <div class="welcome-banner">
                     <div class="welcome-text">
-                        <p class="welcome-greeting">Good morning, <span>Sardor</span> 👋</p>
-                        <p class="welcome-sub">Here's what's happening at PDP Academy today — Sunday, June 21, 2026</p>
+                        <p class="welcome-greeting">Good morning, <span>{{ user.first_name }}</span> 👋</p>
+                        <p class="welcome-sub">Here's what's happening at PDP Academy today
+                            — {% now "l" %}, {% now "j E Yг" %}</p>
                     </div>
                     <div class="welcome-emoji" style="font-size:2.5rem;">🎓</div>
                 </div>
@@ -105,9 +106,9 @@
                             <span class="stat-card-label">Total Students</span>
                             <div class="stat-icon-wrap green">👨‍🎓</div>
                         </div>
-                        <div class="stat-value mono" data-count="245">0</div>
+                        <div class="stat-value mono" data-count="{{ students_count }}">{{ students }}</div>
                         <div class="stat-trend up">
-                            <span>↑ 12</span>
+                            <span>↑ {{ sim }}</span>
                             <span class="stat-trend-label">this month</span>
                         </div>
                     </div>
@@ -118,9 +119,9 @@
                             <span class="stat-card-label">Teachers</span>
                             <div class="stat-icon-wrap blue">🧑‍💻</div>
                         </div>
-                        <div class="stat-value mono" data-count="18">0</div>
+                        <div class="stat-value mono" data-count="{{ teachers_count }}"></div>
                         <div class="stat-trend up">
-                            <span>↑ 2</span>
+                            <span>↑ {{ tim }}</span>
                             <span class="stat-trend-label">new this quarter</span>
                         </div>
                     </div>
@@ -131,9 +132,9 @@
                             <span class="stat-card-label">Active Groups</span>
                             <div class="stat-icon-wrap gold">🏫</div>
                         </div>
-                        <div class="stat-value mono" data-count="32">0</div>
+                        <div class="stat-value mono" data-count="{{ active_groups }}">{{ active_groups }}</div>
                         <div class="stat-trend up">
-                            <span>↑ 4</span>
+                            <span>↑ {{ gim }}</span>
                             <span class="stat-trend-label">this month</span>
                         </div>
                     </div>
@@ -198,7 +199,7 @@
                                 <h3 class="card-title">Recent Users</h3>
                                 <p class="card-subtitle">Newly registered accounts</p>
                             </div>
-                            <a href="../pages/users.html" class="btn btn-sm btn-secondary">View All</a>
+                            <a href="/admin/users" class="btn btn-sm btn-secondary">View All</a>
                         </div>
                         <div class="card-body" style="padding:0;">
                             <div class="table-toolbar" style="padding:16px 20px 0;">
@@ -232,114 +233,29 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td class="primary">
-                                        <div style="display:flex;align-items:center;gap:10px;">
-                                            <div class="avatar avatar-xs"
-                                                 style="background:linear-gradient(135deg,#3B82F6,#60A5FA);">A
+                                {% for user in users %}
+
+                                    <tr>
+                                        <td class="primary">
+                                            <div style="display:flex;align-items:center;gap:10px;">
+                                                <div class="avatar avatar-xs"
+                                                     style="background:linear-gradient(135deg,#3B82F6,#60A5FA);">{{ user.first_name | slice:":1" }}
+                                                </div>
+                                                {{ user.first_name }} {{ user.last_name }}
                                             </div>
-                                            Alex Kim
-                                        </div>
-                                    </td>
-                                    <td><span class="code-chip">P38</span></td>
-                                    <td><span class="role-badge student">Student</span></td>
-                                    <td style="color:var(--text-muted);font-size:.8125rem;">Jun 18</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-ghost-primary" data-modal-open="editUserModal">
-                                            Edit
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="primary">
-                                        <div style="display:flex;align-items:center;gap:10px;">
-                                            <div class="avatar avatar-xs"
-                                                 style="background:linear-gradient(135deg,#8B5CF6,#A78BFA);">T
-                                            </div>
-                                            Timur Rashidov
-                                        </div>
-                                    </td>
-                                    <td><span class="code-chip">P41</span></td>
-                                    <td><span class="role-badge student">Student</span></td>
-                                    <td style="color:var(--text-muted);font-size:.8125rem;">Jun 17</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-ghost-primary" data-modal-open="editUserModal">
-                                            Edit
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="primary">
-                                        <div style="display:flex;align-items:center;gap:10px;">
-                                            <div class="avatar avatar-xs">I</div>
-                                            Ivan Petrov
-                                        </div>
-                                    </td>
-                                    <td><span class="code-chip">—</span></td>
-                                    <td><span class="role-badge teacher">Teacher</span></td>
-                                    <td style="color:var(--text-muted);font-size:.8125rem;">Jun 15</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-ghost-primary" data-modal-open="editUserModal">
-                                            Edit
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="primary">
-                                        <div style="display:flex;align-items:center;gap:10px;">
-                                            <div class="avatar avatar-xs"
-                                                 style="background:linear-gradient(135deg,#F59E0B,#FCD34D);color:#78350F;">
-                                                M
-                                            </div>
-                                            Maria Chen
-                                        </div>
-                                    </td>
-                                    <td><span class="code-chip">J12</span></td>
-                                    <td><span class="role-badge student">Student</span></td>
-                                    <td style="color:var(--text-muted);font-size:.8125rem;">Jun 14</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-ghost-primary" data-modal-open="editUserModal">
-                                            Edit
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="primary">
-                                        <div style="display:flex;align-items:center;gap:10px;">
-                                            <div class="avatar avatar-xs"
-                                                 style="background:linear-gradient(135deg,#EC4899,#F472B6);">D
-                                            </div>
-                                            Doniyor Yusupov
-                                        </div>
-                                    </td>
-                                    <td><span class="code-chip">P38</span></td>
-                                    <td><span class="role-badge student">Student</span></td>
-                                    <td style="color:var(--text-muted);font-size:.8125rem;">Jun 13</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-ghost-primary" data-modal-open="editUserModal">
-                                            Edit
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="primary">
-                                        <div style="display:flex;align-items:center;gap:10px;">
-                                            <div class="avatar avatar-xs"
-                                                 style="background:linear-gradient(135deg,#14B8A6,#5EEAD4);color:#134E4A;">
-                                                N
-                                            </div>
-                                            Nodira Karimova
-                                        </div>
-                                    </td>
-                                    <td><span class="code-chip">—</span></td>
-                                    <td><span class="role-badge parent">Parent</span></td>
-                                    <td style="color:var(--text-muted);font-size:.8125rem;">Jun 12</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-ghost-primary" data-modal-open="editUserModal">
-                                            Edit
-                                        </button>
-                                    </td>
-                                </tr>
+                                        </td>
+                                        <td><span class="code-chip">{{ user.group }}</span></td>
+                                        <td><span class="role-badge student">{{ user.role }}</span></td>
+                                        <td style="color:var(--text-muted);font-size:.8125rem;">{{ user.date_joined|date:"M d" }}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-ghost-primary"
+                                                    data-modal-open="editUserModal">
+                                                Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                {% endfor %}
                                 </tbody>
                             </table>
                         </div>
@@ -430,15 +346,16 @@
             <button class="modal-close" data-modal-close>✕</button>
         </div>
         <div class="modal-body">
-            <form data-ajax>
+            <form action="{% url 'add-user' %}" method="post">
+                {% csrf_token %}
                 <div class="form-row mb-16">
                     <div class="form-group">
                         <label class="form-label">First Name <span class="required">*</span></label>
-                        <input type="text" class="form-control" placeholder="e.g. Alex">
+                        <input type="text" class="form-control" name="first_name" placeholder="e.g. Alex">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Last Name <span class="required">*</span></label>
-                        <input type="text" class="form-control" placeholder="e.g. Kim">
+                        <input type="text" class="form-control" name="last_name" placeholder="e.g. Kim">
                     </div>
                 </div>
                 <div class="form-row mb-16">
@@ -446,40 +363,37 @@
                         <label class="form-label">Phone</label>
                         <div class="input-group">
                             <span class="input-icon">📱</span>
-                            <input type="tel" class="form-control" placeholder="+998 90 000 00 00">
+                            <input type="tel" class="form-control" name="phone" placeholder="+998 90 000 00 00">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Role <span class="required">*</span></label>
-                        <select class="form-control">
+                        <select class="form-control" name="role">
                             <option value="">Select role…</option>
-                            <option value="admin">Admin</option>
-                            <option value="teacher">Teacher</option>
-                            <option value="student">Student</option>
-                            <option value="parent">Parent</option>
+                            <option value="ADMIN">Admin</option>
+                            <option value="TEACHER">Teacher</option>
+                            <option value="STUDENT">Student</option>
+                            <option value="PARENT">Parent</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-row mb-16">
                     <div class="form-group">
                         <label class="form-label">Login <span class="required">*</span></label>
-                        <input type="text" class="form-control" placeholder="e.g. alex.kim">
+                        <input type="text" class="form-control" name="username" placeholder="e.g. alex.kim">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Password <span class="required">*</span></label>
-                        <input type="password" class="form-control" placeholder="Min 8 characters">
+                        <input type="password" class="form-control" name="password" placeholder="Min 8 characters">
                     </div>
                 </div>
                 <div class="form-group mb-16">
                     <label class="form-label">Group (for students)</label>
-                    <select class="form-control">
+                    <select class="form-control" name="group">
                         <option value="">— None —</option>
-                        <option>P38</option>
-                        <option>P41</option>
-                        <option>J12</option>
-                        <option>F09</option>
-                        <option>R22</option>
-                        <option>J15</option>
+                        {% for group in groups %}
+                            <option value="{{ group.id }}">{{ group.title }}</option>
+                        {% endfor %}
                     </select>
                 </div>
             </form>
@@ -502,41 +416,45 @@
             <button class="modal-close" data-modal-close>✕</button>
         </div>
         <div class="modal-body">
-            <form data-ajax>
-                <div class="form-group mb-16">
-                    <label class="form-label">Group Code <span class="required">*</span></label>
-                    <input type="text" class="form-control" placeholder="e.g. P38, J12, F09">
-                    <p class="form-hint">P = Python · J = JavaScript · F = Flutter · R = React</p>
-                </div>
+            <form action="{% url 'add-group' %}" method="post">
+
+                <!-- ОТЛАДОЧНЫЙ БЛОК: Выведет абсолютно все ошибки формы -->
+                {% if form.errors %}
+                    <div style="background-color: #ffcccc; color: red; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
+                        <h3>Ошибки в форме:</h3>
+                        <ul>
+                            {% for field, errors in form.errors.items %}
+                                <li><strong>{{ field }}:</strong> {{ errors|striptags }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+
+                {% csrf_token %}
                 <div class="form-group mb-16">
                     <label class="form-label">Technology</label>
-                    <select class="form-control">
-                        <option value="python">Python</option>
-                        <option value="js">JavaScript</option>
-                        <option value="react">React</option>
-                        <option value="flutter">Flutter</option>
+                    <select class="form-control" name="technology">
+                        <option value="PYTHON">Python</option>
+                        <option value="JAVA">Java</option>
                     </select>
                 </div>
                 <div class="form-group mb-16">
                     <label class="form-label">Teacher</label>
-                    <select class="form-control">
-                        <option>Ivan Petrov</option>
-                        <option>Sardor Aliyev</option>
-                        <option>Malika Nazarova</option>
+                    <select class="form-control" name="teacher">
+                        {% for teacher in teachers %}
+                            <option value="{{ teacher.id }}">{{ teacher.first_name }} {{ teacher.last_name }}</option>
+                        {% endfor %}
                     </select>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Schedule</label>
-                    <input type="text" class="form-control" placeholder="e.g. Mon/Wed/Fri 14:00">
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-modal-close>Cancel</button>
+                    <button class="btn btn-primary" type="submit">Create Group
+                    </button>
                 </div>
             </form>
         </div>
-        <div class="modal-footer">
-            <button class="btn btn-secondary" data-modal-close>Cancel</button>
-            <button class="btn btn-primary"
-                    onclick="window.showToast('Group created','success');closeModal('addGroupModal')">Create Group
-            </button>
-        </div>
+
     </div>
 </div>
 

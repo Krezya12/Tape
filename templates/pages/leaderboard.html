@@ -1,10 +1,1182 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dark.css' %}">
+    <style>
+        /* ── Leaderboard page-specific styles ── */
 
-</body>
-</html>
+        .lb-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 0 48px;
+        }
+
+        /* ── Controls / Filters ── */
+        .lb-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+
+        .lb-controls-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .lb-filter-btn {
+            padding: 7px 14px;
+            border-radius: var(--r-full);
+            font-size: .8125rem;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--ease-fast);
+        }
+
+        .lb-filter-btn:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+        }
+
+        .lb-filter-btn.active {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: #fff;
+        }
+
+        /* ── Podium (Top 3) ── */
+        .lb-podium {
+            display: grid;
+            grid-template-columns: 1fr 1.15fr 1fr;
+            gap: 12px;
+            margin-bottom: 28px;
+            align-items: flex-end;
+        }
+
+        .podium-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--r-lg);
+            padding: 20px 14px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+            transition: var(--ease);
+        }
+
+        .podium-card::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .podium-card.rank-1::before {
+            background: linear-gradient(90deg, #F59E0B, #FCD34D);
+        }
+
+        .podium-card.rank-2::before {
+            background: linear-gradient(90deg, #94A3B8, #CBD5E1);
+        }
+
+        .podium-card.rank-3::before {
+            background: linear-gradient(90deg, #B45309, #D97706);
+        }
+
+        .podium-card.rank-1 {
+            border-color: #F59E0B;
+            box-shadow: 0 4px 24px rgba(245, 158, 11, .15);
+        }
+
+        .podium-medal {
+            font-size: 2rem;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .podium-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: var(--r-full);
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+            border: 3px solid rgba(255, 255, 255, .6);
+        }
+
+        .podium-name {
+            font-size: .9375rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .podium-group {
+            font-size: .75rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .podium-score {
+            font-size: 1.625rem;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            letter-spacing: -.04em;
+            color: var(--text-primary);
+        }
+
+        .podium-score.gold {
+            color: #D97706;
+        }
+
+        .podium-score.silver {
+            color: #64748B;
+        }
+
+        .podium-score.bronze {
+            color: #B45309;
+        }
+
+        .podium-rank-num {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            font-size: .6875rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        /* ── Rank List ── */
+        .lb-list {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--r-lg);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .lb-list-header {
+            display: grid;
+            grid-template-columns: 44px 1fr 80px 80px 80px 80px;
+            gap: 8px;
+            padding: 10px 16px;
+            background: var(--bg-body);
+            border-bottom: 1px solid var(--border);
+            font-size: .6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: var(--text-muted);
+        }
+
+        .lb-row {
+            display: grid;
+            grid-template-columns: 44px 1fr 80px 80px 80px 80px;
+            gap: 8px;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            transition: var(--ease-fast);
+            position: relative;
+        }
+
+        .lb-row:last-child {
+            border-bottom: none;
+        }
+
+        .lb-row:hover {
+            background: var(--bg-hover);
+        }
+
+        .lb-row.is-me {
+            background: var(--jade-50);
+            border-left: 3px solid var(--jade-500);
+        }
+
+        .lb-row.is-me::after {
+            content: 'You';
+            position: absolute;
+            right: 16px;
+            font-size: .6875rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            background: var(--jade-100);
+            padding: 2px 7px;
+            border-radius: var(--r-full);
+        }
+
+        .lb-rank-num {
+            font-size: .9375rem;
+            font-weight: 800;
+            text-align: center;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+        }
+
+        .lb-rank-num.top-1 {
+            color: #F59E0B;
+        }
+
+        .lb-rank-num.top-2 {
+            color: #94A3B8;
+        }
+
+        .lb-rank-num.top-3 {
+            color: #B45309;
+        }
+
+        .lb-student {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .lb-student-name {
+            font-size: .9375rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .lb-student-group {
+            font-size: .75rem;
+            color: var(--text-muted);
+        }
+
+        .lb-score-cell {
+            font-size: .875rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .lb-score-cell.total {
+            color: var(--color-primary);
+            font-size: 1rem;
+        }
+
+        .lb-score-bar {
+            height: 4px;
+            background: var(--ink-100);
+            border-radius: var(--r-full);
+            margin-top: 3px;
+            overflow: hidden;
+        }
+
+        .lb-score-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--jade-600), var(--jade-400));
+            border-radius: var(--r-full);
+        }
+
+        /* ── Mobile card layout ── */
+        .lb-mobile-card {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 16px;
+            border-bottom: 1px solid var(--border);
+            transition: var(--ease-fast);
+            position: relative;
+        }
+
+        .lb-mobile-card:last-child {
+            border-bottom: none;
+        }
+
+        .lb-mobile-card.is-me {
+            background: var(--jade-50);
+            border-left: 3px solid var(--jade-500);
+        }
+
+        .lb-mobile-rank {
+            font-size: 1.0625rem;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            width: 28px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .lb-mobile-rank.top-1 {
+            color: #F59E0B;
+        }
+
+        .lb-mobile-rank.top-2 {
+            color: #94A3B8;
+        }
+
+        .lb-mobile-rank.top-3 {
+            color: #B45309;
+        }
+
+        .lb-mobile-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .lb-mobile-name {
+            font-size: .9375rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .lb-mobile-sub {
+            font-size: .75rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .lb-mobile-score {
+            font-size: 1.125rem;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            color: var(--color-primary);
+            flex-shrink: 0;
+        }
+
+        .lb-mobile-you {
+            font-size: .6875rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            background: var(--jade-100);
+            padding: 1px 7px;
+            border-radius: var(--r-full);
+            flex-shrink: 0;
+        }
+
+        /* ── My Position Pin (mobile sticky) ── */
+        .my-position-bar {
+            display: none;
+            background: var(--color-primary);
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: var(--r-md);
+            margin-bottom: 16px;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 16px rgba(22, 163, 74, .3);
+        }
+
+        .my-position-bar .rank {
+            font-size: 1.375rem;
+            font-weight: 800;
+            font-family: var(--font-mono);
+        }
+
+        .my-position-bar .score {
+            font-size: 1.125rem;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            margin-left: auto;
+        }
+
+        /* ── Dark mode ── */
+        [data-theme=dark] .podium-card.rank-1 {
+            box-shadow: 0 4px 24px rgba(245, 158, 11, .08);
+        }
+
+        [data-theme=dark] .lb-row.is-me {
+            background: rgba(34, 197, 94, .08);
+        }
+
+        [data-theme=dark] .lb-row.is-me::after {
+            background: rgba(34, 197, 94, .15);
+        }
+
+        [data-theme=dark] .lb-mobile-card.is-me {
+            background: rgba(34, 197, 94, .08);
+        }
+
+        [data-theme=dark] .lb-mobile-you {
+            background: rgba(34, 197, 94, .15);
+        }
+
+        [data-theme=dark] .lb-score-bar {
+            background: #1E2E48;
+        }
+
+        /* ════════════════════════════
+           RESPONSIVE BREAKPOINTS
+           ════════════════════════════ */
+
+        /* Tablet — hide detail columns */
+        @media (max-width: 768px) {
+            .lb-podium {
+                grid-template-columns: 1fr 1.1fr 1fr;
+                gap: 8px;
+            }
+
+            .podium-avatar {
+                width: 42px;
+                height: 42px;
+                font-size: 1rem;
+            }
+
+            .podium-name {
+                font-size: .8125rem;
+            }
+
+            .podium-score {
+                font-size: 1.375rem;
+            }
+
+            .podium-medal {
+                font-size: 1.625rem;
+            }
+
+            /* Hide desktop table */
+            .lb-list-header {
+                display: none;
+            }
+
+            .lb-row {
+                display: none !important;
+            }
+
+            /* Show mobile cards */
+            .lb-mobile-card {
+                display: flex;
+            }
+
+            /* Show my position bar */
+            .my-position-bar {
+                display: flex;
+            }
+        }
+
+        /* Mobile small — vertical podium + tweaks */
+        @media (max-width: 480px) {
+            .lb-controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .lb-controls-left {
+                gap: 6px;
+            }
+
+            .lb-filter-btn {
+                padding: 6px 11px;
+                font-size: .75rem;
+            }
+
+            .lb-podium {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .podium-card {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                padding: 14px 16px;
+                text-align: left;
+            }
+
+            .podium-card::before {
+                width: 4px;
+                height: auto;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: auto;
+                border-radius: 0;
+            }
+
+            .podium-medal {
+                font-size: 1.5rem;
+                margin-bottom: 0;
+            }
+
+            .podium-avatar {
+                margin: 0;
+                width: 38px;
+                height: 38px;
+                font-size: .9375rem;
+            }
+
+            .podium-info {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .podium-name {
+                margin-bottom: 0;
+            }
+
+            .podium-group {
+                margin-bottom: 0;
+            }
+
+            .podium-score {
+                font-size: 1.25rem;
+                flex-shrink: 0;
+            }
+
+            .podium-rank-num {
+                top: 8px;
+            }
+
+            /* Re-order: 1st on top on mobile */
+            .podium-order-1 {
+                order: -1;
+            }
+
+            .podium-order-2 {
+                order: 0;
+            }
+
+            .podium-order-3 {
+                order: 1;
+            }
+
+            .lb-mobile-name {
+                font-size: .875rem;
+            }
+
+            .lb-mobile-score {
+                font-size: 1rem;
+            }
+        }
+    </style>
+{% endblock %}
+
+<div class="app">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    {% include 'components/sidebar.html' %}
+
+    <div class="main-wrapper" id="mainWrapper">
+        {% include 'components/header.html' %}
+
+
+        <main>
+            <div class="lb-wrap">
+                <!-- Page Title -->
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">🏆 Leaderboard</h1>
+                        <p class="page-subtitle">Group P38 · Module 3 · Python Algorithms</p>
+                    </div>
+                    <span class="badge badge-green badge-dot">Updated live</span>
+                </div>
+
+                <!-- ── Controls ── -->
+                <div class="lb-controls">
+                    <div class="lb-controls-left">
+                        <!-- Group filter -->
+                        {# Django: {% for group in groups %} #}
+                        <button class="lb-filter-btn active" onclick="filterGroup(this,'P38')">P38</button>
+                        <button class="lb-filter-btn" onclick="filterGroup(this,'P41')">P41</button>
+                        <button class="lb-filter-btn" onclick="filterGroup(this,'J12')">J12</button>
+                        <button class="lb-filter-btn" onclick="filterGroup(this,'all')">All Groups</button>
+                        {# Django: {% endfor %} #}
+                    </div>
+                    <div class="flex gap-8 items-center">
+                        <select class="table-filter-select" style="width:auto;">
+                            <option>Module 3</option>
+                            <option>Module 2</option>
+                            <option>Module 1</option>
+                            <option>All Time</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- ── My position sticky bar (mobile only) ── -->
+                <div class="my-position-bar">
+                    <div class="avatar avatar-sm"
+                         style="background:linear-gradient(135deg,#3B82F6,#60A5FA);flex-shrink:0;">A
+                    </div>
+                    <div>
+                        <p style="font-size:.75rem;opacity:.75;font-weight:500;">Your position</p>
+                        <p style="font-size:.875rem;font-weight:700;">Alex Kim · Group P38</p>
+                    </div>
+                    <span class="rank">#9</span>
+                    <span class="score">84%</span>
+                </div>
+
+                <!-- ── TOP 3 PODIUM ── -->
+                <div class="lb-podium">
+
+                    <!-- 2nd Place -->
+                    <div class="podium-card rank-2">
+                        <span class="podium-rank-num">#2</span>
+                        <div class="podium-medal">🥈</div>
+                        <div class="podium-avatar" style="background:linear-gradient(135deg,#EC4899,#F472B6);">M</div>
+                        <div class="podium-info">
+                            <p class="podium-name">Maria Chen</p>
+                            <p class="podium-group">Group P38</p>
+                        </div>
+                        <p class="podium-score silver">93%</p>
+                    </div>
+
+                    <!-- 1st Place -->
+                    <div class="podium-card rank-1 podium-order-1">
+                        <span class="podium-rank-num">#1</span>
+                        <div class="podium-medal" style="font-size:2.5rem;">🥇</div>
+                        <div class="podium-avatar"
+                             style="background:linear-gradient(135deg,#8B5CF6,#A78BFA);border-color:rgba(245,158,11,.5);box-shadow:0 0 0 4px rgba(245,158,11,.15);">
+                            T
+                        </div>
+                        <div class="podium-info">
+                            <p class="podium-name">Timur Rashidov</p>
+                            <p class="podium-group">Group P38</p>
+                        </div>
+                        <p class="podium-score gold">96%</p>
+                    </div>
+
+                    <!-- 3rd Place -->
+                    <div class="podium-card rank-3 podium-order-3">
+                        <span class="podium-rank-num">#3</span>
+                        <div class="podium-medal">🥉</div>
+                        <div class="podium-avatar"
+                             style="background:linear-gradient(135deg,#14B8A6,#5EEAD4);color:#134E4A;">Z
+                        </div>
+                        <div class="podium-info">
+                            <p class="podium-name">Zulfiya N.</p>
+                            <p class="podium-group">Group P38</p>
+                        </div>
+                        <p class="podium-score bronze">91%</p>
+                    </div>
+                </div>
+
+                <!-- ── FULL RANKING ── -->
+                <div class="lb-list">
+
+                    <!-- Desktop header -->
+                    <div class="lb-list-header">
+                        <div>#</div>
+                        <div>Student</div>
+                        <div style="text-align:center;">Score</div>
+                        <div style="text-align:center;">Attend.</div>
+                        <div style="text-align:center;">HW</div>
+                        <div style="text-align:center;">Total</div>
+                    </div>
+
+
+                    <!-- ── Rank 1 ── -->
+                    <div class="lb-row">
+                        <span class="lb-rank-num top-1">1</span>
+                        <div class="lb-student">
+                            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#8B5CF6,#A78BFA);">
+                                T
+                            </div>
+                            <div>
+                                <p class="lb-student-name">Timur Rashidov</p>
+                                <p class="lb-student-group">Group P38</p>
+                            </div>
+                        </div>
+                        <div class="lb-score-cell">98%</div>
+                        <div class="lb-score-cell">100%</div>
+                        <div class="lb-score-cell">95%</div>
+                        <div class="lb-score-cell total">96%</div>
+                    </div>
+                    <div class="lb-mobile-card">
+                        <span class="lb-mobile-rank top-1">1</span>
+                        <div class="avatar avatar-xs" style="background:linear-gradient(135deg,#8B5CF6,#A78BFA);">T
+                        </div>
+                        <div class="lb-mobile-info">
+                            <p class="lb-mobile-name">Timur Rashidov</p>
+                            <div class="lb-mobile-sub"><span class="code-chip">P38</span> Score 98% · Attend 100% · HW
+                                95%
+                            </div>
+                        </div>
+                        <span class="lb-mobile-score">96%</span>
+                    </div>
+
+                    <!-- ── Rank 2 ── -->
+                    <div class="lb-row">
+                        <span class="lb-rank-num top-2">2</span>
+                        <div class="lb-student">
+                            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#EC4899,#F472B6);">
+                                M
+                            </div>
+                            <div>
+                                <p class="lb-student-name">Maria Chen</p>
+                                <p class="lb-student-group">Group P38</p>
+                            </div>
+                        </div>
+                        <div class="lb-score-cell">95%</div>
+                        <div class="lb-score-cell">96%</div>
+                        <div class="lb-score-cell">88%</div>
+                        <div class="lb-score-cell total">93%</div>
+                    </div>
+                    <div class="lb-mobile-card">
+                        <span class="lb-mobile-rank top-2">2</span>
+                        <div class="avatar avatar-xs" style="background:linear-gradient(135deg,#EC4899,#F472B6);">M
+                        </div>
+                        <div class="lb-mobile-info">
+                            <p class="lb-mobile-name">Maria Chen</p>
+                            <div class="lb-mobile-sub"><span class="code-chip">P38</span> Score 95% · Attend 96% · HW
+                                88%
+                            </div>
+                        </div>
+                        <span class="lb-mobile-score">93%</span>
+                    </div>
+
+                    <!-- ── Rank 3 ── -->
+                    <div class="lb-row">
+                        <span class="lb-rank-num top-3">3</span>
+                        <div class="lb-student">
+                            <div class="avatar avatar-sm"
+                                 style="background:linear-gradient(135deg,#14B8A6,#5EEAD4);color:#134E4A;">Z
+                            </div>
+                            <div>
+                                <p class="lb-student-name">Zulfiya Nazarova</p>
+                                <p class="lb-student-group">Group P38</p>
+                            </div>
+                        </div>
+                        <div class="lb-score-cell">93%</div>
+                        <div class="lb-score-cell">98%</div>
+                        <div class="lb-score-cell">85%</div>
+                        <div class="lb-score-cell total">91%</div>
+                    </div>
+                    <div class="lb-mobile-card">
+                        <span class="lb-mobile-rank top-3">3</span>
+                        <div class="avatar avatar-xs"
+                             style="background:linear-gradient(135deg,#14B8A6,#5EEAD4);color:#134E4A;">
+                            Z
+                        </div>
+                        <div class="lb-mobile-info">
+                            <p class="lb-mobile-name">Zulfiya Nazarova</p>
+                            <div class="lb-mobile-sub"><span class="code-chip">P38</span> Score 93% · Attend 98% · HW
+                                85%
+                            </div>
+                        </div>
+                        <span class="lb-mobile-score">91%</span>
+                    </div>
+
+                    <!-- ── Rank 4 ── -->
+                    <div class="lb-row">
+                        <span class="lb-rank-num">4</span>
+                        <div class="lb-student">
+                            <div class="avatar avatar-sm"
+                                 style="background:linear-gradient(135deg,#F59E0B,#FCD34D);color:#78350F;">B
+                            </div>
+                            <div>
+                                <p class="lb-student-name">Bobur Ergashev</p>
+                                <p class="lb-student-group">Group P38</p>
+                            </div>
+                        </div>
+                        <div class="lb-score-cell">90%</div>
+                        <div class="lb-score-cell">95%</div>
+                        <div class="lb-score-cell">83%</div>
+                        <div class="lb-score-cell total">89%</div>
+                    </div>
+                    <div class="lb-mobile-card">
+                        <span class="lb-mobile-rank">4</span>
+                        <div class="avatar avatar-xs"
+                             style="background:linear-gradient(135deg,#F59E0B,#FCD34D);color:#78350F;">
+                            B
+                        </div>
+                        <div class="lb-mobile-info">
+                            <p class="lb-mobile-name">Bobur Ergashev</p>
+                            <div class="lb-mobile-sub"><span class="code-chip">P38</span> Score 90% · Attend 95% · HW
+                                83%
+                            </div>
+                        </div>
+                        <span class="lb-mobile-score">89%</span>
+                    </div>
+
+                    <!-- ── Ranks 5–8 (condensed) ── -->
+                    {% for student in students_5_to_8 %}
+                        <!-- Django loop — static demo below -->
+                    {% endfor %}
+
+                    <div class="lb-row">
+                        <span class="lb-rank-num">5</span>
+                        <div class="lb-student">
+                            <div class="avatar avatar-sm">S</div>
+                            <div><p class="lb-student-name">Sherzod Kalandarov</p>
+                                <p class="lb-student-group">P38</p></div>
+                        </div>
+                        <div class="lb-score-cell">88%</div>
+                        <div class="lb-score-cell">93%</div>
+                        <div class="lb-score-cell">80%</div>
+                        <div class="lb-score-cell total">87%</div>
+                    </div>
+                    <div class="lb-mobile-card"><span class="lb-mobile-rank">5</span>
+                        <div class="avatar avatar-xs">S</div>
+                        <div class="lb-mobile-info"><p class="lb-mobile-name">Sherzod Kalandarov</p>
+                            <div class="lb-mobile-sub"><span class="code-chip">P38</span>88% · 93% · 80%</div>
+                        </div>
+                        <span class="lb-mobile-score">87%</span></div>
+
+                    <div class="lb-row">
+                        <span class="lb-rank-num">6</span>
+                        <div class="lb-student">
+                            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#6366F1,#818CF8);">
+                                N
+                            </div>
+                            <div><p class="lb-student-name">Nodira Yusupova</p>
+                                <p class="lb-student-group">P38</p></div>
+                        </div>
+                        <div class="lb-score-cell">87%</div>
+                        <div class="lb-score-cell">90%</div>
+                        <div class="lb-score-cell">82%</div>
+                        <div class="lb-score-cell total">86%</div>
+                    </div>
+                    <div class="lb-mobile-card"><span class="lb-mobile-rank">6</span>
+                        <div class="avatar avatar-xs" style="background:linear-gradient(135deg,#6366F1,#818CF8);">N
+                        </div>
+                        <div class="lb-mobile-info"><p class="lb-mobile-name">Nodira Yusupova</p>
+                            <div class="lb-mobile-sub"><span class="code-chip">P38</span>87% · 90% · 82%</div>
+                        </div>
+                        <span class="lb-mobile-score">86%</span></div>
+
+                    <div class="lb-row">
+                        <span class="lb-rank-num">7</span>
+                        <div class="lb-student">
+                            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#0EA5E9,#38BDF8);">
+                                A
+                            </div>
+                            <div><p class="lb-student-name">Aziz Xolmatov</p>
+                                <p class="lb-student-group">P38</p></div>
+                        </div>
+                        <div class="lb-score-cell">86%</div>
+                        <div class="lb-score-cell">89%</div>
+                        <div class="lb-score-cell">81%</div>
+                        <div class="lb-score-cell total">85%</div>
+                    </div>
+                    <div class="lb-mobile-card"><span class="lb-mobile-rank">7</span>
+                        <div class="avatar avatar-xs" style="background:linear-gradient(135deg,#0EA5E9,#38BDF8);">A
+                        </div>
+                        <div class="lb-mobile-info"><p class="lb-mobile-name">Aziz Xolmatov</p>
+                            <div class="lb-mobile-sub"><span class="code-chip">P38</span>86% · 89% · 81%</div>
+                        </div>
+                        <span class="lb-mobile-score">85%</span></div>
+
+                    <div class="lb-row">
+                        <span class="lb-rank-num">8</span>
+                        <div class="lb-student">
+                            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#D946EF,#F0ABFC);">
+                                G
+                            </div>
+                            <div><p class="lb-student-name">Gulnora Rashidova</p>
+                                <p class="lb-student-group">P38</p></div>
+                        </div>
+                        <div class="lb-score-cell">84%</div>
+                        <div class="lb-score-cell">91%</div>
+                        <div class="lb-score-cell">79%</div>
+                        <div class="lb-score-cell total">84%</div>
+                    </div>
+                    <div class="lb-mobile-card"><span class="lb-mobile-rank">8</span>
+                        <div class="avatar avatar-xs" style="background:linear-gradient(135deg,#D946EF,#F0ABFC);">G
+                        </div>
+                        <div class="lb-mobile-info"><p class="lb-mobile-name">Gulnora Rashidova</p>
+                            <div class="lb-mobile-sub"><span class="code-chip">P38</span>84% · 91% · 79%</div>
+                        </div>
+                        <span class="lb-mobile-score">84%</span></div>
+
+                    <!-- ── Rank 9 — CURRENT USER ── -->
+                    <div class="lb-row is-me">
+                        <span class="lb-rank-num" style="color:var(--color-primary);">9</span>
+                        <div class="lb-student">
+                            <div class="avatar avatar-sm"
+                                 style="background:linear-gradient(135deg,#3B82F6,#60A5FA);border:2px solid var(--color-primary);">
+                                A
+                            </div>
+                            <div>
+                                <p class="lb-student-name" style="color:var(--color-primary);">Alex Kim</p>
+                                <p class="lb-student-group">Group P38</p>
+                            </div>
+                        </div>
+                        <div class="lb-score-cell">87%</div>
+                        <div class="lb-score-cell">95%</div>
+                        <div class="lb-score-cell">80%</div>
+                        <div class="lb-score-cell total" style="color:var(--color-primary);">84%</div>
+                    </div>
+                    <div class="lb-mobile-card is-me">
+                        <span class="lb-mobile-rank" style="color:var(--color-primary);">9</span>
+                        <div class="avatar avatar-xs"
+                             style="background:linear-gradient(135deg,#3B82F6,#60A5FA);border:2px solid var(--color-primary);">
+                            A
+                        </div>
+                        <div class="lb-mobile-info">
+                            <p class="lb-mobile-name" style="color:var(--color-primary);">Alex Kim</p>
+                            <div class="lb-mobile-sub"><span class="code-chip">P38</span> Score 87% · Attend 95% · HW
+                                80%
+                            </div>
+                        </div>
+                        <span class="lb-mobile-score">84%</span>
+                        <span class="lb-mobile-you">You</span>
+                    </div>
+
+                    <!-- ── Ranks 10–20 ── -->
+                    <div class="lb-row"><span class="lb-rank-num">10</span>
+                        <div class="lb-student">
+                            <div class="avatar avatar-sm">K</div>
+                            <div><p class="lb-student-name">Kamola Ismoilova</p>
+                                <p class="lb-student-group">P38</p></div>
+                        </div>
+                        <div class="lb-score-cell">83%</div>
+                        <div class="lb-score-cell">88%</div>
+                        <div class="lb-score-cell">78%</div>
+                        <div class="lb-score-cell total">83%</div>
+                    </div>
+                    <div class="lb-mobile-card"><span class="lb-mobile-rank">10</span>
+                        <div class="avatar avatar-xs">K</div>
+                        <div class="lb-mobile-info"><p class="lb-mobile-name">Kamola Ismoilova</p>
+                            <div class="lb-mobile-sub"><span class="code-chip">P38</span>83% · 88% · 78%</div>
+                        </div>
+                        <span class="lb-mobile-score">83%</span></div>
+
+                    <div class="lb-row"><span class="lb-rank-num">11</span>
+                        <div class="lb-student">
+                            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#F97316,#FDBA74);">
+                                J
+                            </div>
+                            <div><p class="lb-student-name">Jamshid Tursunov</p>
+                                <p class="lb-student-group">P38</p></div>
+                        </div>
+                        <div class="lb-score-cell">82%</div>
+                        <div class="lb-score-cell">86%</div>
+                        <div class="lb-score-cell">77%</div>
+                        <div class="lb-score-cell total">82%</div>
+                    </div>
+                    <div class="lb-mobile-card"><span class="lb-mobile-rank">11</span>
+                        <div class="avatar avatar-xs" style="background:linear-gradient(135deg,#F97316,#FDBA74);">J
+                        </div>
+                        <div class="lb-mobile-info"><p class="lb-mobile-name">Jamshid Tursunov</p>
+                            <div class="lb-mobile-sub"><span class="code-chip">P38</span>82% · 86% · 77%</div>
+                        </div>
+                        <span class="lb-mobile-score">82%</span></div>
+
+                    <div class="lb-row"><span class="lb-rank-num">12</span>
+                        <div class="lb-student">
+                            <div class="avatar avatar-sm">D</div>
+                            <div><p class="lb-student-name">Dilorom Hamidova</p>
+                                <p class="lb-student-group">P38</p></div>
+                        </div>
+                        <div class="lb-score-cell">80%</div>
+                        <div class="lb-score-cell">85%</div>
+                        <div class="lb-score-cell">76%</div>
+                        <div class="lb-score-cell total">81%</div>
+                    </div>
+                    <div class="lb-mobile-card"><span class="lb-mobile-rank">12</span>
+                        <div class="avatar avatar-xs">D</div>
+                        <div class="lb-mobile-info"><p class="lb-mobile-name">Dilorom Hamidova</p>
+                            <div class="lb-mobile-sub"><span class="code-chip">P38</span>80% · 85% · 76%</div>
+                        </div>
+                        <span class="lb-mobile-score">81%</span></div>
+
+                    <div class="lb-row"><span class="lb-rank-num">13</span>
+                        <div class="lb-student">
+                            <div class="avatar avatar-sm"
+                                 style="background:linear-gradient(135deg,#84CC16,#BEF264);color:#365314;">R
+                            </div>
+                            <div><p class="lb-student-name">Rustam Nazarov</p>
+                                <p class="lb-student-group">P38</p></div>
+                        </div>
+                        <div class="lb-score-cell">79%</div>
+                        <div class="lb-score-cell">84%</div>
+                        <div class="lb-score-cell">74%</div>
+                        <div class="lb-score-cell total">79%</div>
+                    </div>
+                    <div class="lb-mobile-card"><span class="lb-mobile-rank">13</span>
+                        <div class="avatar avatar-xs"
+                             style="background:linear-gradient(135deg,#84CC16,#BEF264);color:#365314;">
+                            R
+                        </div>
+                        <div class="lb-mobile-info"><p class="lb-mobile-name">Rustam Nazarov</p>
+                            <div class="lb-mobile-sub"><span class="code-chip">P38</span>79% · 84% · 74%</div>
+                        </div>
+                        <span class="lb-mobile-score">79%</span></div>
+
+                    <div class="lb-row"><span class="lb-rank-num">14</span>
+                        <div class="lb-student">
+                            <div class="avatar avatar-sm">F</div>
+                            <div><p class="lb-student-name">Farzona Mirzayeva</p>
+                                <p class="lb-student-group">P38</p></div>
+                        </div>
+                        <div class="lb-score-cell">78%</div>
+                        <div class="lb-score-cell">83%</div>
+                        <div class="lb-score-cell">73%</div>
+                        <div class="lb-score-cell total">78%</div>
+                    </div>
+                    <div class="lb-mobile-card"><span class="lb-mobile-rank">14</span>
+                        <div class="avatar avatar-xs">F</div>
+                        <div class="lb-mobile-info"><p class="lb-mobile-name">Farzona Mirzayeva</p>
+                            <div class="lb-mobile-sub"><span class="code-chip">P38</span>78% · 83% · 73%</div>
+                        </div>
+                        <span class="lb-mobile-score">78%</span></div>
+
+                    <div class="lb-row"><span class="lb-rank-num">15</span>
+                        <div class="lb-student">
+                            <div class="avatar avatar-sm"
+                                 style="background:linear-gradient(135deg,#06B6D4,#67E8F9);color:#164E63;">I
+                            </div>
+                            <div><p class="lb-student-name">Islom Xasanov</p>
+                                <p class="lb-student-group">P38</p></div>
+                        </div>
+                        <div class="lb-score-cell">77%</div>
+                        <div class="lb-score-cell">80%</div>
+                        <div class="lb-score-cell">72%</div>
+                        <div class="lb-score-cell total">76%</div>
+                    </div>
+                    <div class="lb-mobile-card"><span class="lb-mobile-rank">15</span>
+                        <div class="avatar avatar-xs"
+                             style="background:linear-gradient(135deg,#06B6D4,#67E8F9);color:#164E63;">
+                            I
+                        </div>
+                        <div class="lb-mobile-info"><p class="lb-mobile-name">Islom Xasanov</p>
+                            <div class="lb-mobile-sub"><span class="code-chip">P38</span>77% · 80% · 72%</div>
+                        </div>
+                        <span class="lb-mobile-score">76%</span></div>
+
+                    <div class="lb-row"><span class="lb-rank-num">16</span>
+                        <div class="lb-student">
+                            <div class="avatar avatar-sm">M</div>
+                            <div><p class="lb-student-name">Malika Yuldasheva</p>
+                                <p class="lb-student-group">P38</p></div>
+                        </div>
+                        <div class="lb-score-cell">76%</div>
+                        <div class="lb-score-cell">78%</div>
+                        <div class="lb-score-cell">71%</div>
+                        <div class="lb-score-cell total">75%</div>
+                    </div>
+                    <div class="lb-mobile-card"><span class="lb-mobile-rank">16</span>
+                        <div class="avatar avatar-xs">M</div>
+                        <div class="lb-mobile-info"><p class="lb-mobile-name">Malika Yuldasheva</p>
+                            <div class="lb-mobile-sub"><span class="code-chip">P38</span>76% · 78% · 71%</div>
+                        </div>
+                        <span class="lb-mobile-score">75%</span></div>
+
+                    <div class="lb-row"><span class="lb-rank-num">17</span>
+                        <div class="lb-student">
+                            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#A855F7,#D8B4FE);">
+                                O
+                            </div>
+                            <div><p class="lb-student-name">Otabek Salimov</p>
+                                <p class="lb-student-group">P38</p></div>
+                        </div>
+                        <div class="lb-score-cell">74%</div>
+                        <div class="lb-score-cell">77%</div>
+                        <div class="lb-score-cell">68%</div>
+                        <div class="lb-score-cell total">73%</div>
+                    </div>
+                    <div class="lb-mobile-card"><span class="lb-mobile-rank">17</span>
+                        <div class="avatar avatar-xs" style="background:linear-gradient(135deg,#A855F7,#D8B4FE);">O
+                        </div>
+                        <div class="lb-mobile-info"><p class="lb-mobile-name">Otabek Salimov</p>
+                            <div class="lb-mobile-sub"><span class="code-chip">P38</span>74% · 77% · 68%</div>
+                        </div>
+                        <span class="lb-mobile-score">73%</span></div>
+
+                    <div class="lb-row"><span class="lb-rank-num">18</span>
+                        <div class="lb-student">
+                            <div class="avatar avatar-sm">H</div>
+                            <div><p class="lb-student-name">Hulkar Toxirova</p>
+                                <p class="lb-student-group">P38</p></div>
+                        </div>
+                        <div class="lb-score-cell">72%</div>
+                        <div class="lb-score-cell">75%</div>
+                        <div class="lb-score-cell">65%</div>
+                        <div class="lb-score-cell total">71%</div>
+                    </div>
+                    <div class="lb-mobile-card"><span class="lb-mobile-rank">18</span>
+                        <div class="avatar avatar-xs">H</div>
+                        <div class="lb-mobile-info"><p class="lb-mobile-name">Hulkar Toxirova</p>
+                            <div class="lb-mobile-sub"><span class="code-chip">P38</span>72% · 75% · 65%</div>
+                        </div>
+                        <span class="lb-mobile-score">71%</span></div>
+
+                    <div class="lb-row"><span class="lb-rank-num">19</span>
+                        <div class="lb-student">
+                            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#EF4444,#FCA5A5);">
+                                U
+                            </div>
+                            <div><p class="lb-student-name">Umid Aliyev</p>
+                                <p class="lb-student-group">P38</p></div>
+                        </div>
+                        <div class="lb-score-cell">68%</div>
+                        <div class="lb-score-cell">72%</div>
+                        <div class="lb-score-cell">61%</div>
+                        <div class="lb-score-cell total">67%</div>
+                    </div>
+                    <div class="lb-mobile-card"><span class="lb-mobile-rank">19</span>
+                        <div class="avatar avatar-xs" style="background:linear-gradient(135deg,#EF4444,#FCA5A5);">U
+                        </div>
+                        <div class="lb-mobile-info"><p class="lb-mobile-name">Umid Aliyev</p>
+                            <div class="lb-mobile-sub"><span class="code-chip">P38</span>68% · 72% · 61%</div>
+                        </div>
+                        <span class="lb-mobile-score">67%</span></div>
+
+                    <div class="lb-row"><span class="lb-rank-num">20</span>
+                        <div class="lb-student">
+                            <div class="avatar avatar-sm">D</div>
+                            <div><p class="lb-student-name">Doniyor Yusupov</p>
+                                <p class="lb-student-group">P38</p></div>
+                        </div>
+                        <div class="lb-score-cell">62%</div>
+                        <div class="lb-score-cell">68%</div>
+                        <div class="lb-score-cell">55%</div>
+                        <div class="lb-score-cell total">62%</div>
+                    </div>
+                    <div class="lb-mobile-card"><span class="lb-mobile-rank">20</span>
+                        <div class="avatar avatar-xs">D</div>
+                        <div class="lb-mobile-info"><p class="lb-mobile-name">Doniyor Yusupov</p>
+                            <div class="lb-mobile-sub"><span class="code-chip">P38</span>62% · 68% · 55%</div>
+                        </div>
+                        <span class="lb-mobile-score">62%</span></div>
+
+
+                </div><!-- /lb-list -->
+
+                <!-- Footer note -->
+                <p style="text-align:center;margin-top:16px;font-size:.8125rem;color:var(--text-muted);">
+                    Total 20 students · Group P38 · Module 3
+                    &nbsp;·&nbsp; Scores: avg grade (50%) + attendance (30%) + homework (20%)
+                </p>
+
+            </div><!-- /lb-wrap -->
+
+        </main>
+
+        {% include 'components/footer.html' %}
+    </div>
+</div>
+
+{% block extra_js %}
+    <script src="{% static 'js/theme.js' %}"></script>
+    <script src="{% static 'js/interactions.js' %}"></script>
+    <script>
+        function filterGroup(btn, group) {
+            document.querySelectorAll('.lb-filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            // Django: would reload page with ?group=X  or AJAX fetch
+            window.showToast('Filtering by ' + group + '…', 'info', 1500);
+        }
+    </script>
+{% endblock %}

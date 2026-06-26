@@ -82,7 +82,6 @@
         }
     </style>
 </head>
-<body data-user-role="teacher">
 
 <div class="app">
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -101,7 +100,7 @@
             <!-- Welcome -->
             <div class="welcome-banner mb-24">
                 <div class="welcome-text">
-                    <p class="welcome-greeting">Welcome, <span>Ivan</span> 👋</p>
+                    <p class="welcome-greeting">Welcome, <span>{{ user.first_name }}</span> 👋</p>
                     <p class="welcome-sub">
                         You have <strong style="color:#fff;">4 lessons</strong> today &nbsp;·&nbsp;
                         <strong style="color:#fff;">12 homework</strong> submissions to review
@@ -109,7 +108,7 @@
                 </div>
                 <span class="today-badge"
                       style="font-size:.875rem;padding:8px 14px;background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.2);">
-          📅 Sunday, Jun 21
+          📅 {% now "l" %}, {% now "j E Yг" %}
         </span>
             </div>
 
@@ -120,8 +119,8 @@
                         <span class="stat-card-label">My Groups</span>
                         <div class="stat-icon-wrap green">🏫</div>
                     </div>
-                    <div class="stat-value mono" data-count="4">0</div>
-                    <div class="stat-trend up"><span>72 students total</span></div>
+                    <div class="stat-value mono" data-count="{{ groups_count }}">{{ groups_count }}</div>
+                    <div class="stat-trend up"><span>{{ total_students_count }} students total</span></div>
                 </div>
                 <div class="stat-card blue">
                     <div class="stat-card-header">
@@ -175,93 +174,32 @@
                     <a href="../pages/groups.html" class="section-action">View all →</a>
                 </div>
                 <div class="grid grid-4">
-                    <!-- Group P38 -->
-                    <div class="group-card" onclick="openModal('journalModal')">
-                        <div class="group-card-top">
-                            <div>
-                                <div class="group-code">P38</div>
-                                <div class="group-name">Python · Intermediate</div>
-                            </div>
-                            <span class="group-badge python">Python</span>
-                        </div>
-                        <div class="progress-label">
-                            <span>Module 3</span>
-                            <strong>7 / 12 lessons</strong>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar gradient" data-progress="58" style="width:0%"></div>
-                        </div>
-                        <div class="group-card-footer">
-                            <span class="group-stat">👨‍🎓 <strong>20</strong> students</span>
-                            <span class="group-stat">Avg <strong>87%</strong></span>
-                        </div>
-                    </div>
+                    {% for group in groups %}
 
-                    <!-- Group P41 -->
-                    <div class="group-card" onclick="openModal('journalModal')">
-                        <div class="group-card-top">
-                            <div>
-                                <div class="group-code">P41</div>
-                                <div class="group-name">Python · Beginner</div>
+                        <div class="group-card">
+                            <div class="group-card-top">
+                                <div>
+                                    <div class="group-code">{{ group.title }}</div>
+                                    <div class="group-name">{{ group.technology }} · Intermediate</div>
+                                </div>
+                                <span class="group-badge python">{{ group.technology }}</span>
                             </div>
-                            <span class="group-badge python">Python</span>
+                            <div class="progress-label">
+                                <span>Module {{ group.current_module.number }}</span>
+                                <strong>{{ current_lesson }} / 12 lessons</strong>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar gradient" data-progress="58" style="width:0%"></div>
+                            </div>
+                            <div class="group-card-footer">
+                                <span class="group-stat">👨‍🎓 <strong>20</strong> students</span>
+                                <span class="group-stat">Avg <strong>87%</strong></span>
+                            </div>
                         </div>
-                        <div class="progress-label">
-                            <span>Module 2</span>
-                            <strong>4 / 12 lessons</strong>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar gradient" data-progress="33" style="width:0%"></div>
-                        </div>
-                        <div class="group-card-footer">
-                            <span class="group-stat">👨‍🎓 <strong>15</strong> students</span>
-                            <span class="group-stat">Avg <strong>82%</strong></span>
-                        </div>
-                    </div>
 
-                    <!-- Group J12 -->
-                    <div class="group-card" onclick="openModal('journalModal')">
-                        <div class="group-card-top">
-                            <div>
-                                <div class="group-code">J12</div>
-                                <div class="group-name">JavaScript · Advanced</div>
-                            </div>
-                            <span class="group-badge js">JS</span>
-                        </div>
-                        <div class="progress-label">
-                            <span>Module 5</span>
-                            <strong>10 / 12 lessons</strong>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar gradient" data-progress="83" style="width:0%"></div>
-                        </div>
-                        <div class="group-card-footer">
-                            <span class="group-stat">👨‍🎓 <strong>18</strong> students</span>
-                            <span class="group-stat">Avg <strong>91%</strong></span>
-                        </div>
-                    </div>
+                    {% endfor %}
+                    
 
-                    <!-- Group R22 -->
-                    <div class="group-card" onclick="openModal('journalModal')">
-                        <div class="group-card-top">
-                            <div>
-                                <div class="group-code">R22</div>
-                                <div class="group-name">React · Intermediate</div>
-                            </div>
-                            <span class="group-badge react">React</span>
-                        </div>
-                        <div class="progress-label">
-                            <span>Module 4</span>
-                            <strong>6 / 12 lessons</strong>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar gradient" data-progress="50" style="width:0%"></div>
-                        </div>
-                        <div class="group-card-footer">
-                            <span class="group-stat">👨‍🎓 <strong>19</strong> students</span>
-                            <span class="group-stat">Avg <strong>84%</strong></span>
-                        </div>
-                    </div>
                 </div>
             </div><!-- /my groups -->
 
@@ -269,15 +207,16 @@
             <div class="card mb-24">
                 <div class="card-header">
                     <div>
-                        <h3 class="card-title">Grade Journal — Group P38</h3>
-                        <p class="card-subtitle">Module 3 · Lesson 7 · Click row to edit grades</p>
+                        <h3 class="card-title">Grade Journal — Group {{ current_group.title }}</h3>
+                        <p class="card-subtitle">Module {{ current_group.get_current_lesson }} · Lesson 7 · Click row to edit grades</p>
                     </div>
                     <div class="flex gap-10">
                         <select class="table-filter-select" style="width:auto;">
-                            <option>P38</option>
-                            <option>P41</option>
-                            <option>J12</option>
-                            <option>R22</option>
+                            {% for group in groups %}
+                                <option>{{ group.title }}</option>
+                            {% endfor %}
+
+
                         </select>
                         <button class="btn btn-sm btn-primary" onclick="window.showToast('Grades saved','success')">
                             Save All
@@ -290,8 +229,8 @@
                         <tr>
                             <th>#</th>
                             <th class="sortable">Student <span class="sort-icon">↕</span></th>
-                            <th>Homework <small style="font-weight:400;color:var(--text-muted);">/20</small></th>
-                            <th>Classwork <small style="font-weight:400;color:var(--text-muted);">/20</small></th>
+                            <th>Homework <small style="font-weight:400;color:var(--text-muted);"></small></th>
+                            <th>Classwork <small style="font-weight:400;color:var(--text-muted);"></small></th>
                             <th>Attendance</th>
                             <th>Comment</th>
                         </tr>
@@ -421,72 +360,6 @@
 
             <!-- ── Bottom Row: HW to Check + Attendance Chart ── -->
             <div class="grid grid-2">
-                <!-- Homework to Review -->
-                <div class="card">
-                    <div class="card-header">
-                        <div>
-                            <h3 class="card-title">Homework to Review</h3>
-                            <p class="card-subtitle">Submissions waiting for your grade</p>
-                        </div>
-                        <span class="badge badge-gold badge-dot">12 pending</span>
-                    </div>
-                    <div class="card-body" style="padding:0;">
-                        <table class="data-table">
-                            <thead>
-                            <tr>
-                                <th>Student</th>
-                                <th>Group</th>
-                                <th>Lesson</th>
-                                <th>Submitted</th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td class="primary">Alex Kim</td>
-                                <td><span class="code-chip">P38</span></td>
-                                <td style="font-size:.8125rem;">M3 · L7</td>
-                                <td style="font-size:.8125rem;color:var(--text-muted);">2 hr ago</td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary btn-sm" data-modal-open="gradeHWModal">Grade
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="primary">Timur Rashidov</td>
-                                <td><span class="code-chip">P38</span></td>
-                                <td style="font-size:.8125rem;">M3 · L7</td>
-                                <td style="font-size:.8125rem;color:var(--text-muted);">3 hr ago</td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary" data-modal-open="gradeHWModal">Grade</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="primary">Nodira Karimova</td>
-                                <td><span class="code-chip">J12</span></td>
-                                <td style="font-size:.8125rem;">M5 · L10</td>
-                                <td style="font-size:.8125rem;color:var(--text-muted);">5 hr ago</td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary" data-modal-open="gradeHWModal">Grade</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="primary">Bobur Ergashev</td>
-                                <td><span class="code-chip">P41</span></td>
-                                <td style="font-size:.8125rem;">M2 · L4</td>
-                                <td style="font-size:.8125rem;color:var(--text-muted);">1 day ago</td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary" data-modal-open="gradeHWModal">Grade</button>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="card-footer">
-                        <span style="font-size:.8125rem;color:var(--text-muted);">Showing 4 of 12</span>
-                        <a href="../pages/homework.html" class="btn btn-sm btn-secondary">View All</a>
-                    </div>
-                </div>
 
                 <!-- Attendance Chart -->
                 <div class="card">
@@ -549,7 +422,7 @@
         <div class="modal-footer">
             <button class="btn btn-secondary" data-modal-close>Cancel</button>
             <button class="btn btn-primary"
-                    onclick="window.showToast('Grade saved — 18/20','success');closeModal('gradeHWModal')">Save Grade
+                    onclick="window.showToast('Grade saved — 18','success');closeModal('gradeHWModal')">Save Grade
             </button>
         </div>
     </div>

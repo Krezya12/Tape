@@ -80,15 +80,19 @@
                 <p class="auth-form-sub">Sign in to your PDP Academy account</p>
             </div>
 
-            <!-- Django: {% if messages %} -->
-                <!-- Error alerts would appear here -->
-                <!-- Django: {% endif %} -->
+            {% if messages %}
+                <div class="toast-container" id="toastContainer">
+                    {% for message in messages %}
+                        <div class="toast toast-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
 
-            <!-- Login Form -->
-            <!-- Django: <form method="post" action="{% url 'login' %}"> -->
-            <!-- Django: {% csrf_token %} -->
-            <form data-ajax id="loginForm">
 
+            <form action="{% url 'login' %}" method="post">
+                {% csrf_token %}
                 <div class="form-group mb-16">
                     <label class="form-label" for="loginInput">Login</label>
                     <div class="input-group">
@@ -98,7 +102,7 @@
                       cx="12" cy="7" r="4"/></svg>
             </span>
                         <input type="text" id="loginInput" name="username" class="form-control"
-                               placeholder="your.login" autocomplete="username" required>
+                               placeholder="your.login" required>
                     </div>
                 </div>
 
@@ -111,7 +115,7 @@
                                                                         ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
             </span>
                         <input type="password" id="passwordInput" name="password" class="form-control"
-                               placeholder="••••••••" autocomplete="current-password" required>
+                               placeholder="••••••••" required>
                         <button type="button" class="input-suffix"
                                 onclick="togglePwd()"
                                 title="Show / hide password"
@@ -122,33 +126,29 @@
                 </div>
 
                 <div class="flex items-center justify-between mb-24">
-                    <label class="form-check">
-                        <input type="checkbox" name="remember_me">
-                        <span class="form-check-label">Remember me</span>
-                    </label>
                     <a href="#" style="font-size:.875rem;color:var(--color-primary);font-weight:500;">Forgot
                         password?</a>
                 </div>
 
                 <!-- Quick role selector for demo -->
-                <div style="margin-bottom:20px;padding:14px;background:var(--bg-input);border-radius:var(--r-md);border:1px solid var(--border);">
-                    <p style="font-size:.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">
-                        Demo — Sign in as:
-                    </p>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-                        <button type="button" class="btn btn-sm btn-secondary" onclick="loginAs('admin')">🛡️ Admin
-                        </button>
-                        <button type="button" class="btn btn-sm btn-secondary" onclick="loginAs('teacher')">🧑‍💻
-                            Teacher
-                        </button>
-                        <button type="button" class="btn btn-sm btn-secondary" onclick="loginAs('student')">👨‍🎓
-                            Student
-                        </button>
-                        <button type="button" class="btn btn-sm btn-secondary" onclick="loginAs('parent')">👨‍👩‍👧
-                            Parent
-                        </button>
-                    </div>
-                </div>
+{#                <div style="margin-bottom:20px;padding:14px;background:var(--bg-input);border-radius:var(--r-md);border:1px solid var(--border);">#}
+{#                    <p style="font-size:.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">#}
+{#                        Demo — Sign in as:#}
+{#                    </p>#}
+{#                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">#}
+{#                        <button type="button" class="btn btn-sm btn-secondary" onclick="loginAs('admin')">🛡️ Admin#}
+{#                        </button>#}
+{#                        <button type="button" class="btn btn-sm btn-secondary" onclick="loginAs('teacher')">🧑‍💻#}
+{#                            Teacher#}
+{#                        </button>#}
+{#                        <button type="button" class="btn btn-sm btn-secondary" onclick="loginAs('student')">👨‍🎓#}
+{#                            Student#}
+{#                        </button>#}
+{#                        <button type="button" class="btn btn-sm btn-secondary" onclick="loginAs('parent')">👨‍👩‍👧#}
+{#                            Parent#}
+{#                        </button>#}
+{#                    </div>#}
+{#                </div>#}
 
                 <button type="submit" class="btn btn-primary btn-full btn-lg">
                     Sign In →
@@ -203,18 +203,18 @@
     }
 
     // Form submit (demo)
-    document.getElementById('loginForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const login = document.getElementById('loginInput').value.trim();
-        if (!login) {
-            window.showToast('Enter your login', 'error');
-            return;
-        }
-        window.showToast('Authenticating…', 'info', 900);
-        setTimeout(() => {
-            window.location.href = 'admin';
-        }, 800);
-    });
+    {#document.getElementById('loginForm').addEventListener('submit', (e) => {#}
+    {#    e.preventDefault();#}
+    {#    const login = document.getElementById('loginInput').value.trim();#}
+    {#    if (!login) {#}
+    {#        window.showToast('Enter your login', 'error');#}
+    {#        return;#}
+    {#    }#}
+    {#    window.showToast('Authenticating…', 'info', 900);#}
+    {#    setTimeout(() => {#}
+    {#        window.location.href = 'admin';#}
+    {#    }, 800);#}
+    {#);#}
 </script>
 </body>
 </html>

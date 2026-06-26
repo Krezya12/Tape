@@ -1,4 +1,4 @@
-{% if request.path == "/admin" or request.path == "/admin/notifications" %}
+{% if request.path|slice:":6" == "/admin" %}
 
     <header class="header">
         <div class="header-left">
@@ -107,21 +107,25 @@
                         Settings
                     </div>
                     <div class="dropdown-divider"></div>
-                    <div class="dropdown-item danger" onclick="window.showToast('Logged out','success')">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
-                            <polyline points="16 17 21 12 16 7"/>
-                            <line x1="21" y1="12" x2="9" y2="12"/>
-                        </svg>
-                        Log Out
-                    </div>
+                    <a href="/logout">
+                        <div class="dropdown-item danger">
+
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                            Log Out
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
     </header>
 
-{% elif request.path == '/teacher' or request.path == "/teacher/notifications"  %}
+{% elif request.path|slice:":8" == "/teacher" %}
+
 
     <header class="header">
 
@@ -261,7 +265,7 @@
 
     </header>
 
-{% elif request.path == '/parent' or request.path == "/parent/notifications" %}
+{% elif request.path|slice:":7" == "/parent" %}
 
     <header class="header">
 
@@ -390,7 +394,7 @@
 
     </header>
 
-{% elif request.path == '/student' or request.path == "/student/notifications" %}
+{% elif request.path|slice:":8" == "/student" %}
 
     <header class="header">
 

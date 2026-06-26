@@ -1,4 +1,4 @@
-{% if request.path == "/admin" or request.path == "/admin/notifications" %}
+{% if request.path|slice:":6" == "/admin" %}
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <a href="/" class="sidebar-logo">
@@ -21,7 +21,11 @@
                 <span class="nav-group-label">Overview</span>
                 <ul>
                     <li class="nav-item">
-                        <a href="admin_dashboard.html" class="nav-link active">
+                        {% if request.path == "/admin" %}
+                            <a href="/admin" class="nav-link active">
+                        {% else %}
+                            <a href="/admin" class="nav-link">
+                        {% endif %}
                             <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                         stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect
@@ -125,7 +129,11 @@
                 <span class="nav-group-label">System</span>
                 <ul>
                     <li class="nav-item">
-                        <a href="/admin/notifications" class="nav-link">
+                        {% if request.path == "/admin/notifications" %}
+                            <a href="/admin/notifications" class="nav-link active">
+                        {% else %}
+                            <a href="/admin/notifications" class="nav-link">
+                        {% endif %}
                             <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                         stroke-linejoin="round"><path
@@ -135,7 +143,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="../pages/settings.html" class="nav-link">
+                        <a href="/admin/settings" class="nav-link">
                             <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                         stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path
@@ -151,13 +159,13 @@
             <div class="sidebar-user" id="userMenuBtn">
                 <div class="avatar avatar-sm">A</div>
                 <div class="sidebar-user-info">
-                    <p class="sidebar-user-name">Sardor Toshmatov</p>
+                    <p class="sidebar-user-name">{{ user.first_name }} {{ user.last_name }}</p>
                     <p class="sidebar-user-role">Administrator</p>
                 </div>
             </div>
         </div>
     </aside>
-{% elif request.path == '/teacher' or request.path == "/teacher/notifications"  %}
+{% elif request.path|slice:":8" == "/teacher" %}
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <a href="/" class="sidebar-logo">
@@ -179,7 +187,7 @@
             <div class="nav-group">
                 <span class="nav-group-label">Overview</span>
                 <ul>
-                    <li><a href="teacher_dashboard.html" class="nav-link active">
+                    <li><a href="/teacher" class="nav-link active">
                         <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect
@@ -194,7 +202,7 @@
             <div class="nav-group">
                 <span class="nav-group-label">Teaching</span>
                 <ul>
-                    <li><a href="../pages/groups.html" class="nav-link">
+                    <li><a href="/teacher/groups" class="nav-link">
                         <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round"><path
@@ -203,7 +211,7 @@
                         <span class="nav-text">My Groups</span>
                         <span class="nav-badge">4</span>
                     </a></li>
-                    <li><a href="../pages/lessons.html" class="nav-link">
+                    <li><a href="/teacher/lessons" class="nav-link">
                         <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round"><path
@@ -211,7 +219,7 @@
                                 d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></span>
                         <span class="nav-text">Lessons</span>
                     </a></li>
-                    <li><a href="../pages/homework.html" class="nav-link">
+                    <li><a href="/teacher/homework" class="nav-link">
                         <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round"><path
@@ -222,7 +230,7 @@
                         <span class="nav-text">Homework</span>
                         <span class="nav-badge" style="background:var(--color-accent);color:#fff;">12</span>
                     </a></li>
-                    <li><a href="../pages/materials.html" class="nav-link">
+                    <li><a href="/teacher/materials" class="nav-link">
                         <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round"><path
@@ -234,14 +242,14 @@
             <div class="nav-group">
                 <span class="nav-group-label">Insights</span>
                 <ul>
-                    <li><a href="../pages/statistics.html" class="nav-link">
+                    <li><a href="/teacher/statistics" class="nav-link">
                         <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line
                                 x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
                         <span class="nav-text">Statistics</span>
                     </a></li>
-                    <li><a href="../pages/leaderboard.html" class="nav-link">
+                    <li><a href="/teacher/leaderboard" class="nav-link">
                         <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path
@@ -253,7 +261,7 @@
             <div class="nav-group">
                 <span class="nav-group-label">Account</span>
                 <ul>
-                    <li><a href="../pages/notifications.html" class="nav-link">
+                    <li><a href="/teacher/notifications" class="nav-link">
                         <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round"><path
@@ -262,14 +270,14 @@
                         <span class="nav-text">Notifications</span>
                         <span class="nav-badge">5</span>
                     </a></li>
-                    <li><a href="../pages/profile.html" class="nav-link">
+                    <li><a href="/teacher/profile" class="nav-link">
                         <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round"><path
                                 d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
                         <span class="nav-text">Profile</span>
                     </a></li>
-                    <li><a href="../pages/settings.html" class="nav-link">
+                    <li><a href="/teacher/settings" class="nav-link">
                         <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path
@@ -290,7 +298,7 @@
             </div>
         </div>
     </aside>
-{% elif request.path == '/parent' or request.path == "/parent/notifications" %}
+{% elif request.path|slice:":7" == "/parent" %}
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <a href="/" class="sidebar-logo">
@@ -312,7 +320,7 @@
             <div class="nav-group">
                 <span class="nav-group-label">Overview</span>
                 <ul>
-                    <li><a href="parent_dashboard.html" class="nav-link active">
+                    <li><a href="/parent" class="nav-link active">
                         <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect
@@ -385,7 +393,7 @@
             <div class="nav-group">
                 <span class="nav-group-label">Account</span>
                 <ul>
-                    <li><a href="../pages/notifications.html" class="nav-link">
+                    <li><a href="/parent/notifications" class="nav-link">
                         <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round"><path
@@ -401,7 +409,7 @@
                                 d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
                         <span class="nav-text">My Profile</span>
                     </a></li>
-                    <li><a href="../pages/settings.html" class="nav-link">
+                    <li><a href="/parent/settings" class="nav-link">
                         <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path
@@ -424,7 +432,7 @@
             </div>
         </div>
     </aside>
-{% elif request.path == '/student' or request.path == "/student/notifications" %}
+{% elif request.path|slice:":8" == "/student" %}
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <a href="/" class="sidebar-logo">
@@ -531,7 +539,7 @@
                                 d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
                         <span class="nav-text">Profile</span>
                     </a></li>
-                    <li><a href="pages/settings.html" class="nav-link">
+                    <li><a href="/student/settings" class="nav-link">
                         <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path

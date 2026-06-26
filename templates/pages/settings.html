@@ -1,10 +1,652 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings — PDP Academy LMS</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dark.css' %}">
+    <style>
+        .settings-layout {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
 
+        .settings-nav {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--r-lg);
+            overflow: hidden;
+            position: sticky;
+            top: calc(var(--header-h) + 20px);
+        }
+
+        .settings-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 16px;
+            font-size: .875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--ease);
+            border-left: 3px solid transparent;
+            text-decoration: none;
+        }
+
+        .settings-nav-item:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .settings-nav-item.active {
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            border-left-color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .settings-nav-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 4px 0;
+        }
+
+        .settings-section {
+            display: none;
+        }
+
+        .settings-section.active {
+            display: block;
+        }
+
+        .setting-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+            gap: 20px;
+        }
+
+        .setting-row:last-child {
+            border-bottom: none;
+        }
+
+        .setting-label {
+            font-size: .9375rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .setting-desc {
+            font-size: .8125rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .color-scheme-grid {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .color-swatch {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--r-md);
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--ease);
+            position: relative;
+        }
+
+        .color-swatch.active::after {
+            content: '✓';
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: .75rem;
+            font-weight: 700;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.1);
+        }
+
+        .color-swatch.active {
+            border-color: var(--border-strong);
+        }
+
+        @media (max-width: 768px) {
+            .settings-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .settings-nav {
+                position: static;
+                display: flex;
+                overflow-x: auto;
+                border-radius: var(--r-md);
+            }
+
+            .settings-nav-item {
+                white-space: nowrap;
+                border-left: none;
+                border-bottom: 2px solid transparent;
+                padding: 10px 14px;
+            }
+
+            .settings-nav-item.active {
+                border-bottom-color: var(--color-primary);
+                border-left: none;
+            }
+
+            .settings-nav-divider {
+                width: 1px;
+                height: auto;
+                margin: 0 2px;
+            }
+        }
+    </style>
+</head>
+<body data-user-role="admin">
+<div class="app">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    {% include 'components/sidebar.html' %}
+
+    <div class="main-wrapper" id="mainWrapper">
+        {% include 'components/header.html' %}
+
+        <main class="main-content">
+            <div class="page-header mb-24">
+                <div>
+                    <h1 class="page-title">Settings</h1>
+                    <p class="page-subtitle">Manage your account preferences and system settings</p>
+                </div>
+            </div>
+
+            <div class="settings-layout">
+
+                <!-- ── Settings Nav ── -->
+                <nav class="settings-nav">
+                    <a class="settings-nav-item active" onclick="showSection('account',this)">
+                        👤 Account
+                    </a>
+                    <a class="settings-nav-item" onclick="showSection('security',this)">
+                        🔒 Security
+                    </a>
+                    <a class="settings-nav-item" onclick="showSection('notifications',this)">
+                        🔔 Notifications
+                    </a>
+                    <div class="settings-nav-divider"></div>
+                    <a class="settings-nav-item" onclick="showSection('appearance',this)">
+                        🎨 Appearance
+                    </a>
+                    <a class="settings-nav-item" onclick="showSection('language',this)">
+                        🌐 Language
+                    </a>
+                    <div class="settings-nav-divider"></div>
+                    <a class="settings-nav-item" onclick="showSection('danger',this)"
+                       style="color:var(--color-danger);">
+                        ⚠️ Danger Zone
+                    </a>
+                </nav>
+
+                <!-- ── Settings Panels ── -->
+                <div>
+
+                    <!-- Account -->
+                    <div class="settings-section active" id="section-account">
+                        <div class="card mb-20">
+                            <div class="card-header">
+                                <h3 class="card-title">Account Information</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-row mb-16">
+                                    <div class="form-group">
+                                        <label class="form-label">First Name</label>
+                                        <input type="text" class="form-control" value="Sardor">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" value="Toshmatov">
+                                    </div>
+                                </div>
+                                <div class="form-group mb-16">
+                                    <label class="form-label">Email Address</label>
+                                    <input type="email" class="form-control" value="sardor@pdp.uz">
+                                </div>
+                                <div class="form-group mb-16">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-control" value="+998 90 123 45 67">
+                                </div>
+                                <div class="form-group mb-16">
+                                    <label class="form-label">Login (Username)</label>
+                                    <input type="text" class="form-control" value="sardor.toshmatov" readonly
+                                           style="background:var(--bg-input);color:var(--text-muted);">
+                                    <p class="form-hint">Your login cannot be changed without administrator
+                                        approval.</p>
+                                </div>
+                                <div class="form-group mb-20">
+                                    <label class="form-label">Role</label>
+                                    <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--r-md);">
+                                        <span class="role-badge admin">Admin</span>
+                                        <span style="font-size:.8125rem;color:var(--text-muted);">Full access to all features</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary"
+                                        onclick="window.showToast('Account information saved','success')">
+                                    Save Changes
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Account Status</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="setting-row">
+                                    <div>
+                                        <p class="setting-label">Account Status</p>
+                                        <p class="setting-desc">Your account is active and in good standing</p>
+                                    </div>
+                                    <span class="badge badge-green badge-dot">Active</span>
+                                </div>
+                                <div class="setting-row">
+                                    <div>
+                                        <p class="setting-label">Member Since</p>
+                                        <p class="setting-desc">Account created on January 15, 2025</p>
+                                    </div>
+                                    <span style="font-size:.875rem;color:var(--text-muted);font-family:var(--font-mono);">Jan 15, 2025</span>
+                                </div>
+                                <div class="setting-row">
+                                    <div>
+                                        <p class="setting-label">Last Login</p>
+                                        <p class="setting-desc">Chrome · Windows · Tashkent</p>
+                                    </div>
+                                    <span style="font-size:.875rem;color:var(--text-muted);">Today 14:32</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security -->
+                    <div class="settings-section" id="section-security">
+                        <div class="card mb-20">
+                            <div class="card-header">
+                                <h3 class="card-title">Change Password</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group mb-16">
+                                    <label class="form-label">Current Password <span class="required">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-icon">🔒</span>
+                                        <input type="password" class="form-control" placeholder="Enter current password"
+                                               id="oldPwd">
+                                    </div>
+                                </div>
+                                <div class="form-group mb-16">
+                                    <label class="form-label">New Password <span class="required">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-icon">🔑</span>
+                                        <input type="password" class="form-control" placeholder="Min 8 characters"
+                                               id="pwd1">
+                                    </div>
+                                    <p class="form-hint">Must contain uppercase, number, and special character.</p>
+                                </div>
+                                <div class="form-group mb-20">
+                                    <label class="form-label">Confirm New Password <span
+                                            class="required">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-icon">🔑</span>
+                                        <input type="password" class="form-control" placeholder="Repeat new password"
+                                               id="pwd2" data-confirm="pwd1">
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary"
+                                        onclick="window.showToast('Password changed successfully','success')">
+                                    Update Password
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Active Sessions</h3>
+                                <button class="btn btn-sm btn-danger"
+                                        onclick="window.showToast('All other sessions terminated','success')">
+                                    Terminate All Others
+                                </button>
+                            </div>
+                            <div class="card-body" style="padding:0;">
+                                <div style="padding:16px 20px;border-bottom:1px solid var(--border);">
+                                    <div class="flex items-center gap-14">
+                                        <div style="font-size:1.5rem;">💻</div>
+                                        <div style="flex:1;">
+                                            <p style="font-size:.875rem;font-weight:600;color:var(--text-primary);">
+                                                Chrome · Windows 11</p>
+                                            <p style="font-size:.75rem;color:var(--text-muted);">Tashkent, UZ · IP
+                                                95.214.*.* · Active now</p>
+                                        </div>
+                                        <span class="badge badge-green badge-dot">Current</span>
+                                    </div>
+                                </div>
+                                <div style="padding:16px 20px;">
+                                    <div class="flex items-center gap-14">
+                                        <div style="font-size:1.5rem;">📱</div>
+                                        <div style="flex:1;">
+                                            <p style="font-size:.875rem;font-weight:600;color:var(--text-primary);">
+                                                Safari · iPhone 15</p>
+                                            <p style="font-size:.75rem;color:var(--text-muted);">Tashkent, UZ · IP
+                                                95.214.*.* · Jun 19, 09:40</p>
+                                        </div>
+                                        <button class="btn btn-sm btn-secondary"
+                                                onclick="window.showToast('Session terminated','success')">End
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notifications -->
+                    <div class="settings-section" id="section-notifications">
+                        <div class="card mb-20">
+                            <div class="card-header">
+                                <h3 class="card-title">Email Notifications</h3>
+                                <span class="badge badge-green badge-dot">Email verified</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="setting-row">
+                                    <div>
+                                        <p class="setting-label">New student registration</p>
+                                        <p class="setting-desc">Get notified when a new student creates an account</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked
+                                               onchange="window.showToast('Preference saved','success',1500)">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="setting-row">
+                                    <div>
+                                        <p class="setting-label">Overdue payments</p>
+                                        <p class="setting-desc">Alert when a module payment is overdue</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked
+                                               onchange="window.showToast('Preference saved','success',1500)">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="setting-row">
+                                    <div>
+                                        <p class="setting-label">Group created or closed</p>
+                                        <p class="setting-desc">Notifications about group lifecycle changes</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox"
+                                               onchange="window.showToast('Preference saved','success',1500)">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="setting-row">
+                                    <div>
+                                        <p class="setting-label">Weekly report summary</p>
+                                        <p class="setting-desc">Receive a weekly digest of academy performance</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked
+                                               onchange="window.showToast('Preference saved','success',1500)">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">In-App Notifications</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="setting-row">
+                                    <div>
+                                        <p class="setting-label">Show notification badge</p>
+                                        <p class="setting-desc">Display a count badge on the notification bell</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked
+                                               onchange="window.showToast('Preference saved','success',1500)">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="setting-row">
+                                    <div>
+                                        <p class="setting-label">Sound alerts</p>
+                                        <p class="setting-desc">Play a sound for important notifications</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox"
+                                               onchange="window.showToast('Preference saved','success',1500)">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Appearance -->
+                    <div class="settings-section" id="section-appearance">
+                        <div class="card mb-20">
+                            <div class="card-header">
+                                <h3 class="card-title">Theme</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="setting-row" style="border:none;padding-bottom:0;">
+                                    <div>
+                                        <p class="setting-label">Color Mode</p>
+                                        <p class="setting-desc">Choose between light and dark interface</p>
+                                    </div>
+                                    <div class="theme-toggle-wrap" style="scale:1.1;">
+                                        <div class="theme-opt active" data-mode="light">☀️ Light</div>
+                                        <div class="theme-opt" data-mode="dark">🌙 Dark</div>
+                                    </div>
+                                </div>
+
+                                <div class="divider" style="margin:20px 0;"></div>
+
+                                <p style="font-size:.875rem;font-weight:600;color:var(--text-primary);margin-bottom:4px;">
+                                    Accent Color</p>
+                                <p style="font-size:.8125rem;color:var(--text-muted);margin-bottom:12px;">Choose the
+                                    primary accent color for the interface</p>
+                                <div class="color-scheme-grid">
+                                    <div class="color-swatch active" style="background:#16A34A;" title="Jade (default)"
+                                         onclick="pickColor(this,'#16A34A')"></div>
+                                    <div class="color-swatch" style="background:#2563EB;" title="Blue"
+                                         onclick="pickColor(this,'#2563EB')"></div>
+                                    <div class="color-swatch" style="background:#7C3AED;" title="Violet"
+                                         onclick="pickColor(this,'#7C3AED')"></div>
+                                    <div class="color-swatch" style="background:#DB2777;" title="Pink"
+                                         onclick="pickColor(this,'#DB2777')"></div>
+                                    <div class="color-swatch" style="background:#D97706;" title="Amber"
+                                         onclick="pickColor(this,'#D97706')"></div>
+                                    <div class="color-swatch" style="background:#0891B2;" title="Cyan"
+                                         onclick="pickColor(this,'#0891B2')"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Layout & Density</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="setting-row">
+                                    <div>
+                                        <p class="setting-label">Sidebar auto-collapse on mobile</p>
+                                        <p class="setting-desc">Automatically collapse sidebar on small screens</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked
+                                               onchange="window.showToast('Preference saved','success',1500)">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="setting-row">
+                                    <div>
+                                        <p class="setting-label">Compact tables</p>
+                                        <p class="setting-desc">Reduce row padding in data tables</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox"
+                                               onchange="window.showToast('Preference saved','success',1500)">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="setting-row">
+                                    <div>
+                                        <p class="setting-label">Animate transitions</p>
+                                        <p class="setting-desc">Enable smooth animations and transitions</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked
+                                               onchange="window.showToast('Preference saved','success',1500)">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Language -->
+                    <div class="settings-section" id="section-language">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Language & Region</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group mb-16">
+                                    <label class="form-label">Interface Language</label>
+                                    <select class="form-control">
+                                        <option value="en" selected>🇬🇧 English</option>
+                                        <option value="ru">🇷🇺 Русский</option>
+                                        <option value="uz">🇺🇿 O'zbek</option>
+                                    </select>
+                                </div>
+                                <div class="form-group mb-16">
+                                    <label class="form-label">Timezone</label>
+                                    <select class="form-control">
+                                        <option value="Asia/Tashkent" selected>Asia/Tashkent (UTC+5)</option>
+                                        <option value="Europe/Moscow">Europe/Moscow (UTC+3)</option>
+                                        <option value="UTC">UTC+0</option>
+                                    </select>
+                                </div>
+                                <div class="form-group mb-20">
+                                    <label class="form-label">Date Format</label>
+                                    <select class="form-control">
+                                        <option selected>DD.MM.YYYY</option>
+                                        <option>MM/DD/YYYY</option>
+                                        <option>YYYY-MM-DD</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary"
+                                        onclick="window.showToast('Language settings saved','success')">Save
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Danger Zone -->
+                    <div class="settings-section" id="section-danger">
+                        <div class="card" style="border-color:var(--color-danger);">
+                            <div class="card-header">
+                                <h3 class="card-title" style="color:var(--color-danger);">⚠️ Danger Zone</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-danger mb-20">
+                                    <span class="alert-icon">⚠️</span>
+                                    <div class="alert-content">
+                                        <p class="alert-title">Actions here are irreversible</p>
+                                        <p class="alert-desc">Please proceed with caution. These operations cannot be
+                                            undone.</p>
+                                    </div>
+                                </div>
+
+                                <div class="setting-row">
+                                    <div>
+                                        <p class="setting-label">Export My Data</p>
+                                        <p class="setting-desc">Download all your account data as a JSON file</p>
+                                    </div>
+                                    <button class="btn btn-sm btn-secondary"
+                                            onclick="window.showToast('Preparing export…','info')">Export
+                                    </button>
+                                </div>
+                                <div class="setting-row">
+                                    <div>
+                                        <p class="setting-label">Deactivate Account</p>
+                                        <p class="setting-desc">Temporarily disable your account. You can reactivate
+                                            later.</p>
+                                    </div>
+                                    <button class="btn btn-sm btn-secondary"
+                                            onclick="window.showToast('Contact admin to deactivate','warning')">
+                                        Deactivate
+                                    </button>
+                                </div>
+                                <div class="setting-row">
+                                    <div>
+                                        <p class="setting-label" style="color:var(--color-danger);">Delete Account</p>
+                                        <p class="setting-desc">Permanently delete your account and all associated
+                                            data.</p>
+                                    </div>
+                                    <button class="btn btn-sm btn-danger"
+                                            onclick="window.showToast('Contact your system administrator','error')">
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+        {% include 'components/footer.html' %}
+    </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="{% static 'js/theme.js' %}"></script>
+<script src="{% static 'js/interactions.js' %}"></script>
+<script>
+    function showSection(id, el) {
+        // Hide all sections
+        document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.settings-nav-item').forEach(n => n.classList.remove('active'));
+        // Show target
+        document.getElementById('section-' + id).classList.add('active');
+        el.classList.add('active');
+    }
+
+    function pickColor(el, hex) {
+        document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+        el.classList.add('active');
+        document.documentElement.style.setProperty('--color-primary', hex);
+        document.documentElement.style.setProperty('--jade-600', hex);
+        window.showToast('Accent color updated', 'success', 1500);
+    }
+</script>
 </body>
 </html>

@@ -1,10 +1,446 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materials — PDP Academy LMS</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dark.css' %}">
+    <style>
+        .material-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--r-md);
+            padding: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            transition: var(--ease);
+            cursor: pointer;
+        }
 
+        .material-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--jade-200);
+        }
+
+        .material-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--r-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .material-icon.video {
+            background: var(--blue-100);
+        }
+
+        .material-icon.pdf {
+            background: var(--red-100);
+        }
+
+        .material-icon.link {
+            background: var(--jade-100);
+        }
+
+        .material-icon.file {
+            background: var(--gold-100);
+        }
+
+        .material-title {
+            font-size: .9375rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .material-meta {
+            font-size: .75rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .material-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 12px;
+        }
+
+        [data-theme=dark] .material-icon.video {
+            background: rgba(59, 130, 246, .15);
+        }
+
+        [data-theme=dark] .material-icon.pdf {
+            background: rgba(239, 68, 68, .15);
+        }
+
+        [data-theme=dark] .material-icon.link {
+            background: rgba(34, 197, 94, .15);
+        }
+
+        [data-theme=dark] .material-icon.file {
+            background: rgba(245, 158, 11, .15);
+        }
+
+        [data-theme=dark] .material-card:hover {
+            border-color: rgba(34, 197, 94, .3);
+        }
+    </style>
+</head>
+<body data-user-role="teacher">
+<div class="app">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    {% include 'components/sidebar.html' %}
+
+    <div class="main-wrapper" id="mainWrapper">
+        {% include 'components/header.html' %}
+
+        <main class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Materials</h1>
+                    <p class="page-subtitle">Lesson resources, videos, PDFs and links</p>
+                </div>
+                <div class="page-actions">
+                    <!-- {% if user.role in 'admin teacher' %} -->
+                        <button class="btn btn-primary" data-modal-open="uploadModal">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            Upload Material
+                        </button>
+                        <!-- {% endif %} -->
+                </div>
+            </div>
+
+            <!-- Filter Row -->
+            <div class="flex gap-8 mb-24 flex-wrap items-center">
+                <div class="flex gap-6"
+                     style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-md);padding:4px;">
+                    <button class="btn btn-sm btn-primary" onclick="filterType(this,'all')">All</button>
+                    <button class="btn btn-sm btn-ghost" onclick="filterType(this,'video')">🎥 Videos</button>
+                    <button class="btn btn-sm btn-ghost" onclick="filterType(this,'pdf')">📄 PDFs</button>
+                    <button class="btn btn-sm btn-ghost" onclick="filterType(this,'link')">🔗 Links</button>
+                    <button class="btn btn-sm btn-ghost" onclick="filterType(this,'file')">📎 Files</button>
+                </div>
+                <select class="table-filter-select" style="width:auto;" onchange="filterModule(this.value)">
+                    <option value="">All Modules</option>
+                    <option value="1">Module 1</option>
+                    <option value="2">Module 2</option>
+                    <option value="3" selected>Module 3</option>
+                    <option value="4">Module 4</option>
+                </select>
+            </div>
+
+            <!-- ── Module 3 ── -->
+            <div class="section" id="module-3">
+                <div class="section-header">
+                    <h2 class="section-title">Module 3 — Python Algorithms</h2>
+                    <span class="badge badge-green badge-dot">Active</span>
+                </div>
+
+                <!-- Lesson 8 -->
+                <div class="mb-20">
+                    <p style="font-size:.8125rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:10px;">
+                        Lesson 8 — Recursion Deep Dive</p>
+                    <div class="materials-grid">
+                        <div class="material-card" data-type="video">
+                            <div class="material-icon video">🎥</div>
+                            <div style="flex:1;min-width:0;">
+                                <p class="material-title">Lesson 8 — Recording</p>
+                                <p class="material-meta">Video · 42:18 · Jun 21, 2026</p>
+                                <div class="progress sm mt-8" style="width:120px;">
+                                    <div class="progress-bar gradient" style="width:0%;" data-progress="100"></div>
+                                </div>
+                            </div>
+                            <div class="material-actions">
+                                <button class="btn btn-sm btn-primary"
+                                        onclick="window.showToast('Opening video…','info')">▶ Play
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="material-card" data-type="pdf">
+                            <div class="material-icon pdf">📄</div>
+                            <div style="flex:1;min-width:0;">
+                                <p class="material-title">Recursion — Slides</p>
+                                <p class="material-meta">PDF · 2.4 MB · Jun 21, 2026</p>
+                            </div>
+                            <div class="material-actions">
+                                <button class="btn btn-sm btn-secondary"
+                                        onclick="window.showToast('Downloading…','info')">⬇ Download
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="material-card" data-type="link">
+                            <div class="material-icon link">🔗</div>
+                            <div style="flex:1;min-width:0;">
+                                <p class="material-title">Python Docs — Recursion</p>
+                                <p class="material-meta">External link · docs.python.org</p>
+                            </div>
+                            <div class="material-actions">
+                                <a href="#" class="btn btn-sm btn-secondary" onclick="return false;">Open →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lesson 7 -->
+                <div class="mb-20">
+                    <p style="font-size:.8125rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:10px;">
+                        Lesson 7 — Binary Search</p>
+                    <div class="materials-grid">
+                        <div class="material-card" data-type="video">
+                            <div class="material-icon video">🎥</div>
+                            <div style="flex:1;min-width:0;">
+                                <p class="material-title">Lesson 7 — Recording</p>
+                                <p class="material-meta">Video · 38:05 · Jun 19, 2026</p>
+                                <div class="progress sm mt-8" style="width:120px;">
+                                    <div class="progress-bar gradient" style="width:35%;" data-progress="35"></div>
+                                </div>
+                            </div>
+                            <div class="material-actions">
+                                <button class="btn btn-sm btn-primary"
+                                        onclick="window.showToast('Opening video…','info')">▶ Play
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="material-card" data-type="pdf">
+                            <div class="material-icon pdf">📄</div>
+                            <div style="flex:1;min-width:0;">
+                                <p class="material-title">Binary Search — Cheatsheet</p>
+                                <p class="material-meta">PDF · 0.8 MB · Jun 19, 2026</p>
+                            </div>
+                            <div class="material-actions">
+                                <button class="btn btn-sm btn-secondary"
+                                        onclick="window.showToast('Downloading…','info')">⬇ Download
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="material-card" data-type="file">
+                            <div class="material-icon file">📎</div>
+                            <div style="flex:1;min-width:0;">
+                                <p class="material-title">binary_search_examples.py</p>
+                                <p class="material-meta">Python file · 3.1 KB · Jun 19, 2026</p>
+                            </div>
+                            <div class="material-actions">
+                                <button class="btn btn-sm btn-secondary"
+                                        onclick="window.showToast('Downloading…','info')">⬇ Download
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="material-card" data-type="link">
+                            <div class="material-icon link">🔗</div>
+                            <div style="flex:1;min-width:0;">
+                                <p class="material-title">Visualgo — Search Algorithms</p>
+                                <p class="material-meta">External link · visualgo.net</p>
+                            </div>
+                            <div class="material-actions">
+                                <a href="#" class="btn btn-sm btn-secondary" onclick="return false;">Open →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lesson 6 -->
+                <div>
+                    <p style="font-size:.8125rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:10px;">
+                        Lesson 6 — Sorting Algorithms</p>
+                    <div class="materials-grid">
+                        <div class="material-card" data-type="video">
+                            <div class="material-icon video">🎥</div>
+                            <div style="flex:1;min-width:0;">
+                                <p class="material-title">Lesson 6 — Recording</p>
+                                <p class="material-meta">Video · 45:22 · Jun 17, 2026</p>
+                                <div class="progress sm mt-8" style="width:120px;">
+                                    <div class="progress-bar gradient" style="width:100%;" data-progress="100"></div>
+                                </div>
+                            </div>
+                            <div class="material-actions">
+                                <button class="btn btn-sm btn-secondary"
+                                        onclick="window.showToast('Opening video…','info')">▶ Replay
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="material-card" data-type="pdf">
+                            <div class="material-icon pdf">📄</div>
+                            <div style="flex:1;min-width:0;">
+                                <p class="material-title">Sorting Algorithms — Comparison</p>
+                                <p class="material-meta">PDF · 1.2 MB · Jun 17, 2026</p>
+                            </div>
+                            <div class="material-actions">
+                                <button class="btn btn-sm btn-secondary"
+                                        onclick="window.showToast('Downloading…','info')">⬇ Download
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="material-card" data-type="file">
+                            <div class="material-icon file">📎</div>
+                            <div style="flex:1;min-width:0;">
+                                <p class="material-title">sorting_starter.py</p>
+                                <p class="material-meta">Python file · 4.5 KB · Jun 17, 2026</p>
+                            </div>
+                            <div class="material-actions">
+                                <button class="btn btn-sm btn-secondary"
+                                        onclick="window.showToast('Downloading…','info')">⬇ Download
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Module 2 (collapsed preview) ── -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Module 2 — Data Structures</h2>
+                    <a href="#" class="section-action" onclick="return false;">Show all (18 files) →</a>
+                </div>
+                <div class="materials-grid">
+                    <div class="material-card" data-type="video">
+                        <div class="material-icon video">🎥</div>
+                        <div style="flex:1;min-width:0;">
+                            <p class="material-title">Module 2 — Summary Recording</p>
+                            <p class="material-meta">Video · 1:12:40 · May 28, 2026</p>
+                            <div class="progress sm mt-8" style="width:120px;">
+                                <div class="progress-bar gradient" style="width:100%;"></div>
+                            </div>
+                        </div>
+                        <div class="material-actions">
+                            <button class="btn btn-sm btn-secondary"
+                                    onclick="window.showToast('Opening video…','info')">▶ Replay
+                            </button>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:center;background:var(--bg-input);border:1px dashed var(--border);border-radius:var(--r-md);padding:20px;color:var(--text-muted);font-size:.875rem;">
+                        + 17 more files in Module 2
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+    {% include 'components/footer.html' %}
+    </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Upload Modal -->
+<div class="modal-overlay" id="uploadModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 class="modal-title">Upload Material</h2>
+            <button class="modal-close" data-modal-close>✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group mb-16">
+                <label class="form-label">Type</label>
+                <div class="flex gap-8 flex-wrap">
+                    <label class="form-check">
+                        <input type="radio" name="matType" value="video" checked>
+                        <span class="form-check-label">🎥 Video</span>
+                    </label>
+                    <label class="form-check">
+                        <input type="radio" name="matType" value="pdf">
+                        <span class="form-check-label">📄 PDF</span>
+                    </label>
+                    <label class="form-check">
+                        <input type="radio" name="matType" value="file">
+                        <span class="form-check-label">📎 File</span>
+                    </label>
+                    <label class="form-check">
+                        <input type="radio" name="matType" value="link">
+                        <span class="form-check-label">🔗 Link</span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group mb-16">
+                <label class="form-label">Title <span class="required">*</span></label>
+                <input type="text" class="form-control" placeholder="e.g. Lesson 9 — Recording">
+            </div>
+            <div class="form-group mb-16">
+                <label class="form-label">Module & Lesson</label>
+                <div class="form-row">
+                    <select class="form-control">
+                        <option>Module 3</option>
+                        <option>Module 4</option>
+                    </select>
+                    <select class="form-control">
+                        <option>Lesson 8</option>
+                        <option>Lesson 9</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group mb-16">
+                <label class="form-label">File / URL</label>
+                <div style="border:2px dashed var(--border);border-radius:var(--r-md);padding:32px;text-align:center;cursor:pointer;transition:var(--ease);"
+                     onclick="window.showToast('File picker opened','info')"
+                     onmouseover="this.style.borderColor='var(--color-primary)'"
+                     onmouseout="this.style.borderColor='var(--border)'">
+                    <div style="font-size:2rem;margin-bottom:8px;">📤</div>
+                    <p style="font-size:.875rem;font-weight:600;color:var(--text-primary);">Click to upload or drag &
+                        drop</p>
+                    <p style="font-size:.75rem;color:var(--text-muted);margin-top:4px;">MP4, PDF, ZIP, PY — max 500
+                        MB</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Visible to students</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" data-modal-close>Cancel</button>
+            <button class="btn btn-primary"
+                    onclick="window.showToast('Material uploaded successfully','success');closeModal('uploadModal')">
+                Upload
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/theme.js' %}"></script>
+<script src="{% static 'js/interactions.js' %}"></script>
+<script>
+    function filterType(btn, type) {
+        document.querySelectorAll('.flex.gap-6 .btn').forEach(b => {
+            b.className = b === btn ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-ghost';
+        });
+        document.querySelectorAll('.material-card').forEach(card => {
+            card.style.display = (type === 'all' || card.dataset.type === type) ? '' : 'none';
+        });
+    }
+
+    function filterModule(val) {
+        document.querySelectorAll('[id^="module-"]').forEach(sec => {
+            sec.style.display = (!val || sec.id === 'module-' + val) ? '' : 'none';
+        });
+    }
+</script>
 </body>
 </html>

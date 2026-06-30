@@ -106,7 +106,7 @@
                             <span class="stat-card-label">Total Students</span>
                             <div class="stat-icon-wrap green">👨‍🎓</div>
                         </div>
-                        <div class="stat-value mono" data-count="{{ students_count }}">{{ students }}</div>
+                        <div class="stat-value mono" data-count="{{ students_count }}">{{ students_count }}</div>
                         <div class="stat-trend up">
                             <span>↑ {{ sim }}</span>
                             <span class="stat-trend-label">this month</span>
@@ -241,7 +241,7 @@
                                                 <div class="avatar avatar-xs"
                                                      style="background:linear-gradient(135deg,#3B82F6,#60A5FA);">{{ user.first_name | slice:":1" }}
                                                 </div>
-                                                {{ user.first_name }} {{ user.last_name }}
+                                                {{ user.last_name }} {{ user.first_name }}
                                             </div>
                                         </td>
                                         <td><span class="code-chip">{{ user.group }}</span></td>
@@ -345,17 +345,20 @@
             <h2 class="modal-title">Add New User</h2>
             <button class="modal-close" data-modal-close>✕</button>
         </div>
-        <div class="modal-body">
-            <form action="{% url 'add-user' %}" method="post">
-                {% csrf_token %}
+
+        <!-- Открываем форму ДО тела модалки, чтобы подвал тоже входил в неё -->
+        <form action="{% url 'add-user' %}" method="post">
+            {% csrf_token %}
+
+            <div class="modal-body">
                 <div class="form-row mb-16">
                     <div class="form-group">
                         <label class="form-label">First Name <span class="required">*</span></label>
-                        <input type="text" class="form-control" name="first_name" placeholder="e.g. Alex">
+                        <input type="text" class="form-control" name="first_name" placeholder="e.g. Alex" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Last Name <span class="required">*</span></label>
-                        <input type="text" class="form-control" name="last_name" placeholder="e.g. Kim">
+                        <input type="text" class="form-control" name="last_name" placeholder="e.g. Kim" required>
                     </div>
                 </div>
                 <div class="form-row mb-16">
@@ -368,7 +371,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Role <span class="required">*</span></label>
-                        <select class="form-control" name="role">
+                        <select class="form-control" name="role" required>
                             <option value="">Select role…</option>
                             <option value="ADMIN">Admin</option>
                             <option value="TEACHER">Teacher</option>
@@ -380,11 +383,12 @@
                 <div class="form-row mb-16">
                     <div class="form-group">
                         <label class="form-label">Login <span class="required">*</span></label>
-                        <input type="text" class="form-control" name="username" placeholder="e.g. alex.kim">
+                        <input type="text" class="form-control" name="username" placeholder="e.g. alex.kim" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Password <span class="required">*</span></label>
-                        <input type="password" class="form-control" name="password" placeholder="Min 8 characters">
+                        <input type="password" class="form-control" name="password" placeholder="Min 8 characters"
+                               required>
                     </div>
                 </div>
                 <div class="form-group mb-16">
@@ -396,17 +400,19 @@
                         {% endfor %}
                     </select>
                 </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-secondary" data-modal-close>Cancel</button>
-            <button class="btn btn-primary"
-                    onclick="window.showToast('User created successfully','success');closeModal('addUserModal')">
-                Create User
-            </button>
-        </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+                <!-- ИСПРАВЛЕНО: Кнопка отправляет форму благодаря type="submit" -->
+                <button type="submit" class="btn btn-primary">
+                    Create User
+                </button>
+            </div>
+        </form>
     </div>
 </div>
+
 
 <!-- Add Group Modal -->
 <div class="modal-overlay" id="addGroupModal">

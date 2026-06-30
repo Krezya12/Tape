@@ -2,21 +2,7 @@ from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import (
-    User,
-    ParentStudent,
-    Module,
-    Group,
-    Lesson,
-    Exam,
-    StudentModuleProgress,
-    Grade,
-    Attendance,
-    Payment,
-    StudentRating,
-    TeacherSettings,
-    Notification, GroupModuleTeacher
-)
+from .models import *
 
 
 # ==========================
@@ -236,24 +222,6 @@ class PaymentAdmin(admin.ModelAdmin):
 
     list_filter = (
         "paid",
-    )
-
-
-# ==========================
-# RATING
-# ==========================
-
-
-@admin.register(StudentRating)
-class StudentRatingAdmin(admin.ModelAdmin):
-    list_display = (
-        "student",
-        "total_points",
-        "updated_at",
-    )
-
-    ordering = (
-        "-total_points",
     )
 
 

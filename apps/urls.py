@@ -5,13 +5,12 @@ from .views import *
 urlpatterns = [
     # path('test', test_view, name='test'),
 
-
     path('admin', AdminListView.as_view(), name='admin_dashboard'),
-    path('admin/add-group', GroupCreateView.as_view(), name='add-group'),
-    path('admin/add-user', UserCreateView.as_view(), name='add-user'),
+    path('admin/add-group', add_group_view, name='add-group'),
+    path('admin/add-user', add_user_view, name='add-user'),
     path('teacher', TeacherDashboardListView.as_view(), name='teacher_dashboard'),
-    path('parent', parent_dashboard_view, name='parent_dashboard'),
-    path('student', student_dashboard_view, name='student_dashboard'),
+    path('parent', ParentDashboardListView.as_view(), name='parent_dashboard'),
+    path('student', StudentDashboardView.as_view(), name='student_dashboard'),
     path('admin/settings', settings_view, name='settings'),
     path('teacher/settings', settings_view, name='settings'),
     path('teacher/materials', materials_view, name='materials'),

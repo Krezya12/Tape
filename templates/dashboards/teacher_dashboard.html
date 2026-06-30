@@ -175,188 +175,110 @@
                 </div>
                 <div class="grid grid-4">
                     {% for group in groups %}
-
                         <div class="group-card">
                             <div class="group-card-top">
                                 <div>
                                     <div class="group-code">{{ group.title }}</div>
                                     <div class="group-name">{{ group.technology }} · Intermediate</div>
                                 </div>
-                                <span class="group-badge python">{{ group.technology }}</span>
+                                <!-- Класс фильтра приведен к нижнему регистру (python или java) -->
+                                <span class="group-badge {{ group.technology|lower }}">{{ group.technology }}</span>
                             </div>
+
                             <div class="progress-label">
                                 <span>Module {{ group.current_module.number }}</span>
-                                <strong>{{ current_lesson }} / 12 lessons</strong>
+                                <!-- Реальный номер урока из базы -->
+                                <strong>{{ group.last_lesson_number }} / 12 lessons</strong>
                             </div>
+
                             <div class="progress">
-                                <div class="progress-bar gradient" data-progress="58" style="width:0%"></div>
+                                <!-- Процент заполнения рассчитывается автоматически на лету -->
+                                <div class="progress-bar gradient"
+                                     style="width: {% widthratio group.last_lesson_number 12 100 %}%">
+                                </div>
                             </div>
+
                             <div class="group-card-footer">
-                                <span class="group-stat">👨‍🎓 <strong>20</strong> students</span>
+                                <!-- Точное количество студентов в данной группе -->
+                                <span class="group-stat">👨‍🎓 <strong>{{ group.students_count }}</strong> students</span>
                                 <span class="group-stat">Avg <strong>87%</strong></span>
                             </div>
                         </div>
-
+                    {% empty %}
+                        <div class="no-groups">У вас пока нет активных групп.</div>
                     {% endfor %}
-                    
-
                 </div>
             </div><!-- /my groups -->
 
             <!-- ── Grade Journal (inline preview) ── -->
-            <div class="card mb-24">
-                <div class="card-header">
-                    <div>
-                        <h3 class="card-title">Grade Journal — Group {{ current_group.title }}</h3>
-                        <p class="card-subtitle">Module {{ current_group.get_current_lesson }} · Lesson 7 · Click row to edit grades</p>
-                    </div>
-                    <div class="flex gap-10">
-                        <select class="table-filter-select" style="width:auto;">
-                            {% for group in groups %}
-                                <option>{{ group.title }}</option>
-                            {% endfor %}
-
-
-                        </select>
-                        <button class="btn btn-sm btn-primary" onclick="window.showToast('Grades saved','success')">
-                            Save All
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body" style="padding:0; overflow-x:auto;">
-                    <table class="data-table journal-table">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th class="sortable">Student <span class="sort-icon">↕</span></th>
-                            <th>Homework <small style="font-weight:400;color:var(--text-muted);"></small></th>
-                            <th>Classwork <small style="font-weight:400;color:var(--text-muted);"></small></th>
-                            <th>Attendance</th>
-                            <th>Comment</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td style="color:var(--text-muted);font-size:.8125rem;">1</td>
-                            <td class="primary">
-                                <div style="display:flex;align-items:center;gap:8px;">
-                                    <div class="avatar avatar-xs"
-                                         style="background:linear-gradient(135deg,#3B82F6,#60A5FA);">A
-                                    </div>
-                                    Alex Kim
-                                </div>
-                            </td>
-                            <td><input type="number" class="grade-input" value="18" min="0"></td>
-                            <td><input type="number" class="grade-input" value="17" min="0"></td>
-                            <td>
-                                <select class="att-select">
-                                    <option value="present" selected>✅ Present</option>
-                                    <option value="absent">❌ Absent</option>
-                                    <option value="late">⏰ Late</option>
-                                </select>
-                            </td>
-                            <td><input type="text" class="form-control" style="height:30px;font-size:.8125rem;"
-                                       placeholder="Add comment…"></td>
-                        </tr>
-                        <tr>
-                            <td style="color:var(--text-muted);font-size:.8125rem;">2</td>
-                            <td class="primary">
-                                <div style="display:flex;align-items:center;gap:8px;">
-                                    <div class="avatar avatar-xs"
-                                         style="background:linear-gradient(135deg,#8B5CF6,#A78BFA);">T
-                                    </div>
-                                    Timur Rashidov
-                                </div>
-                            </td>
-                            <td><input type="number" class="grade-input" value="15" min="0"></td>
-                            <td><input type="number" class="grade-input" value="16" min="0"></td>
-                            <td>
-                                <select class="att-select">
-                                    <option value="present" selected>✅ Present</option>
-                                    <option value="absent">❌ Absent</option>
-                                    <option value="late">⏰ Late</option>
-                                </select>
-                            </td>
-                            <td><input type="text" class="form-control" style="height:30px;font-size:.8125rem;"
-                                       placeholder="Add comment…"></td>
-                        </tr>
-                        <tr>
-                            <td style="color:var(--text-muted);font-size:.8125rem;">3</td>
-                            <td class="primary">
-                                <div style="display:flex;align-items:center;gap:8px;">
-                                    <div class="avatar avatar-xs"
-                                         style="background:linear-gradient(135deg,#EC4899,#F472B6);">M
-                                    </div>
-                                    Maria Chen
-                                </div>
-                            </td>
-                            <td><input type="number" class="grade-input" value="20" min="0"></td>
-                            <td><input type="number" class="grade-input" value="19" min="0"></td>
-                            <td>
-                                <select class="att-select">
-                                    <option value="present" selected>✅ Present</option>
-                                    <option value="absent">❌ Absent</option>
-                                    <option value="late">⏰ Late</option>
-                                </select>
-                            </td>
-                            <td><input type="text" class="form-control" style="height:30px;font-size:.8125rem;"
-                                       value="Excellent work!"></td>
-                        </tr>
-                        <tr>
-                            <td style="color:var(--text-muted);font-size:.8125rem;">4</td>
-                            <td class="primary">
-                                <div style="display:flex;align-items:center;gap:8px;">
-                                    <div class="avatar avatar-xs">D</div>
-                                    Doniyor Yusupov
-                                </div>
-                            </td>
-                            <td><input type="number" class="grade-input" value="" min="0" placeholder="—"></td>
-                            <td><input type="number" class="grade-input" value="" min="0" placeholder="—"></td>
-                            <td>
-                                <select class="att-select">
-                                    <option value="present">✅ Present</option>
-                                    <option value="absent" selected>❌ Absent</option>
-                                    <option value="late">⏰ Late</option>
-                                </select>
-                            </td>
-                            <td><input type="text" class="form-control" style="height:30px;font-size:.8125rem;"
-                                       placeholder="Add comment…"></td>
-                        </tr>
-                        <tr>
-                            <td style="color:var(--text-muted);font-size:.8125rem;">5</td>
-                            <td class="primary">
-                                <div style="display:flex;align-items:center;gap:8px;">
-                                    <div class="avatar avatar-xs"
-                                         style="background:linear-gradient(135deg,#F59E0B,#FCD34D);color:#78350F;">S
-                                    </div>
-                                    Sherzod Kalandarov
-                                </div>
-                            </td>
-                            <td><input type="number" class="grade-input" value="14" min="0"></td>
-                            <td><input type="number" class="grade-input" value="13" min="0"></td>
-                            <td>
-                                <select class="att-select">
-                                    <option value="present">✅ Present</option>
-                                    <option value="absent">❌ Absent</option>
-                                    <option value="late" selected>⏰ Late</option>
-                                </select>
-                            </td>
-                            <td><input type="text" class="form-control" style="height:30px;font-size:.8125rem;"
-                                       placeholder="Add comment…"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="card-footer">
-                    <span style="font-size:.8125rem;color:var(--text-muted);">Showing 5 of 20 students · Lesson 7</span>
-                    <div class="flex gap-10">
-                        <button class="btn btn-sm btn-secondary" data-modal-open="addLessonModal">+ New Lesson</button>
-                        <button class="btn btn-sm btn-primary"
-                                onclick="window.showToast('All grades saved successfully','success')">💾 Save Grades
-                        </button>
-                    </div>
-                </div>
-            </div><!-- /journal -->
+{#            <div class="card mb-24">#}
+{#                <div class="card-header">#}
+{#                    <div>#}
+{#                        <h3 class="card-title">Grade Journal — Group {{ current_group.title }}</h3>#}
+{#                        <p class="card-subtitle">Module {{ current_group.get_current_lesson }} · Lesson 7 · Click row to#}
+{#                            edit grades</p>#}
+{#                    </div>#}
+{#                    <div class="flex gap-10">#}
+{#                        <select class="table-filter-select" style="width:auto;">#}
+{#                            {% for group in groups %}#}
+{#                                <option>{{ group.title }}</option>#}
+{#                            {% endfor %}#}
+{##}
+{##}
+{#                        </select>#}
+{#                        <button class="btn btn-sm btn-primary" onclick="window.showToast('Grades saved','success')">#}
+{#                            Save All#}
+{#                        </button>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="card-body" style="padding:0; overflow-x:auto;">#}
+{#                    <table class="data-table journal-table">#}
+{#                        <thead>#}
+{#                        <tr>#}
+{#                            <th>#</th>#}
+{#                            <th class="sortable">Student <span class="sort-icon">↕</span></th>#}
+{#                            <th>Homework <small style="font-weight:400;color:var(--text-muted);"></small></th>#}
+{#                            <th>Classwork <small style="font-weight:400;color:var(--text-muted);"></small></th>#}
+{#                            <th>Attendance</th>#}
+{#                            <th>Comment</th>#}
+{#                        </tr>#}
+{#                        </thead>#}
+{#                        <tbody>#}
+{#                        <tr>#}
+{#                            <td style="color:var(--text-muted);font-size:.8125rem;">1</td>#}
+{#                            <td class="primary">#}
+{#                                <div style="display:flex;align-items:center;gap:8px;">#}
+{#                                    <div class="avatar avatar-xs"#}
+{#                                         style="background:linear-gradient(135deg,#3B82F6,#60A5FA);">A#}
+{#                                    </div>#}
+{#                                    Alex Kim#}
+{#                                </div>#}
+{#                            </td>#}
+{#                            <td><input type="number" class="grade-input" value="18" min="0"></td>#}
+{#                            <td><input type="number" class="grade-input" value="17" min="0"></td>#}
+{#                            <td>#}
+{#                                <select class="att-select">#}
+{#                                    <option value="present" selected>✅ Present</option>#}
+{#                                    <option value="absent">❌ Absent</option>#}
+{#                                    <option value="late">⏰ Late</option>#}
+{#                                </select>#}
+{#                            </td>#}
+{#                            <td><input type="text" class="form-control" style="height:30px;font-size:.8125rem;"#}
+{#                                       placeholder="Add comment…"></td>#}
+{#                        </tr>#}
+{#                        </tbody>#}
+{#                    </table>#}
+{#                </div>#}
+{#                <div class="card-footer">#}
+{#                    <span style="font-size:.8125rem;color:var(--text-muted);">Showing 5 of 20 students · Lesson 7</span>#}
+{#                    <div class="flex gap-10">#}
+{#                        <button class="btn btn-sm btn-secondary" data-modal-open="addLessonModal">+ New Lesson</button>#}
+{#                        <button class="btn btn-sm btn-primary"#}
+{#                                onclick="window.showToast('All grades saved successfully','success')">💾 Save Grades#}
+{#                        </button>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div><!-- /journal -->#}
 
             <!-- ── Bottom Row: HW to Check + Attendance Chart ── -->
             <div class="grid grid-2">

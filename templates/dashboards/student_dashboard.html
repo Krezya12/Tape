@@ -116,7 +116,7 @@
     <!-- ═══ MAIN WRAPPER ═══ -->
     <div class="main-wrapper" id="mainWrapper">
 
-        {% include "components/header.html"  %}
+        {% include "components/header.html" %}
 
         <!-- ─── Main Content ──── -->
         <main class="main-content">
@@ -124,9 +124,9 @@
             <!-- Welcome Banner -->
             <div class="welcome-banner mb-24">
                 <div class="welcome-text">
-                    <p class="welcome-greeting">Привет, <span>Alex</span> 👋</p>
-                    <p class="welcome-sub">Group: P38 &nbsp;·&nbsp; Module 3 &nbsp;·&nbsp; Keep it up — you're in the
-                        top 10%!</p>
+                    <p class="welcome-greeting">Привет, <span>{{ user.first_name }}</span> 👋</p>
+                    <p class="welcome-sub">Group: {{ current_group.title }} &nbsp;·&nbsp;
+                        Module {{ current_group.current_module.number }} &nbsp;·&nbsp; Keep it up!</p>
                 </div>
                 <div class="welcome-emoji">🚀</div>
             </div>
@@ -141,34 +141,35 @@
                             <div>
                                 <p style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);">
                                     Current Progress</p>
-                                <h3 style="font-size:1.125rem;font-weight:700;margin-top:4px;">Module 3 — Python
-                                    Algorithms</h3>
+                                <h3 style="font-size:1.125rem;font-weight:700;margin-top:4px;">
+                                    Module {{ current_group.current_module.number }}
+                                    — {{ current_group.technology|title }}</h3>
                             </div>
                             <span class="badge badge-green badge-dot">Active</span>
                         </div>
 
                         <div class="progress-label">
                             <span style="font-size:.875rem;color:var(--text-secondary);">Lessons completed</span>
-                            <strong>7 / 12</strong>
+                            <strong>{{ lessons_completed }} / {{ lessons_total }}</strong>
                         </div>
                         <div class="progress mb-16 module-progress">
-                            <div class="progress-bar gradient" data-progress="58" style="width:0%;"></div>
+                            <div class="progress-bar gradient" data-progress="{{ lc_pct }}" style="width:0%;"></div>
                         </div>
 
                         <div class="flex gap-24">
                             <div>
                                 <p style="font-size:1.375rem;font-weight:800;color:var(--text-primary);font-family:var(--font-mono);">
-                                    87%</p>
+                                    {{ avg_score }}%</p>
                                 <p style="font-size:.75rem;color:var(--text-muted);">Avg Score</p>
                             </div>
                             <div>
                                 <p style="font-size:1.375rem;font-weight:800;color:var(--text-primary);font-family:var(--font-mono);">
-                                    95%</p>
+                                    {{ attendance_pct }}%</p>
                                 <p style="font-size:.75rem;color:var(--text-muted);">Attendance</p>
                             </div>
                             <div>
                                 <p style="font-size:1.375rem;font-weight:800;color:var(--text-primary);font-family:var(--font-mono);">
-                                    80%</p>
+                                    {{ hw_done_pct }}%</p>
                                 <p style="font-size:.75rem;color:var(--text-muted);">HW Done</p>
                             </div>
                         </div>
@@ -181,7 +182,7 @@
                         <span class="stat-card-label">Last HW Score</span>
                         <div class="stat-icon-wrap green">📝</div>
                     </div>
-                    <div class="stat-value mono" data-count="18" data-suffix="/20">0</div>
+                    <div class="stat-value mono" data-count="{{ last_hw_score }}">{{ last_hw_score }}</div>
                     <div class="stat-trend up"><span>Lesson 6 · 90%</span></div>
                 </div>
 
@@ -191,17 +192,17 @@
                         <span class="stat-card-label">Last CW Score</span>
                         <div class="stat-icon-wrap blue">📖</div>
                     </div>
-                    <div class="stat-value mono" data-count="15" data-suffix="/20">0</div>
+                    <div class="stat-value mono" data-count="{{ last_cw_score }}">{{ last_cw_score }}</div>
                     <div class="stat-trend up"><span>Lesson 6 · 75%</span></div>
                 </div>
 
                 <!-- Leaderboard Rank -->
                 <div class="rank-card">
                     <p class="rank-label">Your Rank</p>
-                    <p class="rank-big">#9</p>
-                    <p class="rank-score">84% overall</p>
-                    <p style="font-size:.8125rem;color:rgba(255,255,255,.4);margin-top:4px;">of 20 in P38</p>
-                    <a href="pages/leaderboard.html"
+                    <p class="rank-big">#{{ rank }}</p>
+                    <p class="rank-score">{{ top_percent }}% overall</p>
+                    <p style="font-size:.8125rem;color:rgba(255,255,255,.4);margin-top:4px;">of {{ current_group_students_count }} in {{ current_group.title }}</p>
+                    <a href="/student/leaderboard"
                        style="display:inline-block;margin-top:12px;font-size:.8125rem;font-weight:600;color:var(--jade-400);text-decoration:underline;">View
                         leaderboard →</a>
                 </div>
@@ -230,42 +231,30 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td class="primary">Lesson 7</td>
-                                <td><span class="grade-badge high">18/20</span></td>
-                                <td><span class="grade-badge high">17/20</span></td>
-                                <td style="font-size:.8125rem;color:var(--text-muted);">Great work! Keep it up</td>
-                            </tr>
-                            <tr>
-                                <td class="primary">Lesson 6</td>
-                                <td><span class="grade-badge high">18/20</span></td>
-                                <td><span class="grade-badge mid">15/20</span></td>
-                                <td style="font-size:.8125rem;color:var(--text-muted);">Good understanding</td>
-                            </tr>
-                            <tr>
-                                <td class="primary">Lesson 5</td>
-                                <td><span class="grade-badge mid">16/20</span></td>
-                                <td><span class="grade-badge high">18/20</span></td>
-                                <td style="font-size:.8125rem;color:var(--text-muted);">Excellent in-class!</td>
-                            </tr>
-                            <tr>
-                                <td class="primary">Lesson 4</td>
-                                <td><span class="grade-badge mid">14/20</span></td>
-                                <td><span class="grade-badge mid">15/20</span></td>
-                                <td style="font-size:.8125rem;color:var(--text-muted);">Review recursion</td>
-                            </tr>
-                            <tr>
-                                <td class="primary">Lesson 3</td>
-                                <td><span class="grade-badge low">9/20</span></td>
-                                <td><span class="grade-badge mid">13/20</span></td>
-                                <td style="font-size:.8125rem;color:var(--color-danger);">Needs improvement</td>
-                            </tr>
-                            <tr>
-                                <td class="primary">Lesson 2</td>
-                                <td><span class="grade-badge high">19/20</span></td>
-                                <td><span class="grade-badge high">20/20</span></td>
-                                <td style="font-size:.8125rem;color:var(--color-primary);">Perfect classwork! 🌟</td>
-                            </tr>
+                            {% for grade in grades %}
+                                <tr>
+                                    <td class="primary">Lesson {{ grade.lesson.number }}</td>
+
+                                    <td>
+                                        <span class="grade-badge {{ grade.hw_class }}">{{ grade.homework_points }}</span>
+                                    </td>
+
+                                    <td>
+                                        <span class="grade-badge {{ grade.cw_class }}">{{ grade.classwork_points }}</span>
+                                    </td>
+
+                                    <td style="font-size:.8125rem; {% if grade.hw_class == 'low' or grade.cw_class == 'low' %}color:var(--color-danger);{% else %}color:var(--text-muted);{% endif %}">
+                                        {{ grade.teacher_comment|default:"No comment" }}
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="4" style="text-align: center; color: var(--text-muted);">Оценок по
+                                        этому модулю пока нет.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
                             </tbody>
                         </table>
                     </div>
@@ -275,26 +264,22 @@
                 <div class="card">
                     <div class="card-header">
                         <div>
-                            <h3 class="card-title">Attendance — June</h3>
-                            <p class="card-subtitle">Module 3 · 19/20 lessons attended</p>
+                            <h3 class="card-title">Attendance — {{ current_module }}</h3>
+                            <p class="card-subtitle">Module 3 · {{ lessons_completed }} lessons attended</p>
                         </div>
                         <span class="badge badge-green badge-dot">95%</span>
                     </div>
                     <div class="card-body">
                         <div class="attendance-grid mb-16">
                             <!-- 20 dots for June lessons (19 present, 1 absent) -->
-                            <div class="attendance-dot present" data-tooltip="Jun 1 — Present">1</div>
-                            <div class="attendance-dot present" data-tooltip="Jun 3 — Present">2</div>
-                            <div class="attendance-dot present" data-tooltip="Jun 5 — Present">3</div>
-                            <div class="attendance-dot present" data-tooltip="Jun 8 — Present">4</div>
-                            <div class="attendance-dot present" data-tooltip="Jun 10 — Present">5</div>
-                            <div class="attendance-dot present" data-tooltip="Jun 12 — Present">6</div>
-                            <div class="attendance-dot absent" data-tooltip="Jun 15 — Absent">7</div>
-                            <div class="attendance-dot present" data-tooltip="Jun 17 — Present">8</div>
-                            <div class="attendance-dot present" data-tooltip="Jun 19 — Present">9</div>
-                            <div class="attendance-dot late" data-tooltip="Jun 21 — Late">10</div>
-                            <div class="attendance-dot future" data-tooltip="Jun 22 — Upcoming">11</div>
-                            <div class="attendance-dot future" data-tooltip="Jun 24 — Upcoming">12</div>
+                            {% for lesson in lessons %}
+
+                                <div class="attendance-dot {% if lesson.my_attendance.status == 'present' %} present {% elif lesson.my_attendance.status == 'absent' %} absent {% else %} future {% endif %}"
+                                     data-tooltip="Jun 1 — Present">1
+                                </div>
+
+                            {% endfor %}
+
                         </div>
                         <div class="flex gap-16 mt-8">
                             <div class="flex items-center gap-6">
@@ -307,11 +292,6 @@
                                 <div class="attendance-dot absent" style="width:20px;height:20px;font-size:.625rem;">✗
                                 </div>
                                 <span style="font-size:.8125rem;color:var(--text-secondary);">Absent (1)</span>
-                            </div>
-                            <div class="flex items-center gap-6">
-                                <div class="attendance-dot late" style="width:20px;height:20px;font-size:.625rem;">L
-                                </div>
-                                <span style="font-size:.8125rem;color:var(--text-secondary);">Late (1)</span>
                             </div>
                             <div class="flex items-center gap-6">
                                 <div class="attendance-dot future" style="width:20px;height:20px;font-size:.625rem;">·
@@ -333,65 +313,6 @@
 
             <!-- ── Bottom Row: Homework + Upcoming Lesson ── -->
             <div class="grid grid-2">
-
-                <!-- Upcoming Homework -->
-                <div class="card">
-                    <div class="card-header">
-                        <div>
-                            <h3 class="card-title">My Homework</h3>
-                            <p class="card-subtitle">Pending & upcoming tasks</p>
-                        </div>
-                        <a href="pages/homework.html" class="btn btn-sm btn-secondary">All Tasks</a>
-                    </div>
-                    <div class="card-body">
-
-                        <!-- Overdue -->
-                        <div class="alert alert-danger mb-16" style="padding:10px 14px;">
-                            <span class="alert-icon">⚠️</span>
-                            <div class="alert-content">
-                                <p style="font-size:.875rem;font-weight:600;color:var(--color-danger);">1 overdue
-                                    assignment — submit now!</p>
-                            </div>
-                        </div>
-
-                        <div class="hw-item">
-                            <div class="hw-deadline urgent">DUE<br>NOW</div>
-                            <div style="flex:1;">
-                                <p style="font-size:.875rem;font-weight:600;color:var(--text-primary);">Bubble Sort &
-                                    Quick Sort</p>
-                                <p style="font-size:.75rem;color:var(--text-muted);">Module 3 · Lesson 5 · 2 days
-                                    overdue</p>
-                            </div>
-                            <button class="btn btn-sm btn-danger"
-                                    onclick="window.showToast('Opening submission…','info')">Submit
-                            </button>
-                        </div>
-
-                        <div class="hw-item">
-                            <div class="hw-deadline soon">Jun<br>22</div>
-                            <div style="flex:1;">
-                                <p style="font-size:.875rem;font-weight:600;color:var(--text-primary);">Binary Search
-                                    Implementation</p>
-                                <p style="font-size:.75rem;color:var(--text-muted);">Module 3 · Lesson 7 · Due
-                                    tomorrow</p>
-                            </div>
-                            <button class="btn btn-sm btn-secondary" onclick="window.showToast('Opening task…','info')">
-                                View
-                            </button>
-                        </div>
-
-                        <div class="hw-item">
-                            <div class="hw-deadline ok">Jun<br>25</div>
-                            <div style="flex:1;">
-                                <p style="font-size:.875rem;font-weight:600;color:var(--text-primary);">Recursion:
-                                    Fibonacci & Factorial</p>
-                                <p style="font-size:.75rem;color:var(--text-muted);">Module 3 · Lesson 8 · 4 days
-                                    left</p>
-                            </div>
-                            <button class="btn btn-sm btn-secondary">View</button>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Next Lesson -->
                 <div class="card">

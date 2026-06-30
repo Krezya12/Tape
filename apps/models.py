@@ -321,18 +321,18 @@ class Grade(Model):
 
 class Attendance(Model):
     class Status(TextChoices):
-        PRESENT = "PRESENT", "Present"
+        PRESENT = "present", "Present"
 
-        ABSENT = "ABSENT", "Absent"
+        ABSENT = "absent", "Absent"
 
     student = ForeignKey(
         User,
         on_delete=CASCADE
     )
 
-    lesson = ForeignKey(Lesson, on_delete=CASCADE)
+    lesson = ForeignKey(Lesson, on_delete=CASCADE, related_name='attendance')
 
-    status = CharField(max_length=10, choices=Status)
+    status = CharField(max_length=10, choices=Status, default=Status.ABSENT)
 
 
 class Payment(Model):
@@ -357,24 +357,6 @@ class Payment(Model):
 
     def __str__(self):
         return f"{self.student} - {self.module}"
-
-
-class StudentRating(Model):
-    student = OneToOneField(
-        User,
-        on_delete=CASCADE
-    )
-
-    total_points = IntegerField(
-        default=0
-    )
-
-    updated_at = DateTimeField(
-        auto_now=True
-    )
-
-    def __str__(self):
-        return self.student.username
 
 
 class TeacherSettings(Model):

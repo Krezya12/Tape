@@ -165,7 +165,9 @@
                     </svg>
                     <span style="font-size:.875rem;color:var(--text-muted);font-weight:500;">Viewing child:</span>
                     <select class="child-selector">
-                        <option>👦 Alex Kim — Group P38</option>
+                        {% for child in children %}
+                            <option>👦 {{ child.first_name }} {{ child.last_name }} — Group {{ group }}</option>
+                        {% endfor %}
                     </select>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                          style="color:var(--text-muted);pointer-events:none;">
@@ -178,22 +180,22 @@
             <div class="child-hero">
                 <div class="avatar avatar-lg"
                      style="background:linear-gradient(135deg,#3B82F6,#60A5FA);font-size:1.5rem;flex-shrink:0;box-shadow:0 0 0 3px rgba(255,255,255,.15);">
-                    A
+                    {{ children.0.first_name|slice:":1" }}
                 </div>
                 <div class="child-info">
-                    <p class="child-name">Alex Kim</p>
-                    <p class="child-meta">Teacher: Ivan Petrov &nbsp;·&nbsp; Schedule: Mon / Wed / Fri, 14:00</p>
+                    <p class="child-name">{{ children.first_name }} {{ children.last_name }}</p>
+                    <p class="child-meta">Teacher: {{ child_teacher_name }} &nbsp;·&nbsp; Schedule: {{ child_schedule|default:"—" }}</p>
                     <div class="child-tags">
-                        <span class="child-tag">📚 Group P38</span>
-                        <span class="child-tag">🐍 Python</span>
-                        <span class="child-tag">📖 Module 3</span>
-                        <span class="child-tag">📅 Lesson 7 / 12</span>
+                        <span class="child-tag">📚 Group {{ group }}</span>
+                        <span class="child-tag">🐍 {{ child_tech }}</span>
+                        <span class="child-tag">📖 Module {{ child_module_number }}</span>
+                        <span class="child-tag">📅 Lesson {{ lessons }} / 12</span>
                     </div>
                 </div>
                 <!-- Overall score chip -->
                 <div style="text-align:right;flex-shrink:0;position:relative;z-index:1;">
                     <div style="font-size:2.5rem;font-weight:800;color:#fff;font-family:var(--font-mono);letter-spacing:-.04em;line-height:1;">
-                        87%
+                    {{ child_score }}%
                     </div>
                     <div style="font-size:.8125rem;color:rgba(255,255,255,.5);margin-top:2px;text-transform:uppercase;letter-spacing:.05em;">
                         Overall Score
@@ -220,7 +222,7 @@
                 <!-- Performance -->
                 <div class="card" style="text-align:center;">
                     <div class="card-body">
-                        <div class="ring-progress" data-percent="87"
+                        <div class="ring-progress" data-percent="{{ performance }}"
                              style="width:120px;height:120px;margin:0 auto 16px;">
                             <svg width="120" height="120" viewBox="0 0 120 120">
                                 <circle class="ring-bg" cx="60" cy="60" r="46"/>
@@ -228,7 +230,7 @@
                                         style="stroke-dasharray:289;stroke-dashoffset:289;"/>
                             </svg>
                             <div class="ring-progress-text">
-                                <span class="ring-pct">87%</span>
+                                <span class="ring-pct">{{ performance }}%</span>
                                 <span class="ring-label">Score</span>
                             </div>
                         </div>
@@ -237,10 +239,10 @@
                             grades</p>
                         <div class="progress-label mt-12">
                             <span style="font-size:.8125rem;">This module</span>
-                            <strong>87 / 100</strong>
+                            <strong>{{ performance }} / 100</strong>
                         </div>
                         <div class="progress sm">
-                            <div class="progress-bar gradient" data-progress="87" style="width:0%"></div>
+                            <div class="progress-bar gradient" data-progress="{{ performance }}" style="width:0%"></div>
                         </div>
                     </div>
                 </div>
@@ -248,7 +250,7 @@
                 <!-- Attendance -->
                 <div class="card" style="text-align:center;">
                     <div class="card-body">
-                        <div class="ring-progress" data-percent="95"
+                        <div class="ring-progress" data-percent="{{ attendance }}"
                              style="width:120px;height:120px;margin:0 auto 16px;">
                             <svg width="120" height="120" viewBox="0 0 120 120">
                                 <circle class="ring-bg" cx="60" cy="60" r="46"/>
@@ -256,7 +258,7 @@
                                         style="stroke-dasharray:289;stroke-dashoffset:289;stroke:#3B82F6;"/>
                             </svg>
                             <div class="ring-progress-text">
-                                <span class="ring-pct">95%</span>
+                                <span class="ring-pct">{{ attendance }}%</span>
                                 <span class="ring-label">Attend.</span>
                             </div>
                         </div>
@@ -273,7 +275,7 @@
                 <!-- Homework -->
                 <div class="card" style="text-align:center;">
                     <div class="card-body">
-                        <div class="ring-progress" data-percent="80"
+                        <div class="ring-progress" data-percent="{{ homework }}"
                              style="width:120px;height:120px;margin:0 auto 16px;">
                             <svg width="120" height="120" viewBox="0 0 120 120">
                                 <circle class="ring-bg" cx="60" cy="60" r="46"/>
@@ -281,7 +283,7 @@
                                         style="stroke-dasharray:289;stroke-dashoffset:289;stroke:#F59E0B;"/>
                             </svg>
                             <div class="ring-progress-text">
-                                <span class="ring-pct">80%</span>
+                                <span class="ring-pct">{{ homework }}%</span>
                                 <span class="ring-label">Homework</span>
                             </div>
                         </div>
@@ -289,8 +291,8 @@
                         <p style="font-size:.8125rem;color:var(--text-muted);margin-top:4px;">Submission & quality
                             rate</p>
                         <div class="flex gap-8 mt-12 justify-center">
-                            <span class="badge badge-green badge-dot">6 Submitted</span>
-                            <span class="badge badge-red badge-dot">1 Missing</span>
+                            <span class="badge badge-green badge-dot">{{ submitted }} Submitted</span>
+                            <span class="badge badge-red badge-dot">{{ missing }} Missing</span>
                         </div>
                     </div>
                 </div>
